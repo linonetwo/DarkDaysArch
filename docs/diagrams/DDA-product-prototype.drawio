@@ -1,0 +1,73 @@
+<mxfile host="app.diagrams.net" modified="2021-08-13T15:34:31.812Z" agent="5.0 (Macintosh)" etag="FL8ART5sB5WTLLJvkNx6" version="14.9.6" type="github">
+  <diagram id="Qa3dx4DF3w0xNrYx_QHp" name="Page-1">
+    <mxGraphModel dx="1426" dy="767" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="nYbnf9ke9USroTlVrMWJ-1" value="" style="shape=process;whiteSpace=wrap;html=1;backgroundOutline=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="50" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="nYbnf9ke9USroTlVrMWJ-2" value="&lt;h1&gt;ReactPixiTileEditor&lt;/h1&gt;&lt;p&gt;Use React.JS to write UI ( available tiles list and palette selector/editor, save/load menu etc. ).&lt;/p&gt;&lt;p&gt;Use react-Pixi-fiber to write the &lt;span style=&quot;white-space: pre&quot;&gt;&lt;/span&gt;Tile map.&lt;br&gt;&lt;/p&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="200" y="20" width="230" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="nYbnf9ke9USroTlVrMWJ-3" value="" style="shape=cube;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;darkOpacity=0.05;darkOpacity2=0.1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="230" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="nYbnf9ke9USroTlVrMWJ-4" value="&lt;h1&gt;TauriDataStore&lt;/h1&gt;&lt;p&gt;Provide API for frontent to search map examples and furniture definitions.&lt;/p&gt;&lt;p&gt;Also handle JSON modeling, so we can know which part of official JSON is changed after CDDA version upgrade.&lt;/p&gt;&lt;p&gt;And provide generation demo that simulate map generation and basic movement in the game.&lt;br&gt;&lt;/p&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="220" y="220" width="190" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="nYbnf9ke9USroTlVrMWJ-6" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="490" y="20" width="690" height="390" as="geometry" />
+        </mxCell>
+        <mxCell id="nYbnf9ke9USroTlVrMWJ-10" value="" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="490" y="20" width="30" height="390" as="geometry" />
+        </mxCell>
+        <mxCell id="nYbnf9ke9USroTlVrMWJ-11" value="类似VSCode的功能侧边栏" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="390" width="200" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="nYbnf9ke9USroTlVrMWJ-12" value="" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="520" y="20" width="120" height="390" as="geometry" />
+        </mxCell>
+        <mxCell id="nYbnf9ke9USroTlVrMWJ-13" value="分为多个可展开tab的功能栏" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="510" y="10" width="170" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="nYbnf9ke9USroTlVrMWJ-14" value="历史记录栏，放最近使用过的地块" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="535" y="60" width="90" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="nYbnf9ke9USroTlVrMWJ-15" value="物品列表，带搜索栏，可以搜类别、名称，下滑持续从后端加载，并windowed 分页展示优化性能" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="530" y="160" width="100" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="nYbnf9ke9USroTlVrMWJ-17" value="物品" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="485" y="30" width="40" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="nYbnf9ke9USroTlVrMWJ-18" value="图层" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="485" y="80" width="40" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="nYbnf9ke9USroTlVrMWJ-19" value="搜索" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="485" y="130" width="40" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="nYbnf9ke9USroTlVrMWJ-21" value="&lt;h1&gt;地图展示区域&lt;/h1&gt;&lt;p&gt;展示坐标轴刻度、WASD移动、点击时放置左边选中的地块，有多个图层时点击鼠标切换选择不同图层上此位置的物品&lt;/p&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="710" y="40" width="190" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="nYbnf9ke9USroTlVrMWJ-22" value="当前鼠标悬浮地块的属性" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="535" y="350" width="80" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="nYbnf9ke9USroTlVrMWJ-23" value="图谱" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="485" y="180" width="40" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="nYbnf9ke9USroTlVrMWJ-24" value="模拟" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="485" y="230" width="40" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="nYbnf9ke9USroTlVrMWJ-25" value="文件" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="485" y="280" width="40" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="nYbnf9ke9USroTlVrMWJ-26" value="&lt;div&gt;物品：用于地图编辑，里面的东西选了，在右边地图区域点一下就可以放进去&lt;/div&gt;&lt;div&gt;图层：管理 place_npc place_item 等层的特殊逻辑，可以配置JSON并选中然后在右边点一下放进地图区&lt;/div&gt;&lt;div&gt;搜索：物品那边也能搜索，但是搜索结果只是图标，属性展示也比较简陋。这里搜索可以搜到详细结果，点击搜索结果后右边会变成monaco editor 展示 JSON&lt;/div&gt;&lt;div&gt;图谱：类似物品浏览器，低优先级的需求&lt;/div&gt;&lt;div&gt;模拟：类似debugger，在地图里生成一个主角来控制，一开始可以先仅做移动，前端将事件传给后端，模拟全在后端进行&lt;/div&gt;&lt;div&gt;文件：管理地图的读取和保存&lt;/div&gt;&lt;div&gt;源码：在monaco editor里看当前地图的源码&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="540" y="450" width="370" height="250" as="geometry" />
+        </mxCell>
+        <mxCell id="nYbnf9ke9USroTlVrMWJ-27" value="源码" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="485" y="330" width="40" height="20" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
