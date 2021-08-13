@@ -18,11 +18,12 @@
     "web-vitals": "^1.1.2"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "tauri": "tauri"
+    "ui:start": "react-scripts start",
+    "ui:build": "react-scripts build",
+    "ui:test": "react-scripts test",
+    "tauri:dev": "tauri dev",
+    "tauri:build": "tauri build",
+    "tauri:help": "tauri"
   },
   "eslintConfig": {
     "extends": [
