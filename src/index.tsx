@@ -7,6 +7,7 @@ import DateFnsUtils from '@material-ui/lab/AdapterDateFns';
 import LocalizationProvider from '@material-ui/lab/LocalizationProvider';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { I18nextProvider } from 'react-i18next';
+import { Provider } from 'react-redux';
 import 'typeface-roboto/index.css';
 
 import { initI18N } from './setup/i18n';
@@ -14,6 +15,7 @@ import { initI18N } from './setup/i18n';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { lightTheme } from './setup/defaultTheme';
+import { store } from './store/store';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -23,7 +25,9 @@ ReactDOM.render(
           <CssBaseline />
           <React.Suspense fallback={<div />}>
             <I18nextProvider i18n={i18n}>
-              <App />
+              <Provider store={store}>
+                <App />
+              </Provider>
             </I18nextProvider>
           </React.Suspense>
         </LocalizationProvider>

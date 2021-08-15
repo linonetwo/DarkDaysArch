@@ -1,10 +1,13 @@
-import { useState } from 'react';
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+import { useCallback, useState } from 'react';
 import styled from 'styled-components';
 import { Resizable } from 're-resizable';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { Sidebar } from '../../components/Sidebar';
 import { SideControls } from '../../components/SideControls';
 import { panelConfig } from './panelConfig';
+import { Dispatch, RootState } from '../../store/store';
 
 const SidePanelContainer = styled.div`
   width: 100%;
@@ -14,14 +17,16 @@ const SidePanelContainer = styled.div`
 `;
 
 export function SidePanel(): JSX.Element {
-  const [width, widthSetter] = useState(340);
-  const [selectedButtonIndex, selectedButtonIndexSetter] = useState(0);
+  const dispatch = useDispatch<Dispatch>();
+  const width = useSelector((state: RootState) => state.uiState.sidePanelWidth);
+  const selectedButtonIndex = useSelector((state: RootState) => state.uiState.selectedButtonIndex);
+  const selectedButtonIndexSetter = useCallback((nextButtonIndex: number) => dispatch.uiState.selectedButtonIndexSetter(nextButtonIndex), [dispatch.uiState]);
 
   return (
     <Resizable
       size={{ width, height: '100%' }}
       onResizeStop={(_, direction, __, d) => {
-        widthSetter(width + d.width);
+        dispatch.uiState.sidePanelWidthSetter(width + d.width);
       }}>
       <SidePanelContainer>
         <SideControls controls={panelConfig[selectedButtonIndex]?.controls ?? []} />
