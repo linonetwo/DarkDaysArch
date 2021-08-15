@@ -1,8 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { SplitPane } from 'react-collapse-pane';
 import { ISideControl } from './interface';
 import { Button } from '@material-ui/core';
+import { useDispatch, useSelector } from 'react-redux';
+import { Dispatch, RootState } from 'src/store/store';
 
 const SideControlContainer = styled.div`
   height: 100%;
@@ -27,6 +30,10 @@ export interface ISideControlsProps {
 
 export function SideControls(props: ISideControlsProps): JSX.Element {
   const { t } = useTranslation();
+  const sideControlsSizes = useSelector((state: RootState) => state.uiState.sideControlsSizes[state.uiState.selectedButtonIndex]);
+  const sideControlsCollapses = useSelector((state: RootState) => state.uiState.sideControlsCollapses[state.uiState.selectedButtonIndex]);
+  const selectedButtonIndex = useSelector((state: RootState) => state.uiState.selectedButtonIndex);
+  const dispatch = useDispatch<Dispatch>();
   return (
     <SplitPane
       split="horizontal"
@@ -38,7 +45,13 @@ export function SideControls(props: ISideControlsProps): JSX.Element {
         buttonPositionOffset: -20,
         collapsedSize: 50,
         collapseTransitionTimeout: 350,
-      }}>
+      }}
+      hooks={{
+        onSaveSizes: (sizes: number[]) => dispatch.uiState.sideControlsSizesSetter({ id: selectedButtonIndex, sizes }),
+        onCollapse: (sizes: Array<number | null>) => dispatch.uiState.sideControlsCollapsesSetter({ id: selectedButtonIndex, sizes }),
+      }}
+      initialSizes={sideControlsSizes}
+      collapsedSizes={sideControlsCollapses}>
       {props.controls.map((controlConfig) => (
         <SideControlContainer key={controlConfig.id}>
           <SideControlTitle>{t(`Controls.${controlConfig.id}`)}</SideControlTitle>

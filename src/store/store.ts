@@ -3,6 +3,7 @@ import loadingPlugin, { ExtraModelsFromLoading } from '@rematch/loading';
 import immerPlugin from '@rematch/immer';
 import persistPlugin from '@rematch/persist';
 import storage from 'redux-persist/lib/storage';
+import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 
 import { models, RootModel } from './models';
 
@@ -15,6 +16,7 @@ export const store = init<RootModel, FullModel>({
     persistPlugin({
       key: 'root',
       storage,
+      stateReconciler: autoMergeLevel2,
       whitelist: ['uiState'],
     }),
   ],

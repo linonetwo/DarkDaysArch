@@ -1,4 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+import { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
+
+import { Dispatch, RootState } from 'src/store/store';
 import { ISidebarIconButton } from './interface';
 import { SidebarIconButton } from './SidebarIconButton';
 
@@ -30,24 +35,25 @@ const SidebarBottomItems = styled.div`
 export interface ISidebarProps {
   bottomButtons?: ISidebarIconButton[];
   buttons: ISidebarIconButton[];
-  onClickButton: (index: number) => void;
-  selectedButtonIndex: number;
 }
 
 export function Sidebar(props: ISidebarProps): JSX.Element {
+  const dispatch = useDispatch<Dispatch>();
+  const selectedButtonIndexSetter = useCallback((nextButtonIndex: number) => dispatch.uiState.selectedButtonIndexSetter(nextButtonIndex), [dispatch.uiState]);
+  const selectedButtonIndex = useSelector((state: RootState) => state.uiState.selectedButtonIndex);
   return (
     <SidebarContainer>
       {props.buttons.map((buttonConfig, index) => (
-        <SidebarIconButton onClick={() => props.onClickButton(index)} key={buttonConfig.id} {...buttonConfig} selected={props.selectedButtonIndex === index} />
+        <SidebarIconButton onClick={() => selectedButtonIndexSetter(index)} key={buttonConfig.id} {...buttonConfig} selected={selectedButtonIndex === index} />
       ))}
 
       <SidebarBottomItems>
         {props.bottomButtons?.map((buttonConfig, index) => (
           <SidebarIconButton
-            onClick={() => props.onClickButton(props.bottomButtons!.length + index)}
+            onClick={() => selectedButtonIndexSetter(props.bottomButtons!.length + index)}
             key={buttonConfig.id}
             {...buttonConfig}
-            selected={props.selectedButtonIndex === props.bottomButtons!.length + index}
+            selected={selectedButtonIndex === props.bottomButtons!.length + index}
           />
         ))}
       </SidebarBottomItems>

@@ -20,7 +20,6 @@ export function SidePanel(): JSX.Element {
   const dispatch = useDispatch<Dispatch>();
   const width = useSelector((state: RootState) => state.uiState.sidePanelWidth);
   const selectedButtonIndex = useSelector((state: RootState) => state.uiState.selectedButtonIndex);
-  const selectedButtonIndexSetter = useCallback((nextButtonIndex: number) => dispatch.uiState.selectedButtonIndexSetter(nextButtonIndex), [dispatch.uiState]);
 
   return (
     <Resizable
@@ -30,7 +29,7 @@ export function SidePanel(): JSX.Element {
       }}>
       <SidePanelContainer>
         <SideControls controls={panelConfig[selectedButtonIndex]?.controls ?? []} />
-        <Sidebar buttons={panelConfig.map(({ button }) => button)} onClickButton={selectedButtonIndexSetter} selectedButtonIndex={selectedButtonIndex} />
+        <Sidebar buttons={panelConfig.map(({ button }) => button)} />
       </SidePanelContainer>
     </Resizable>
   );
