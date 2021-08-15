@@ -54,6 +54,7 @@
     "i18next": "^20.4.0",
     "i18next-browser-languagedetector": "^6.1.2",
     "i18next-http-backend": "^1.3.0",
+    "immer": "^9.0.5",
     "lodash": "^4.17.21",
     "re-resizable": "^6.9.0",
     "react": "^17.0.2",
