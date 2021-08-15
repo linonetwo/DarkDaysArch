@@ -19,7 +19,6 @@ const SidePanelContainer = styled.div`
 export function SidePanel(): JSX.Element {
   const dispatch = useDispatch<Dispatch>();
   const width = useSelector((state: RootState) => state.uiState.sidePanelWidth);
-  const selectedButtonIndex = useSelector((state: RootState) => state.uiState.selectedButtonIndex);
 
   return (
     <Resizable
@@ -28,7 +27,9 @@ export function SidePanel(): JSX.Element {
         dispatch.uiState.sidePanelWidthSetter(width + d.width);
       }}>
       <SidePanelContainer>
-        <SideControls controls={panelConfig[selectedButtonIndex]?.controls ?? []} />
+        {panelConfig.map(({ controls }, index) => (
+          <SideControls key={index} controls={controls ?? []} id={index} />
+        ))}
         <Sidebar buttons={panelConfig.map(({ button }) => button)} />
       </SidePanelContainer>
     </Resizable>
