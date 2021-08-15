@@ -20,9 +20,7 @@ export async function initI18N(): Promise<void> {
     .init({
       debug: isDevelopment,
       interpolation: { escapeValue: false },
-      saveMissing: isDevelopment,
-      saveMissingTo: 'current',
-      fallbackLng: isDevelopment ? false : 'en',
+      fallbackLng: 'zh_CN',
       detection: {
         // order and from where user language should be detected
         order: ['querystring', 'cookie', 'localStorage', 'sessionStorage', 'navigator', 'htmlTag', 'path', 'subdomain'],
