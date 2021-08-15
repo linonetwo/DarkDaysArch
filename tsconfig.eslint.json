@@ -17,5 +17,5 @@
     "./*.json",
     "./*.js"
   ],
-  "exclude": ["src-tauri"]
+  "exclude": ["src-tauri", "craco.config.js"]
 }
