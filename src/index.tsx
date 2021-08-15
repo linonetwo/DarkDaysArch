@@ -1,14 +1,38 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import i18n from 'i18next';
+import { ThemeProvider } from 'styled-components';
+import StyledEngineProvider from '@material-ui/core/StyledEngineProvider';
+import DateFnsUtils from '@material-ui/lab/AdapterDateFns';
+import LocalizationProvider from '@material-ui/lab/LocalizationProvider';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import { I18nextProvider } from 'react-i18next';
+import 'typeface-roboto/index.css';
+
+import { initI18N } from './setup/i18n';
+
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { lightTheme } from './setup/defaultTheme';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <ThemeProvider theme={lightTheme}>
+      <StyledEngineProvider injectFirst>
+        <LocalizationProvider dateAdapter={DateFnsUtils}>
+          <CssBaseline />
+          <React.Suspense fallback={<div />}>
+            <I18nextProvider i18n={i18n}>
+              <App />
+            </I18nextProvider>
+          </React.Suspense>
+        </LocalizationProvider>
+      </StyledEngineProvider>
+    </ThemeProvider>
   </React.StrictMode>,
-  document.getElementById('root')
+  document.querySelector('#root'),
 );
+void initI18N();
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
