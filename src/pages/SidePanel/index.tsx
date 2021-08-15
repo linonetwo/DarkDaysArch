@@ -25,7 +25,7 @@ export function SidePanel(): JSX.Element {
       }}>
       <SidePanelContainer>
         <SideControls controls={panelConfig[selectedButtonIndex]?.controls ?? []} />
-        <Sidebar buttons={panelConfig.map(({ button }) => button)} onClickButton={selectedButtonIndexSetter} />
+        <Sidebar buttons={panelConfig.map(({ button }) => button)} onClickButton={selectedButtonIndexSetter} selectedButtonIndex={selectedButtonIndex} />
       </SidePanelContainer>
     </Resizable>
   );

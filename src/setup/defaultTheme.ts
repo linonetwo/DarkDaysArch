@@ -1,11 +1,22 @@
 import { merge, cloneDeep } from 'lodash';
-import { createMuiTheme, Theme } from '@material-ui/core';
+import { DefaultTheme } from 'styled-components';
+import { createMuiTheme } from '@material-ui/core';
 
-export const lightTheme: Theme = merge(cloneDeep(createMuiTheme()), {});
-export const darkTheme: Theme = merge(cloneDeep(createMuiTheme()), {
+const position = {
+  sideBarWidth: 40,
+};
+
+export const lightTheme: DefaultTheme = merge(cloneDeep(createMuiTheme()), {
   palette: {
-    background: {
-      default: '#212121',
-    },
+    background: { default: 'rgb(250, 250, 250)' },
+    border: { default: '1px solid #BBB' },
   },
+  position,
+});
+export const darkTheme: DefaultTheme = merge(cloneDeep(createMuiTheme()), {
+  palette: {
+    background: { default: '#212121' },
+    border: { default: '1px solid #666' },
+  },
+  position,
 });

@@ -1,12 +1,17 @@
-import { useTranslation } from 'react-i18next';
+import styled from 'styled-components';
+
 import { SidePanel } from './pages/SidePanel';
 
+const AppContainer = styled.div`
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+`;
+
 export default function App(): JSX.Element {
-  const { t } = useTranslation();
   return (
-    <div>
-      <header className="App-header">Hi {t('LinOnetwo')}</header>
+    <AppContainer>
       <SidePanel />
-    </div>
+    </AppContainer>
   );
 }
