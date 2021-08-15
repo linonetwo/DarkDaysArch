@@ -41,7 +41,7 @@ export function SideControls(props: ISideControlsProps): JSX.Element {
       }}>
       {props.controls.map((controlConfig) => (
         <SideControlContainer key={controlConfig.id}>
-          <SideControlTitle>{t(`Icons.${controlConfig.id}`)}</SideControlTitle>
+          <SideControlTitle>{t(`Controls.${controlConfig.id}`)}</SideControlTitle>
           {controlConfig.component}
         </SideControlContainer>
       ))}

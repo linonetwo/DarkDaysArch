@@ -2,5 +2,23 @@
   "LinOnetwo": "林一二",
   "Loading": "加载中",
   "Yes": "是的",
-  "No": "不了"
+  "No": "不了",
+  "Icons": {
+    "File": "文件",
+    "Item": "物品",
+    "Layer": "图层",
+    "Search": "搜索",
+    "Simulation": "搜索"
+  },
+  "Controls": {
+    "OpenedFiles": "已打开的文件",
+    "FileTree": "文件树",
+    "ItemHistory": "最近用过的物品",
+    "Layers": "地图上的图层",
+    "LayerHelp": "图层使用帮助",
+    "Search": "搜索",
+    "SearchHelp": "搜索使用帮助",
+    "SimulationParameter": "模拟参数",
+    "SimulationTools": "调试工具"
+  }
 }

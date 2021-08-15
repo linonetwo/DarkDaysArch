@@ -2,5 +2,23 @@
   "Loading": "Loading",
   "Yes": "Yes",
   "No": "No",
-  "LinOnetwo": "Lin Onetwo"
+  "LinOnetwo": "Lin Onetwo",
+  "Controls": {
+    "FileTree": "File tree",
+    "ItemHistory": "Recently used items",
+    "OpenedFiles": "Opened file",
+    "LayerHelp": "Help for using layers",
+    "Layers": "Layers on the map",
+    "Search": "search",
+    "SearchHelp": "Search and use help",
+    "SimulationParameter": "Simulation parameters",
+    "SimulationTools": "Debugging tools"
+  },
+  "Icons": {
+    "Layer": "Layer",
+    "Search": "search",
+    "File": "document",
+    "Item": "thing",
+    "Simulation": "search"
+  }
 }

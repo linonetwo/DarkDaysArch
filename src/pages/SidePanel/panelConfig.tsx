@@ -49,12 +49,12 @@ export const panelConfig: IPanelConfig[] = [
   },
   {
     button: {
-      icon: 'Games',
+      icon: 'SportsEsports',
       id: 'Simulation',
     },
     controls: [
-      { icon: 'Search', id: 'Search', component: <div>aaa</div> },
-      { icon: 'Help', id: 'SearchHelp', component: <div>bbb</div> },
+      { icon: 'Subscriptions', id: 'SimulationParameter', component: <div>aaa</div> },
+      { icon: 'SportsEsports', id: 'SimulationTools', component: <div>bbb</div> },
     ],
   },
 ];

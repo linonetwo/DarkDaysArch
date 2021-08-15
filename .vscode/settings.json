@@ -6,5 +6,6 @@
     "craco",
     "languagedetector",
     "typesync"
-  ]
+  ],
+  "i18n-ally.keystyle": "nested"
 }
