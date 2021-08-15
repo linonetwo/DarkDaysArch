@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/no-null */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import { useTranslation } from 'react-i18next';
 import styled, { css } from 'styled-components';
@@ -6,14 +7,9 @@ import { ISideControl } from './interface';
 import { Button } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { Dispatch, RootState } from 'src/store/store';
+import { isEqual } from 'lodash';
 
-const SideControlsContainer = styled.div<{ active: boolean }>`
-  ${({ active }) =>
-    !active &&
-    css`
-      display: none;
-    `}
-`;
+const SideControlsContainer = styled.div``;
 const ControlContainer = styled.div`
   height: 100%;
   /* react-collapse-pane will make SideControls position absolute so cover Sidebar, we have to add a margin left so they don't overlap */
@@ -36,17 +32,18 @@ export interface ISideControlsProps {
   id: number;
 }
 
-export function SideControls(props: ISideControlsProps): JSX.Element {
+export function SideControls(props: ISideControlsProps): JSX.Element | null {
   const { t } = useTranslation();
   const sideControlsSizes = useSelector((state: RootState) => state.uiState.sideControlsSizes[state.uiState.selectedButtonIndex]);
   const sideControlsCollapses = useSelector((state: RootState) => state.uiState.sideControlsCollapses[state.uiState.selectedButtonIndex]);
   const selectedButtonIndex = useSelector((state: RootState) => state.uiState.selectedButtonIndex);
   const dispatch = useDispatch<Dispatch>();
   const active = props.id === selectedButtonIndex;
-  // DEBUG: console
-  console.log(`sideControlsSizes`, sideControlsSizes);
+  if (!active) {
+    return null;
+  }
   return (
-    <SideControlsContainer active={active}>
+    <SideControlsContainer>
       <SplitPane
         split="horizontal"
         collapse={{

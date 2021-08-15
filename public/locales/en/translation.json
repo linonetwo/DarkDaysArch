@@ -6,6 +6,7 @@
   "Controls": {
     "FileTree": "File tree",
     "ItemHistory": "Recently used items",
+    "ItemList": "Item List",
     "OpenedFiles": "Opened file",
     "LayerHelp": "Help for using layers",
     "Layers": "Layers on the map",

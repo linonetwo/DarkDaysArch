@@ -13,20 +13,6 @@ interface IUIState {
   sidePanelWidth: number;
 }
 
-const arrayEquals = (a?: Array<number | null>, b?: Array<number | null>): boolean => {
-  if ((a === undefined && b !== undefined) || (a !== undefined && b === undefined)) {
-    return false;
-  }
-  if (a === undefined && b === undefined) {
-    return true;
-  }
-  let equal = a?.length === b?.length;
-  if (!equal) return false;
-  a!.forEach((item, index) => {
-    equal = equal && item === b![index];
-  });
-  return equal;
-};
 /**
  * 管理边栏UI的状态
  */
@@ -38,15 +24,11 @@ export const uiState = createModel<RootModel>()({
       return state;
     },
     sideControlsCollapsesSetter(state, payload: { id: number; sizes: Array<number | null> }) {
-      if (!arrayEquals(state.sideControlsCollapses[payload.id], payload.sizes)) {
-        state.sideControlsCollapses[payload.id] = payload.sizes;
-      }
+      state.sideControlsCollapses[payload.id] = payload.sizes;
       return state;
     },
     sideControlsSizesSetter(state, payload: { id: number; sizes: number[] }) {
-      if (!arrayEquals(state.sideControlsSizes[payload.id], payload.sizes)) {
-        state.sideControlsSizes[payload.id] = payload.sizes;
-      }
+      state.sideControlsSizes[payload.id] = payload.sizes;
       return state;
     },
     sidePanelWidthSetter(state, sidePanelWidth: number) {
