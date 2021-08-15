@@ -5,7 +5,7 @@
   },
   "build": {
     "distDir": "../build",
-    "devPath": "http://localhost:3000",
+    "devPath": "http://localhost:3000?lng=zh_CN",
     "beforeDevCommand": "npm run ui:start",
     "beforeBuildCommand": "npm run ui:build"
   },
