@@ -6,10 +6,10 @@ import { Button } from '@material-ui/core';
 
 const SideControlContainer = styled.div`
   height: 100%;
-  width: 300px;
-
   /* react-collapse-pane will make SideControls position absolute so cover Sidebar, we have to add a margin left so they don't overlap */
   margin-left: ${(props) => props.theme.position.sideBarWidth}px;
+  /** and we delete that margin from width (100% of absolute react-collapse-pane) */
+  width: calc(100% - ${(props) => props.theme.position.sideBarWidth}px);
 
   background-color: ${(props) => props.theme.palette.background.default};
   border-right: ${(props) => props.theme.palette.border.default};
