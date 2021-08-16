@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import { useState, useCallback, MouseEvent, KeyboardEvent } from 'react';
 import styled from 'styled-components';
 import { Stage } from 'react-pixi-fiber';
 import { Provider, useDispatch } from 'react-redux';
@@ -14,7 +14,7 @@ const containerID = 'game-container';
 export default function World(): JSX.Element {
   const dispatch = useDispatch<Dispatch>();
   const setMousePosition = useCallback(
-    (event: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
+    (event: MouseEvent<HTMLCanvasElement>) => {
       if (typeof event.clientX === 'number' && typeof event.clientY === 'number') {
         dispatch.cameraMouse.mouseMoveTo({ x: event.clientX, y: event.clientY });
       }
@@ -24,7 +24,7 @@ export default function World(): JSX.Element {
   const [contextMenuIsOpen, contextMenuIsOpenSetter] = useState(false);
 
   const handleKeyDownEvent = useCallback(
-    (event: React.KeyboardEvent<HTMLCanvasElement>) => {
+    (event: KeyboardEvent<HTMLCanvasElement>) => {
       switch (event.key) {
         case 'w':
           dispatch.cameraMouse.cameraMove({ direction: Direction.up });
@@ -54,7 +54,7 @@ export default function World(): JSX.Element {
         }}
         onKeyDown={handleKeyDownEvent}
         onMouseMove={setMousePosition}
-        onContextMenu={(event: MouseEvent) => {
+        onContextMenu={(event: MouseEvent<HTMLCanvasElement>) => {
           event.preventDefault();
           // reopen the menu to refresh its props
           contextMenuIsOpenSetter(false);
