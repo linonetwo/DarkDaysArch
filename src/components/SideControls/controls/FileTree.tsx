@@ -13,7 +13,7 @@ const FileForestContainer = styled.div`
 `;
 const FileTreeContainer = styled.div`
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 `;
