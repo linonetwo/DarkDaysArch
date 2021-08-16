@@ -21,5 +21,9 @@
     "SearchHelp": "搜索使用帮助",
     "SimulationParameter": "模拟参数",
     "SimulationTools": "调试工具"
+  },
+  "Details": {
+    "NoActiveFile": "没有打开的文件",
+    "ActiveFileIsEmpty": "打开的文件内容为空"
   }
 }

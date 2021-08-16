@@ -21,5 +21,9 @@
     "File": "document",
     "Item": "thing",
     "Simulation": "search"
+  },
+  "Details": {
+    "NoActiveFile": "No Active File",
+    "ActiveFileIsEmpty": "Active File Is Empty"
   }
 }

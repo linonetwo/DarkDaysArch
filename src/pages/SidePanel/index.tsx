@@ -9,7 +9,19 @@ import { SideControls } from '../../components/SideControls';
 import { panelConfig } from './panelConfig';
 import { Dispatch, RootState } from '../../store/store';
 
+const Container = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+`;
 const SidePanelContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+`;
+const DetailContainer = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
@@ -19,19 +31,23 @@ const SidePanelContainer = styled.div`
 export function SidePanel(): JSX.Element {
   const dispatch = useDispatch<Dispatch>();
   const width = useSelector((state: RootState) => state.uiState.sidePanelWidth);
+  const selectedButtonIndex = useSelector((state: RootState) => state.uiState.selectedButtonIndex);
 
   return (
-    <Resizable
-      size={{ width, height: '100%' }}
-      onResizeStop={(_, direction, __, d) => {
-        dispatch.uiState.sidePanelWidthSetter(width + d.width);
-      }}>
-      <SidePanelContainer>
-        {panelConfig.map(({ controls }, index) => (
-          <SideControls key={index} controls={controls ?? []} id={index} />
-        ))}
-        <Sidebar buttons={panelConfig.map(({ button }) => button)} />
-      </SidePanelContainer>
-    </Resizable>
+    <Container>
+      <Resizable
+        size={{ width, height: '100%' }}
+        onResizeStop={(_, direction, __, d) => {
+          dispatch.uiState.sidePanelWidthSetter(width + d.width);
+        }}>
+        <SidePanelContainer>
+          {panelConfig.map(({ controls }, index) => (
+            <SideControls key={index} controls={controls ?? []} id={index} />
+          ))}
+          <Sidebar buttons={panelConfig.map(({ button }) => button)} />
+        </SidePanelContainer>
+      </Resizable>
+      <DetailContainer>{panelConfig[selectedButtonIndex]?.detail}</DetailContainer>
+    </Container>
   );
 }

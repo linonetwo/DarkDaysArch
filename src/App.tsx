@@ -18,7 +18,9 @@ export default function App(): JSX.Element {
   // TODO: debug code, load example file
   useEffect(() => {
     void dispatch.files.popDialogAndLoadFileTree();
-    void dispatch.files.loadFile('magic_academy.json');
+    void dispatch.files.loadFile('magic_academy.json').then(() => {
+      dispatch.files.selectFile('magic_academy.json');
+    });
   }, []);
   return (
     <AppContainer>

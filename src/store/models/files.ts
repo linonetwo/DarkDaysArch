@@ -10,11 +10,11 @@ export interface IFileTree {
   /** 文件或文件夹的完整路径 */
   path: string;
 }
-export interface IOpenedFiles {
+export interface IOpenedFile {
   /**
    * 文件内容，可以是字符串或者 JSON 对象等
    */
-  content: string | any;
+  content: string;
   path: string;
 }
 export enum GameFileType {
@@ -25,20 +25,20 @@ export enum GameFileType {
 
 interface IMapsState {
   /** 当前选中在编辑的文件 */
-  activeOpenedFile?: string;
+  activeOpenedFilePath?: string;
   /** 打开的几个工作区，可以查看里面的文件内容 */
   fileTrees: IFileTree[];
-  openedFiles: IOpenedFiles[];
+  openedFiles: IOpenedFile[];
 }
 
 /**
  * 管理当前打开的地图文件、Mod资源等
  */
 export const files = createModel<RootModel>()({
-  state: { activeOpenedFile: undefined, fileTrees: [], openedFiles: [] } as IMapsState,
+  state: { activeOpenedFilePath: undefined, fileTrees: [], openedFiles: [] } as IMapsState,
   reducers: {
     selectFile(state, selectedFilePath?: string) {
-      state.activeOpenedFile = selectedFilePath;
+      state.activeOpenedFilePath = selectedFilePath;
       return state;
     },
     addNewFileTree(state, newFileTree: IFileTree) {
@@ -56,7 +56,7 @@ export const files = createModel<RootModel>()({
       state.fileTrees.splice(fileTreeIndex, 1);
       return state;
     },
-    addNewOpenedFiles(state, newOpenedFile: IOpenedFiles) {
+    addNewOpenedFiles(state, newOpenedFile: IOpenedFile) {
       const existedIndex = state.openedFiles.findIndex((openedFiles) => openedFiles.path === newOpenedFile.path);
       // existed, update it
       if (existedIndex >= 0) {
@@ -87,7 +87,7 @@ export const files = createModel<RootModel>()({
       try {
         // eslint-disable-next-line @typescript-eslint/await-thenable
         const content = await import('./magic_academy.json');
-        const newFile = { path: filePath, content };
+        const newFile = { path: filePath, content: JSON.stringify(content, undefined, '  ') };
         // TODO: call tauri dialog api
         dispatch.files.addNewOpenedFiles(newFile);
       } catch (error) {
