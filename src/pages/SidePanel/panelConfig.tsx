@@ -1,5 +1,6 @@
-import { ISidebarIconButton } from '../../components/Sidebar/interface';
-import { ISideControl } from '../../components/SideControls/interface';
+import { ISidebarIconButton } from 'src/components/Sidebar/interface';
+import { ISideControl } from 'src/components/SideControls/interface';
+import { FileTree, OpenedFiles } from 'src/components/SideControls/controls';
 
 export interface IPanelConfig {
   button: ISidebarIconButton;
@@ -13,8 +14,8 @@ export const panelConfig: IPanelConfig[] = [
       id: 'File',
     },
     controls: [
-      { icon: 'List', id: 'OpenedFiles', component: <div>aaa</div> },
-      { icon: 'AccountTree', id: 'FileTree', component: <div>bbb</div> },
+      { icon: 'List', id: 'OpenedFiles', component: <OpenedFiles /> },
+      { icon: 'AccountTree', id: 'FileTree', component: <FileTree /> },
     ],
   },
   {

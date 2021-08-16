@@ -1,0 +1,51 @@
+import styled from 'styled-components';
+import { useDispatch, useSelector } from 'react-redux';
+import { TreeView, TreeItem } from '@material-ui/lab';
+import { ExpandMore as ExpandMoreIcon, ChevronRight as ChevronRightIcon } from '@material-ui/icons';
+
+import { Dispatch, RootState } from 'src/store/store';
+
+const FileForestContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+`;
+const FileTreeContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+`;
+const FileTreeTitle = styled.h3``;
+
+export function FileTree(): JSX.Element {
+  const dispatch = useDispatch<Dispatch>();
+  const fileTrees = useSelector((state: RootState) => state.files.fileTrees);
+
+  return (
+    <FileForestContainer>
+      {fileTrees.map((fileTree) => (
+        <FileTreeContainer key={fileTree.path}>
+          <FileTreeTitle>{fileTree.path}</FileTreeTitle>
+          <TreeView defaultCollapseIcon={<ExpandMoreIcon />} defaultExpandIcon={<ChevronRightIcon />}>
+            <TreeItem nodeId="1" label="Applications">
+              <TreeItem nodeId="2" label="Calendar" />
+              <TreeItem nodeId="3" label="Chrome" />
+              <TreeItem nodeId="4" label="Webstorm" />
+            </TreeItem>
+            <TreeItem nodeId="5" label="Documents">
+              <TreeItem nodeId="10" label="OSS" />
+              <TreeItem nodeId="6" label="Material-UI">
+                <TreeItem nodeId="7" label="src">
+                  <TreeItem nodeId="8" label="index.js" />
+                  <TreeItem nodeId="9" label="tree-view.js" />
+                </TreeItem>
+              </TreeItem>
+            </TreeItem>
+          </TreeView>
+        </FileTreeContainer>
+      ))}
+    </FileForestContainer>
+  );
+}

@@ -1,13 +1,12 @@
 /* eslint-disable unicorn/no-null */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import { useTranslation } from 'react-i18next';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { SplitPane } from 'react-collapse-pane';
 import { ISideControl } from './interface';
 import { Button } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { Dispatch, RootState } from 'src/store/store';
-import { isEqual } from 'lodash';
 
 const SideControlsContainer = styled.div``;
 const ControlContainer = styled.div`
