@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 
+import './globalStyles';
+
 import { SidePanel } from './pages/SidePanel';
 
 const AppContainer = styled.div`
