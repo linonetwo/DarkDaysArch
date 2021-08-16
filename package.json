@@ -56,6 +56,7 @@
     "i18next-http-backend": "^1.3.0",
     "immer": "^9.0.5",
     "lodash": "^4.17.21",
+    "pixi.js": "^6.1.2",
     "re-resizable": "^6.9.0",
     "react": "^17.0.2",
     "react-collapse-pane": "^2.0.1",

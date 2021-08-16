@@ -1,25 +1,32 @@
-import React from 'react';
-import { Sprite, Container, Text } from 'react-pixi-fiber';
-import * as PIXI from 'pixi.js';
+import React, { useEffect, useState } from 'react';
+import { TilingSprite, Container, Text } from 'react-pixi-fiber';
+import { Loader, Texture, Point } from 'pixi.js';
 
-import { tileWidthHeight } from '../../../constants/math';
-import { resources } from '../../../utils/resourcePool';
+const tileWidthHeight = 50;
 
-const centerAnchor = new PIXI.Point(0.5, 0.5);
+const centerAnchor = new Point(0.5, 0.5);
 
-export type IPawnProps = {
-  texture: string;
+export interface IPawnProps {
+  textureName: string;
   x: number;
   y: number;
-};
+}
 
 export default React.memo(function Tile(props: IPawnProps): JSX.Element {
-  const tileTexture = resources.getTexture(props.texture);
-  if (!tileTexture) return <Text text={`No Tile Texture "${props.texture}"`} x={0} y={0} />;
+  const [tileTexture, tileTextureSetter] = useState<Texture | undefined>();
+  useEffect(() => {
+    Loader.shared.load((loader, resources) => {
+      const { texture } = resources[props.textureName];
+      if (texture !== undefined) {
+        tileTextureSetter(texture);
+      }
+    });
+  });
+  if (tileTexture === undefined) return <Text text={`No Tile Texture "${props.textureName}"`} x={0} y={0} />;
 
   return (
     <Container>
-      <Sprite width={tileWidthHeight} height={tileWidthHeight} anchor={centerAnchor} x={props.x} y={props.y} texture={tileTexture} />
+      <TilingSprite width={tileWidthHeight} height={tileWidthHeight} anchor={centerAnchor} x={props.x} y={props.y} texture={tileTexture} />
     </Container>
   );
 });
