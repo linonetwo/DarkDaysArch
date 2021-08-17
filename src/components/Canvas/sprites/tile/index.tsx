@@ -12,6 +12,13 @@ export interface IPawnProps {
   y: number;
 }
 
+function getTileColumnRow(id: number, idStart: number, totalColumns: number): { column: number; row: number } {
+  const actualID = id - idStart;
+  const column = actualID % totalColumns;
+  const row = Math.floor(actualID / totalColumns);
+  return { column, row };
+}
+
 export default React.memo(function Tile(props: IPawnProps): JSX.Element {
   const [tileTexture, tileTextureSetter] = useState<Texture | undefined>();
   const [tileWidthHeight, tileWidthHeightSetter] = useState<[number, number]>([100, 100]);
@@ -39,14 +46,14 @@ export default React.memo(function Tile(props: IPawnProps): JSX.Element {
             let fgColumn = 0;
             let fgRow = 0;
             if (typeof tileToRender?.bg === 'number') {
-              const actualBgID = tileToRender.bg - idStart;
-              bgColumn = actualBgID % totalColumns;
-              bgRow = Math.floor(actualBgID / totalColumns);
+              const xy = getTileColumnRow(tileToRender.bg, idStart, totalColumns);
+              bgColumn = xy.column;
+              bgRow = xy.row;
             }
             if (typeof tileToRender?.fg === 'number') {
-              const actualBgID = tileToRender.fg - idStart;
-              fgColumn = actualBgID % totalColumns;
-              fgRow = Math.floor(actualBgID / totalColumns);
+              const xy = getTileColumnRow(tileToRender.fg, idStart, totalColumns);
+              fgColumn = xy.column;
+              fgRow = xy.row;
             }
             // origin start at top-left, so going right-down, we have to provide negative value
             bgTilePositionSetter({ x: -tileWidth * bgColumn, y: -tileHeight * bgRow });
