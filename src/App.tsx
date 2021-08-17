@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
+import { Loader } from 'pixi.js';
 
 import './globalStyles';
 
@@ -30,6 +31,10 @@ export default function App(): JSX.Element {
     void dispatch.files.loadFile('magic_academy.json').then(() => {
       dispatch.files.selectFile('magic_academy.json');
     });
+  }, []);
+  useEffect(() => {
+    Loader.shared.add('assets/ChibiUltica/normal.png');
+    Loader.shared.add('assets/ChibiUltica/tile_config.json');
   }, []);
   const selectedButtonIndex = useSelector((state: RootState) => state.uiState.selectedButtonIndex);
 

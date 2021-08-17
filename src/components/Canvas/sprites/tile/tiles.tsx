@@ -5,7 +5,10 @@ export default function Tiles(): JSX.Element {
   //   const { x, y, texture } = props.components[0];
   //   return <Tile x={x} y={y} textureName={texture} />;
   // });
-  const tiles = [null];
 
-  return <>{tiles}</>;
+  return (
+    <>
+      <Tile x={100} y={0} textureName={'assets/ChibiUltica/normal.png'} />
+    </>
+  );
 }
