@@ -1,16 +1,25 @@
 import { useEffect } from 'react';
 import styled from 'styled-components';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import './globalStyles';
 
-import { Dispatch } from 'src/store/store';
+import { Dispatch, RootState } from 'src/store/store';
 import { SidePanel } from './pages/SidePanel';
+import { panelConfig } from './pages/SidePanel/panelConfig';
 
 const AppContainer = styled.div`
   width: 100vw;
   height: 100vh;
   overflow: hidden;
+  display: flex;
+  flex-direction: row;
+`;
+const DetailContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
 `;
 
 export default function App(): JSX.Element {
@@ -22,9 +31,12 @@ export default function App(): JSX.Element {
       dispatch.files.selectFile('magic_academy.json');
     });
   }, []);
+  const selectedButtonIndex = useSelector((state: RootState) => state.uiState.selectedButtonIndex);
+
   return (
     <AppContainer>
       <SidePanel />
+      <DetailContainer>{panelConfig[selectedButtonIndex]?.detail}</DetailContainer>
     </AppContainer>
   );
 }

@@ -1,8 +1,9 @@
+import { ReactChild, ReactFragment } from 'react';
 import { ISidebarIconButton } from 'src/components/Sidebar/interface';
 import { ISideControl } from 'src/components/SideControls/interface';
 import { FileTree, OpenedFiles } from 'src/components/SideControls/controls';
-import { ReactChild, ReactFragment } from 'react';
 import { SourceFileViewer } from 'src/components/Details';
+import { World } from 'src/components/Canvas';
 
 export interface IPanelConfig {
   /** 左侧的竖着的按钮列表 */
@@ -34,7 +35,7 @@ export const panelConfig: IPanelConfig[] = [
       { icon: 'History', id: 'ItemHistory', component: <div>aaa</div> },
       { icon: 'EmojiSymbols', id: 'ItemList', component: <div>bbb</div> },
     ],
-    detail: <div>ccc</div>,
+    detail: <World />,
   },
   {
     button: {

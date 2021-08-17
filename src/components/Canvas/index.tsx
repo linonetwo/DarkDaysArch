@@ -1,17 +1,17 @@
-import { useState, useCallback, MouseEvent, KeyboardEvent } from 'react';
+import { useState, useCallback, MouseEvent, KeyboardEvent, useMemo } from 'react';
 import styled from 'styled-components';
 import { Stage } from 'react-pixi-fiber';
-import { Provider, useDispatch } from 'react-redux';
+import { Provider, useDispatch, useSelector } from 'react-redux';
 import ContextMenu from '../ContextMenu';
 import Tiles from './sprites/tile/tiles';
 import { Direction } from 'src/store/models/cameraMouse';
-import { Dispatch, store } from 'src/store/store';
+import { Dispatch, RootState, store } from 'src/store/store';
 
 const Container = styled.main``;
 
 const containerID = 'game-container';
 
-export default function World(): JSX.Element {
+export function World(): JSX.Element {
   const dispatch = useDispatch<Dispatch>();
   const setMousePosition = useCallback(
     (event: MouseEvent<HTMLCanvasElement>) => {
@@ -37,6 +37,9 @@ export default function World(): JSX.Element {
     [dispatch],
   );
 
+  const sidePanelWidth = useSelector((state: RootState) => state.uiState.sidePanelWidth);
+  const actualWidth = useMemo(() => window.innerWidth - sidePanelWidth, [sidePanelWidth]);
+
   return (
     <Container id={containerID}>
       <Stage
@@ -46,11 +49,11 @@ export default function World(): JSX.Element {
           y: 0,
         }}
         // center the camera
-        position={{ x: window.innerWidth / 2, y: window.innerHeight / 2 }}
+        position={{ x: actualWidth / 2, y: window.innerHeight / 2 }}
         options={{
           backgroundColor: 0x10_bb_99,
           height: window.innerHeight,
-          width: window.innerWidth,
+          width: actualWidth,
         }}
         onKeyDown={handleKeyDownEvent}
         onMouseMove={setMousePosition}
