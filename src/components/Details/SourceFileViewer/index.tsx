@@ -16,5 +16,5 @@ export function SourceFileViewer(): JSX.Element {
   if (activeOpenedFile.content === undefined) {
     return <NoActiveFileInfo>{t('Details.ActiveFileIsEmpty')}</NoActiveFileInfo>;
   }
-  return <Editor height="90vh" defaultLanguage="json" defaultValue={activeOpenedFile.content} />;
+  return <Editor height="100vh" defaultLanguage="json" defaultValue={activeOpenedFile.content} />;
 }
