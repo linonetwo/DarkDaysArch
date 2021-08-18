@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { TilingSprite, Container, Text } from 'react-pixi-fiber';
-import { Loader, Texture, Point } from 'pixi.js';
+import { Sprite, Container, Text } from 'react-pixi-fiber';
+import { Loader, Texture, Point, Rectangle, SCALE_MODES } from 'pixi.js';
 
 import { CDDATileSetConfig } from 'src/types/tileset';
 
@@ -20,16 +20,14 @@ function getTileColumnRow(id: number, idStart: number, totalColumns: number): { 
 }
 
 export default React.memo(function Tile(props: IPawnProps): JSX.Element {
-  const [tileTexture, tileTextureSetter] = useState<Texture | undefined>();
+  const [fgTileTexture, fgTileTextureSetter] = useState<Texture | undefined>();
+  const [bgTileTexture, bgTileTextureSetter] = useState<Texture | undefined>();
   const [tileWidthHeight, tileWidthHeightSetter] = useState<[number, number]>([100, 100]);
-  const [bgTilePosition, bgTilePositionSetter] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
-  const [fgTilePosition, fgTilePositionSetter] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const tileID = 'ranch_camp_17';
   useEffect(() => {
     Loader.shared.load((loader, resources) => {
-      const { texture } = resources[props.textureName] ?? {};
-      if (texture !== undefined) {
-        tileTextureSetter(texture);
+      const { texture: tileSetTexture } = resources[props.textureName] ?? {};
+      if (tileSetTexture !== undefined) {
         const tileSetData = resources['assets/ChibiUltica/tile_config.json']?.data as CDDATileSetConfig | undefined;
         if (tileSetData !== undefined) {
           const tileSubSetData = tileSetData['tiles-new'].find((item) => props.textureName.endsWith(item.file));
@@ -38,7 +36,7 @@ export default React.memo(function Tile(props: IPawnProps): JSX.Element {
             const tileHeight = tileSubSetData.sprite_height ?? tileSetData.tile_info[0].height;
             tileWidthHeightSetter([tileWidth, tileHeight]);
             const tileToRender = tileSubSetData.tiles.find((tile) => tile.id === tileID);
-            const totalColumns = texture.orig.width / tileWidth;
+            const totalColumns = tileSetTexture.orig.width / tileWidth;
             const [, idStartString] = /range (\d+) to (\d+)/.exec(tileSubSetData?.['//'] ?? '') ?? [];
             const idStart = Number(idStartString);
             let bgColumn = 0;
@@ -56,38 +54,45 @@ export default React.memo(function Tile(props: IPawnProps): JSX.Element {
               fgRow = xy.row;
             }
             // origin start at top-left, so going right-down, we have to provide negative value
-            bgTilePositionSetter({ x: -tileWidth * bgColumn, y: -tileHeight * bgRow });
-            fgTilePositionSetter({ x: -tileWidth * fgColumn, y: -tileHeight * fgRow });
+            const fgX = tileWidth * bgColumn;
+            const fgY = tileHeight * bgRow;
+            const bgX = tileWidth * fgColumn;
+            const bgY = tileHeight * fgRow;
+            // TODO: init texture in a pool
+            const newFgTileTexture = new Texture(tileSetTexture.baseTexture, new Rectangle(fgX, fgY, tileWidth, tileHeight));
+            const newBgTileTexture = new Texture(tileSetTexture.baseTexture, new Rectangle(bgX, bgY, tileWidth, tileHeight));
+            newFgTileTexture.baseTexture.scaleMode = SCALE_MODES.NEAREST;
+            newBgTileTexture.baseTexture.scaleMode = SCALE_MODES.NEAREST;
+            fgTileTextureSetter(newFgTileTexture);
+            bgTileTextureSetter(newBgTileTexture);
           }
         }
       }
     });
   }, []);
-  if (tileTexture === undefined) return <Text text={`No Tile Texture "${props.textureName}"`} x={0} y={0} />;
+  if (fgTileTexture === undefined && bgTileTexture === undefined) return <Text text={`No Tile Texture "${props.textureName}"`} x={0} y={0} />;
 
   return (
     <Container>
-      <TilingSprite
+      <Sprite
         width={tileWidthHeight[0]}
         height={tileWidthHeight[1]}
         anchor={centerAnchor}
-        tilePosition={bgTilePosition}
         interactive
         x={props.x}
         y={props.y}
         cursor="pointer"
-        texture={tileTexture}
+        texture={fgTileTexture}
       />
-      <TilingSprite
+      <Sprite
         width={tileWidthHeight[0]}
         height={tileWidthHeight[1]}
         anchor={centerAnchor}
-        tilePosition={fgTilePosition}
         interactive
         x={props.x}
         y={props.y}
         cursor="pointer"
-        texture={tileTexture}
+        texture={bgTileTexture}
       />
     </Container>
   );
