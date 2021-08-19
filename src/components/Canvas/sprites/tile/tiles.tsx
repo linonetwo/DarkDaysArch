@@ -8,7 +8,7 @@ export default function Tiles(): JSX.Element {
 
   return (
     <>
-      <Tile x={100} y={0} textureName={'assets/ChibiUltica/normal.png'} />
+      <Tile x={100} y={0} tileName={'ranch_camp_17'} />
     </>
   );
 }

@@ -6,6 +6,7 @@
     "PIXI",
     "craco",
     "languagedetector",
+    "tileset",
     "typesync"
   ],
   "i18n-ally.keystyle": "nested"

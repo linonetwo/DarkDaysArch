@@ -12,9 +12,12 @@ interface ITileSetTileInfo {
   width: number;
 }
 
-type imageID = number | number[] | Array<{ spirit: number; weight: number }>;
+export type TileLayers = 'fg' | 'bg';
 
-interface ITileSetTile {
+export type ITileRandomSpriteDesc = Array<{ spirit: number; weight: number }>;
+type imageID = number | number[] | ITileRandomSpriteDesc;
+
+export interface ITileSetTile {
   '//'?: string;
   additional_tiles?: ITileSetAdditionalTile[];
   animated?: boolean;
@@ -25,7 +28,7 @@ interface ITileSetTile {
   rotates?: boolean;
 }
 
-interface ITileSetTilesNew {
+export interface ITileSetTilesNew {
   '//'?: string;
   ascii?: ITileSetAscii[];
   file: string;
