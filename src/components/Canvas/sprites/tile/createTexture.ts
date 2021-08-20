@@ -10,6 +10,13 @@ export interface ITileContext {
   tileSubSetData: ITileSetTilesNew;
 }
 
+/**
+ * Calculate single tile texture column and row in the tileset large png texture
+ * @param id
+ * @param idStart
+ * @param totalColumns
+ * @returns
+ */
 function getTileColumnRow(id: number, idStart: number, totalColumns: number): { column: number; row: number } {
   const actualID = id - idStart;
   const column = actualID % totalColumns;
@@ -28,6 +35,12 @@ interface INewTileOptions {
   totalColumns: number;
 }
 
+/**
+ * Get single tile texture from tileset large png texture
+ * @param baseTexture
+ * @param newTileOptions
+ * @returns
+ */
 function createTileTextureFromBaseTexture(baseTexture: BaseTexture, newTileOptions: INewTileOptions): Texture {
   const { tileID, idStart, totalColumns, tileWidth, tileHeight, direction, layer, tileName } = newTileOptions;
   const xy = getTileColumnRow(tileID, idStart, totalColumns);
@@ -38,6 +51,11 @@ function createTileTextureFromBaseTexture(baseTexture: BaseTexture, newTileOptio
   return newTileTexture;
 }
 
+/**
+ * Pick random sprite for one of the CDDA tile config structure
+ * @param tileSpriteDesc
+ * @returns
+ */
 function pickRandomTextureForTile(tileSpriteDesc: ITileRandomSpriteDesc): number {
   const weightCount = tileSpriteDesc.reduce((previous, current) => previous + current.weight, 0);
   let randomSpriteIndex = Math.floor(Math.random() * weightCount);
@@ -50,7 +68,7 @@ function pickRandomTextureForTile(tileSpriteDesc: ITileRandomSpriteDesc): number
   return tileSpriteDesc.length - 1;
 }
 
-export interface INewTileOptions1 {
+export interface ICreateTileOptions {
   idStart: number;
   tileHeight: number;
   tileToRender: ITileSetTile | undefined;
@@ -58,7 +76,14 @@ export interface INewTileOptions1 {
   totalColumns: number;
 }
 
-export function getNewTileOptions(tileName: string, tileSetTexture: Texture, context: ITileContext): INewTileOptions1 {
+/**
+ * Get options for `createTileTextures`
+ * @param tileName
+ * @param tileSetTexture
+ * @param context
+ * @returns
+ */
+export function getNewTileOptions(tileName: string, tileSetTexture: Texture, context: ITileContext): ICreateTileOptions {
   const { tileSetData, tileSubSetData } = context;
   const tileWidth = tileSubSetData.sprite_width ?? tileSetData.tile_info[0].width;
   const tileHeight = tileSubSetData.sprite_height ?? tileSetData.tile_info[0].height;
@@ -78,11 +103,19 @@ export function getNewTileOptions(tileName: string, tileSetTexture: Texture, con
   };
 }
 
+/**
+ * call `createTileTextureFromBaseTexture`, create texture in 3 different ways, adapt CDDA 's tileset JSON structure
+ * @param tileName
+ * @param tileSetTexture
+ * @param layer
+ * @param context
+ * @returns
+ */
 export function createTileTextures(
   tileName: string,
   tileSetTexture: Texture,
   layer: TileLayers,
-  context: { direction?: Direction } & INewTileOptions1,
+  context: { direction?: Direction } & ICreateTileOptions,
 ): Texture {
   const { direction, tileWidth, tileHeight, tileToRender, totalColumns, idStart } = context;
 
