@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { Loader } from 'pixi.js';
+import { invoke } from '@tauri-apps/api';
 
 import './globalStyles';
 
@@ -33,9 +34,14 @@ export default function App(): JSX.Element {
     });
   }, []);
   useEffect(() => {
-    Loader.shared.add('assets/ChibiUltica/normal.png');
-    Loader.shared.add('assets/ChibiUltica/tile_config.json');
+    try {
+      Loader.shared.add('assets/ChibiUltica/normal.png');
+      Loader.shared.add('assets/ChibiUltica/tile_config.json');
+    } catch {}
   }, []);
+  useEffect(() => {
+    void invoke('read_tileset_folder', { pathName: '/Users/linonetwo/Desktop/repo/DarkDaysArch/public/assets/ChibiUltica' }).then(console.log);
+  });
   const selectedButtonIndex = useSelector((state: RootState) => state.uiState.selectedButtonIndex);
 
   return (
