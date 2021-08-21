@@ -1,5 +1,6 @@
 use serde;
 use serde::{Deserialize, Serialize};
+use std::collections::BTreeMap;
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -9,6 +10,7 @@ use serde::{Deserialize, Serialize};
 pub struct CDDATileSetConfigWithCache {
   #[serde(rename = "raw_config")]
   pub raw_config: CDDATileSetConfig,
+  pub textures: BTreeMap<String, String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]

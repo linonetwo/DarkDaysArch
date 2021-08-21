@@ -1,4 +1,5 @@
 use glob::glob;
+use std::collections::BTreeMap;
 use std::fs::File;
 use std::io::Read;
 
@@ -30,8 +31,11 @@ pub fn read_tileset_folder(path_name: &str) -> tileset_json::CDDATileSetConfigWi
     .unwrap();
   let raw_tile_config: tileset_json::CDDATileSetConfig =
     serde_json::from_str(&raw_tile_config_string).unwrap();
+  let mut textures: BTreeMap<String, String> = BTreeMap::new();
+  textures.insert("aaa".to_string(), "bbb".to_string());
   let raw_config = tileset_json::CDDATileSetConfigWithCache {
     raw_config: raw_tile_config,
+    textures: textures,
   };
   raw_config
 }

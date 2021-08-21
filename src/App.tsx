@@ -34,13 +34,17 @@ export default function App(): JSX.Element {
     });
   }, []);
   useEffect(() => {
+    // prevent resource is already loaded when dev hot reload
     try {
       Loader.shared.add('assets/ChibiUltica/normal.png');
       Loader.shared.add('assets/ChibiUltica/tile_config.json');
     } catch {}
   }, []);
   useEffect(() => {
-    void invoke('read_tileset_folder', { pathName: '/Users/linonetwo/Desktop/repo/DarkDaysArch/public/assets/ChibiUltica' }).then(console.log);
+    // prevent Unhandled Rejection (TypeError): window.rpc is undefined when open in browser
+    try {
+      void invoke('read_tileset_folder', { pathName: '/Users/linonetwo/Desktop/repo/DarkDaysArch/public/assets/ChibiUltica' }).then(console.log);
+    } catch {}
   });
   const selectedButtonIndex = useSelector((state: RootState) => state.uiState.selectedButtonIndex);
 
