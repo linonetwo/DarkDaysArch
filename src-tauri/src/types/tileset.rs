@@ -49,20 +49,22 @@ pub struct CDDATileSetTilesNew {
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct CDDATileSetRandomSpriteDescItem {
-  spirit: i64,
+  sprite: i64,
   weight: i64,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(untagged)]
 pub enum CDDATileSetImageID {
-  String(i64),
+  Id(i64),
   IdList(Vec<i64>),
   RandomList(Vec<CDDATileSetRandomSpriteDescItem>),
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(untagged)]
 pub enum CDDATileSetID {
-  String(String),
+  Id(String),
   IdList(Vec<String>),
 }
 
@@ -70,9 +72,9 @@ pub enum CDDATileSetID {
 #[serde(rename_all = "camelCase")]
 pub struct CDDATileSetTile {
   pub id: CDDATileSetID,
-  pub fg: CDDATileSetImageID,
+  pub fg: Option<CDDATileSetImageID>,
   pub rotates: Option<bool>,
-  pub bg: CDDATileSetImageID,
+  pub bg: Option<CDDATileSetImageID>,
   pub animated: Option<bool>,
   pub multitile: Option<bool>,
   #[serde(rename = "additional_tiles")]
@@ -86,8 +88,8 @@ pub struct CDDATileSetTile {
 #[serde(rename_all = "camelCase")]
 pub struct CDDATileSetAdditionalTile {
   pub id: String,
-  pub fg: CDDATileSetImageID,
-  pub bg: CDDATileSetImageID,
+  pub fg: Option<CDDATileSetImageID>,
+  pub bg: Option<CDDATileSetImageID>,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
