@@ -18,4 +18,5 @@ fn main() {
   let raw_config = tileset_json::CDDATileSetConfigWithCache {
     raw_config: raw_tile_config,
   };
+  println!("{:?}", raw_config);
 }

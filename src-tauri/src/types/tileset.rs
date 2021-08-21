@@ -55,14 +55,14 @@ pub struct CDDATileSetRandomSpriteDescItem {
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub enum CDDATileSetImageID {
-  Id(i64),
+  String(i64),
   IdList(Vec<i64>),
   RandomList(Vec<CDDATileSetRandomSpriteDescItem>),
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub enum CDDATileSetID {
-  Id(String),
+  String(String),
   IdList(Vec<String>),
 }
 
