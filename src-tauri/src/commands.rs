@@ -36,14 +36,27 @@ pub fn read_tileset_folder(tileset_path_name: &str) -> tileset_json::CDDATileSet
     textures.insert(tile_config_item.file.clone(), to_base64(&texture_image_file_path));
   }
   // prepare inverse index
+  let default_tileset_info = tileset_json::CDDATileSetTileInfo {
+    width: 32,
+    height: 32,
+    pixelscale: 1,
+  };
   let id_start_matching_regex = Regex::new(r"range (\d+) to (\d+)").unwrap();
   let mut tile_data_index: BTreeMap<String, tileset_json::CDDATileSetInverseIndexedTileData> = BTreeMap::new();
   for tile_config_item in &raw_tile_config.tiles_new {
     let mut cloned_tile_config_item = tile_config_item.clone();
     cloned_tile_config_item.tiles = vec![];
     cloned_tile_config_item.ascii = vec![];
-    cloned_tile_config_item.sprite_height = Some(cloned_tile_config_item.sprite_height.unwrap_or(raw_tile_config.tile_info[0].height));
-    cloned_tile_config_item.sprite_width = Some(cloned_tile_config_item.sprite_width.unwrap_or(raw_tile_config.tile_info[0].width));
+    cloned_tile_config_item.sprite_height = Some(
+      cloned_tile_config_item
+        .sprite_height
+        .unwrap_or(raw_tile_config.tile_info.get(0).unwrap_or(&default_tileset_info).height),
+    );
+    cloned_tile_config_item.sprite_width = Some(
+      cloned_tile_config_item
+        .sprite_width
+        .unwrap_or(raw_tile_config.tile_info.get(0).unwrap_or(&default_tileset_info).width),
+    );
     cloned_tile_config_item.sprite_offset_x = Some(cloned_tile_config_item.sprite_offset_x.unwrap_or(0));
     cloned_tile_config_item.sprite_offset_y = Some(cloned_tile_config_item.sprite_offset_y.unwrap_or(0));
     cloned_tile_config_item.comment = Some(cloned_tile_config_item.comment.unwrap_or(String::from("range 1 to 63")));
