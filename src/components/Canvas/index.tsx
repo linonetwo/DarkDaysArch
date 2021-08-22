@@ -2,6 +2,8 @@ import { useState, useCallback, MouseEvent, KeyboardEvent, useMemo } from 'react
 import styled from 'styled-components';
 import { Stage } from 'react-pixi-fiber';
 import { Provider, useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
+
 import ContextMenu from '../ContextMenu';
 import Tiles from './sprites/tile/tiles';
 import { Direction } from 'src/store/models/cameraMouse';
@@ -12,6 +14,7 @@ const Container = styled.main``;
 const containerID = 'game-container';
 
 export function World(): JSX.Element {
+  const { t } = useTranslation();
   const dispatch = useDispatch<Dispatch>();
   const setMousePosition = useCallback(
     (event: MouseEvent<HTMLCanvasElement>) => {
@@ -38,7 +41,12 @@ export function World(): JSX.Element {
   );
 
   const sidePanelWidth = useSelector((state: RootState) => state.uiState.sidePanelWidth);
+  const loadTexturesLoading = useSelector((state: RootState) => state.loading.effects.files.loadTextures);
   const actualWidth = useMemo(() => window.innerWidth - sidePanelWidth, [sidePanelWidth]);
+
+  if (loadTexturesLoading) {
+    return <div>{t('Loading')}</div>;
+  }
 
   return (
     <Container id={containerID}>

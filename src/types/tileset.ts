@@ -1,9 +1,22 @@
+export const TILE_SET_CONFIG_FILE_NAME = 'tile_config.json';
 /**
  * @docs https://github.com/CleverRaven/Cataclysm-DDA/blob/master/doc/TILESET.md
  */
 export interface CDDATileSetConfig {
   tile_info: ITileSetTileInfo[];
   'tiles-new': ITileSetTilesNew[];
+}
+
+/**
+ * provided by rust side
+ * @link src-tauri/src/types/tileset.rs
+ */
+export interface CDDATileSetConfigWithCache {
+  raw_config: CDDATileSetConfig;
+  /**
+   * tileset in base64 format
+   */
+  textures: Record<string, string>;
 }
 
 interface ITileSetTileInfo {

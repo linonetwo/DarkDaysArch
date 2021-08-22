@@ -12,7 +12,7 @@ export interface ITileProps {
   y: number;
 }
 
-const textureName = 'assets/ChibiUltica/normal.png';
+const textureName = 'normal.png';
 export default memo(function Tile(props: ITileProps): JSX.Element {
   const { tileName, x, y } = props;
   const [fgTileTexture, bgTileTexture, tileWidthHeight] = useTileTexture(textureName, tileName);

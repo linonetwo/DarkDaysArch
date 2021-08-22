@@ -2,7 +2,7 @@ import { Texture, Loader } from 'pixi.js';
 import { useState, useLayoutEffect } from 'react';
 
 import { textureManager } from 'src/store/global/textureManager';
-import { CDDATileSetConfig } from 'src/types/tileset';
+import { CDDATileSetConfig, TILE_SET_CONFIG_FILE_NAME } from 'src/types/tileset';
 import { getNewTileOptions, createTileTextures } from './createTexture';
 
 /**
@@ -17,10 +17,11 @@ export function useTileTexture(baseTextureName: string, tileName: string): [Text
   const [tileWidthHeight, tileWidthHeightSetter] = useState<[number, number]>([100, 100]);
 
   useLayoutEffect(() => {
+    // wait for texture to be generated from png image by PIXI loader
     Loader.shared.load((loader, resources) => {
       const { texture: tileSetTexture } = resources[baseTextureName] ?? {};
       if (tileSetTexture !== undefined) {
-        const tileSetData = resources['assets/ChibiUltica/tile_config.json']?.data as CDDATileSetConfig | undefined;
+        const tileSetData = resources[TILE_SET_CONFIG_FILE_NAME]?.data as CDDATileSetConfig | undefined;
         if (tileSetData !== undefined) {
           const tileSubSetData = tileSetData['tiles-new'].find((item) => baseTextureName.endsWith(item.file));
           if (tileSubSetData !== undefined) {

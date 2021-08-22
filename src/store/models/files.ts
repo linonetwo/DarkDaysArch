@@ -1,6 +1,10 @@
 /* eslint-disable @typescript-eslint/consistent-type-assertions */
 import { createModel } from '@rematch/core';
+import { Loader, LoaderResource } from 'pixi.js';
+import { invoke } from '@tauri-apps/api';
+
 import type { RootModel } from './index';
+import { CDDATileSetConfigWithCache, TILE_SET_CONFIG_FILE_NAME } from 'src/types/tileset';
 
 export interface IFileTree {
   /** 文件夹的子文件 */
@@ -92,6 +96,24 @@ export const files = createModel<RootModel>()({
         dispatch.files.addNewOpenedFiles(newFile);
       } catch (error) {
         console.error(error);
+      }
+    },
+    async loadTextures(tilesetPathName: string) {
+      // prevent Unhandled Rejection (TypeError): window.rpc is undefined when open in browser
+      try {
+        const tileConfig = await invoke<CDDATileSetConfigWithCache>('read_tileset_folder', {
+          tilesetPathName,
+        });
+        const tileConfigResource = new LoaderResource(TILE_SET_CONFIG_FILE_NAME, TILE_SET_CONFIG_FILE_NAME);
+        tileConfigResource.data = tileConfig.raw_config;
+        Loader.shared.resources[tileConfigResource.name] = tileConfigResource;
+        for (const [tilesetName, tilesetImage] of Object.entries(tileConfig.textures)) {
+          // DEBUG: console
+          console.log(`tilesetName, tilesetImage`, tilesetName, tilesetImage);
+          Loader.shared.add(tilesetName, tilesetImage);
+        }
+      } catch (error) {
+        console.log('loadTileConfigs error', error);
       }
     },
   }),
