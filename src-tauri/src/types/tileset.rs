@@ -2,17 +2,44 @@ use serde;
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
 /**
  * Have all original JSON CDDATileSetConfig have, but with additional inverse index for fast look at things
  */
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct CDDATileSetConfigWithCache {
-  #[serde(rename = "raw_config")]
-  pub raw_config: CDDATileSetConfig,
+  /**
+   * key is file name like `large.png`, value is base64 blob data string
+   */
   pub textures: BTreeMap<String, String>,
+  /**
+   * inverse index to quick lookup tile data, key is tile name like `ranch_camp_17`, value is data I think useful for React renderer.
+   */
+  pub tile_data_index: BTreeMap<String, CDDATileSetInverseIndexedTileData>,
 }
 
+/**
+ * value for tile_data_index
+ */
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct CDDATileSetInverseIndexedTileData {
+  /**
+   * copy of tile data
+   */
+  pub tile: CDDATileSetTile,
+  /**
+   * copy of tileset image data, omit the `tiles` `ascii` field.
+   */
+  pub tileset: CDDATileSetTilesNew,
+  /**
+   * id in whole tileset is consequent, so each png 's tile 's id should have minus the start_id of this png
+   */
+  pub start_id: i64,
+}
+
+/**
+ * Auto generated type from tile_config.json, enum are adjusted by hand.
+ */
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct CDDATileSetConfig {
@@ -35,7 +62,7 @@ pub struct CDDATileSetTileInfo {
 pub struct CDDATileSetTilesNew {
   pub file: String,
   #[serde(rename = "//")]
-  pub field: Option<String>,
+  pub comment: Option<String>,
   #[serde(rename = "sprite_width")]
   pub sprite_width: Option<i64>,
   #[serde(rename = "sprite_height")]
@@ -83,7 +110,7 @@ pub struct CDDATileSetTile {
   #[serde(default)]
   pub additional_tiles: Vec<CDDATileSetAdditionalTile>,
   #[serde(rename = "//")]
-  pub field: Option<String>,
+  pub comment: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]

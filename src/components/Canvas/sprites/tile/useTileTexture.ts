@@ -2,7 +2,7 @@ import { Texture, Loader } from 'pixi.js';
 import { useState, useLayoutEffect } from 'react';
 
 import { textureManager } from 'src/store/global/textureManager';
-import { CDDATileSetConfig, TILE_SET_CONFIG_FILE_NAME } from 'src/types/tileset';
+import { CDDATileSetConfigWithCache, TILE_SET_CONFIG_FILE_NAME } from 'src/types/tileset';
 import { getNewTileOptions, createTileTextures } from './createTexture';
 
 /**
@@ -11,7 +11,7 @@ import { getNewTileOptions, createTileTextures } from './createTexture';
  * @param tileName 地块的ID
  * @returns [fgTileTexture, bgTileTexture, tileWidthHeight]
  */
-export function useTileTexture(baseTextureName: string, tileName: string): [Texture | undefined, Texture | undefined, [number, number]] {
+export function useTileTexture(tileName: string): [Texture | undefined, Texture | undefined, [number, number]] {
   const [fgTileTexture, fgTileTextureSetter] = useState<Texture | undefined>();
   const [bgTileTexture, bgTileTextureSetter] = useState<Texture | undefined>();
   const [tileWidthHeight, tileWidthHeightSetter] = useState<[number, number]>([100, 100]);
@@ -19,16 +19,22 @@ export function useTileTexture(baseTextureName: string, tileName: string): [Text
   useLayoutEffect(() => {
     // wait for texture to be generated from png image by PIXI loader
     Loader.shared.load((loader, resources) => {
-      const { texture: tileSetTexture } = resources[baseTextureName] ?? {};
-      if (tileSetTexture !== undefined) {
-        const tileSetData = resources[TILE_SET_CONFIG_FILE_NAME]?.data as CDDATileSetConfig | undefined;
-        if (tileSetData !== undefined) {
-          const tileSubSetData = tileSetData['tiles-new'].find((item) => baseTextureName.endsWith(item.file));
-          if (tileSubSetData !== undefined) {
+      const tileSetData = resources[TILE_SET_CONFIG_FILE_NAME]?.data as CDDATileSetConfigWithCache['tileDataIndex'] | undefined;
+      if (tileSetData !== undefined) {
+        // DEBUG: console
+        console.log(`tileSetData`, tileSetData);
+        const tileSubSetData = tileSetData[tileName];
+        // DEBUG: console
+        console.log(`tileSubSetData`, tileSubSetData);
+        if (tileSubSetData !== undefined) {
+          const { texture: tileSetTexture } = resources[tileSubSetData.tileset.file] ?? {};
+          if (tileSetTexture !== undefined) {
             // TODO: calculate direction in rust
             let direction: undefined;
 
-            const newTileOptions = getNewTileOptions(tileName, tileSetTexture, { tileSetData, tileSubSetData, direction });
+            const newTileOptions = getNewTileOptions(tileSetTexture, { tileSubSetData, direction });
+            // DEBUG: console
+            console.log(`newTileOptions`, newTileOptions);
             tileWidthHeightSetter([newTileOptions.tileWidth, newTileOptions.tileHeight]);
 
             // a tile can have foreground texture and a background texture

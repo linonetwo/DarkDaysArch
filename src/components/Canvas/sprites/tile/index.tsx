@@ -12,10 +12,9 @@ export interface ITileProps {
   y: number;
 }
 
-const textureName = 'normal.png';
 export default memo(function Tile(props: ITileProps): JSX.Element {
   const { tileName, x, y } = props;
-  const [fgTileTexture, bgTileTexture, tileWidthHeight] = useTileTexture(textureName, tileName);
+  const [fgTileTexture, bgTileTexture, tileWidthHeight] = useTileTexture(tileName);
   if (fgTileTexture === undefined && bgTileTexture === undefined) return <Text text={`No Tile Texture "${tileName}"`} x={0} y={0} />;
 
   return (

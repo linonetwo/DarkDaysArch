@@ -12,11 +12,29 @@ export interface CDDATileSetConfig {
  * @link src-tauri/src/types/tileset.rs
  */
 export interface CDDATileSetConfigWithCache {
-  raw_config: CDDATileSetConfig;
   /**
    * tileset in base64 format
    */
   textures: Record<string, string>;
+  /**
+   * copy of tileset image data, omit the `tiles` `ascii` field.
+   */
+  tileDataIndex: Record<string, CDDATileSetInverseIndexedTileData>;
+}
+export interface CDDATileSetInverseIndexedTileData {
+  /**
+   * id in whole tileset is consequent, so each png 's tile 's id should have minus the start_id of this png
+   */
+  start_id: number;
+  /**
+   * copy of tile data
+   */
+  tile: ITileSetTile;
+  /**
+   * copy of tileset image data, omit the `tiles` `ascii` field (become empty array).
+   * required field is enforced by rust side
+   */
+  tileset: Required<ITileSetTilesNew>;
 }
 
 interface ITileSetTileInfo {

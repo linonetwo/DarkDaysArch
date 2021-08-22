@@ -105,11 +105,9 @@ export const files = createModel<RootModel>()({
           tilesetPathName,
         });
         const tileConfigResource = new LoaderResource(TILE_SET_CONFIG_FILE_NAME, TILE_SET_CONFIG_FILE_NAME);
-        tileConfigResource.data = tileConfig.raw_config;
+        tileConfigResource.data = tileConfig.tileDataIndex;
         Loader.shared.resources[tileConfigResource.name] = tileConfigResource;
         for (const [tilesetName, tilesetImage] of Object.entries(tileConfig.textures)) {
-          // DEBUG: console
-          console.log(`tilesetName, tilesetImage`, tilesetName, tilesetImage);
           Loader.shared.add(tilesetName, tilesetImage);
         }
       } catch (error) {

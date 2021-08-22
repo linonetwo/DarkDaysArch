@@ -2,12 +2,11 @@ import { Texture, Rectangle, SCALE_MODES, BaseTexture } from 'pixi.js';
 
 import { textureManager } from 'src/store/global/textureManager';
 import { Direction, directionToIndex } from 'src/types/direction';
-import { CDDATileSetConfig, ITileRandomSpriteDesc, ITileSetTile, ITileSetTilesNew, TileLayers } from 'src/types/tileset';
+import { CDDATileSetInverseIndexedTileData, ITileRandomSpriteDesc, ITileSetTile, TileLayers } from 'src/types/tileset';
 
 export interface ITileContext {
   direction?: Direction;
-  tileSetData: CDDATileSetConfig;
-  tileSubSetData: ITileSetTilesNew;
+  tileSubSetData: CDDATileSetInverseIndexedTileData;
 }
 
 /**
@@ -83,16 +82,15 @@ export interface ICreateTileOptions {
  * @param context
  * @returns
  */
-export function getNewTileOptions(tileName: string, tileSetTexture: Texture, context: ITileContext): ICreateTileOptions {
-  const { tileSetData, tileSubSetData } = context;
-  const tileWidth = tileSubSetData.sprite_width ?? tileSetData.tile_info[0].width;
-  const tileHeight = tileSubSetData.sprite_height ?? tileSetData.tile_info[0].height;
+export function getNewTileOptions(tileSetTexture: Texture, context: ITileContext): ICreateTileOptions {
+  const { tileSubSetData } = context;
+  const tileWidth = tileSubSetData.tileset.sprite_width;
+  const tileHeight = tileSubSetData.tileset.sprite_height;
   // id can be string or array, array means ids in the array share the same texture
-  const tileToRender = tileSubSetData.tiles.find((tile) => tile.id === tileName || (Array.isArray(tile.id) && tile.id.includes(tileName)));
+  const tileToRender = tileSubSetData.tile;
   const totalColumns = tileSetTexture.orig.width / tileWidth;
   // we need to minus texture id with id start of this png, because tile-set put all ids of png in a tile_config.json, png in the later will have large id for its tiles
-  const [, idStartString] = /range (\d+) to (\d+)/.exec(tileSubSetData?.['//'] ?? '') ?? [];
-  const idStart = Number(idStartString);
+  const idStart = tileSubSetData.start_id;
 
   return {
     tileWidth,
