@@ -1,5 +1,5 @@
 import { useState, useCallback, MouseEvent, KeyboardEvent, useMemo } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { Stage } from 'react-pixi-fiber';
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -8,8 +8,21 @@ import ContextMenu from '../ContextMenu';
 import Tiles from './sprites/tile/tiles';
 import { Direction } from 'src/store/models/cameraMouse';
 import { Dispatch, RootState, store } from 'src/store/store';
+import { RandomSpinner } from '../RandomSpinner';
 
-const Container = styled.main``;
+const Container = styled.main<{ sidePanelWidth: number }>`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  ${({ sidePanelWidth }) => css`
+    position: absolute;
+    left: ${sidePanelWidth}px;
+    width: calc(100vw - ${sidePanelWidth}px);
+  `}
+`;
 
 const containerID = 'game-container';
 
@@ -45,11 +58,16 @@ export function World(): JSX.Element {
   const actualWidth = useMemo(() => window.innerWidth - sidePanelWidth, [sidePanelWidth]);
 
   if (loadTexturesLoading) {
-    return <div>{t('Loading')}</div>;
+    return (
+      <Container sidePanelWidth={sidePanelWidth}>
+        <div>{t('Loading')}</div>
+        <RandomSpinner loading />
+      </Container>
+    );
   }
 
   return (
-    <Container id={containerID}>
+    <Container id={containerID} sidePanelWidth={sidePanelWidth}>
       <Stage
         // follow the camera
         pivot={{
