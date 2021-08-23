@@ -29,19 +29,32 @@ pub struct CDDAMapgenObject {
   /**
    * @example `{ "_": "t_open_air", ")": "t_wall_glass", "#": "t_rock_wall", "-": "t_floor", "]": "t_door_glass_c" }`
    */
-  pub terrain: BTreeMap<String, String>,
+  pub terrain: BTreeMap<String, CDDAMapgenTerrain>,
   /**
    * @example `{ "=": "f_magic_bench", "-": "f_alembic", "?": "f_rack_wood" }`
    */
-  pub furniture: Option<BTreeMap<String, String>>,
+  pub furniture: Option<BTreeMap<String, CDDAMapgenFurniture>>,
   #[serde(rename = "place_loot")]
   #[serde(default)]
   pub place_loot: Vec<CDDAMapgenPlaceLoot>,
-  pub items: Option<BTreeMap<String, CDDAMapgenItemsArray>>,
+  pub items: Option<BTreeMap<String, CDDAMapgenItem>>,
   /**
    * @example `{ "=": "tr_rollmat" }`
    */
   pub traps: Option<BTreeMap<String, String>>,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum CDDAMapgenTerrain {
+  Id(String),
+  RandomList(Vec<CDDAMapgenTerrainRandomListItem>),
+}
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum CDDAMapgenTerrainRandomListItem {
+  Id(String),
+  RandomList((String, i32)),
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -63,11 +76,24 @@ pub struct CDDAMapgenPlaceLoot {
   pub chance: i64,
 }
 
-pub type CDDAMapgenItemsArray = Vec<CDDAMapgenItems>;
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum CDDAMapgenItem {
+  Id(String),
+  Item(CDDAMapgenItemRandomListItem),
+  RandomList(Vec<CDDAMapgenItemRandomListItem>),
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum CDDAMapgenFurniture {
+  Id(String),
+  RandomList(Vec<String>),
+}
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct CDDAMapgenItems {
+pub struct CDDAMapgenItemRandomListItem {
   pub item: String,
   pub chance: i64,
   pub repeat: Option<Vec<i64>>,
