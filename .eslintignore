@@ -10,3 +10,5 @@ build-resources/
 .vscode/
 .github/
 craco.config.js
+# generated types
+src/types/cdda/

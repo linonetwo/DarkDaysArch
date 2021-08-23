@@ -2,7 +2,7 @@ import { Texture, Rectangle, SCALE_MODES, BaseTexture } from 'pixi.js';
 
 import { textureManager } from 'src/store/global/textureManager';
 import { Direction, directionToIndex } from 'src/types/direction';
-import { CDDATileSetInverseIndexedTileData, ITileRandomSpriteDesc, ITileSetTile, TileLayers } from 'src/types/tileset';
+import { CDDATileSetInverseIndexedTileData, ITileRandomSpriteDesc, ITileSetTile, TileLayers } from 'src/types/cdda/tileset';
 
 export interface ITileContext {
   direction?: Direction;

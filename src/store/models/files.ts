@@ -4,7 +4,8 @@ import { Loader, LoaderResource } from 'pixi.js';
 import { invoke } from '@tauri-apps/api';
 
 import type { RootModel } from './index';
-import { CDDATileSetConfigWithCache, TILE_SET_CONFIG_FILE_NAME } from 'src/types/tileset';
+import { CDDATileSetConfigWithCache, TILE_SET_CONFIG_FILE_NAME } from 'src/types/cdda/tileset';
+import mapgen from 'src/types/cdda/mapgen';
 
 export interface IFileTree {
   /** 文件夹的子文件 */
@@ -90,7 +91,7 @@ export const files = createModel<RootModel>()({
     async loadFile(filePath: string) {
       try {
         // eslint-disable-next-line @typescript-eslint/await-thenable
-        const content = await import('./magic_academy.json');
+        const content = await invoke<mapgen.CDDAMapgenWithCache>('');
         const newFile = { path: filePath, content: JSON.stringify(content, undefined, '  ') };
         // TODO: call tauri dialog api
         dispatch.files.addNewOpenedFiles(newFile);

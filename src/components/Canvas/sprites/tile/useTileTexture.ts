@@ -2,7 +2,7 @@ import { Texture, Loader } from 'pixi.js';
 import { useState, useLayoutEffect } from 'react';
 
 import { textureManager } from 'src/store/global/textureManager';
-import { CDDATileSetConfigWithCache, TILE_SET_CONFIG_FILE_NAME } from 'src/types/tileset';
+import { CDDATileSetConfigWithCache, TILE_SET_CONFIG_FILE_NAME } from 'src/types/cdda/tileset';
 import { getNewTileOptions, createTileTextures } from './createTexture';
 
 /**

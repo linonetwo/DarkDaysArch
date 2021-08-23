@@ -1,7 +1,7 @@
 import { Texture } from 'pixi.js';
 
 import { Direction } from 'src/types/direction';
-import { TileLayers } from 'src/types/tileset';
+import { TileLayers } from 'src/types/cdda/tileset';
 
 export interface ITileTextures {
   bg?: Texture;
