@@ -5,11 +5,13 @@ use std::collections::BTreeMap;
 use std::fs::File;
 use std::io::Read;
 
+#[path = "types/mapgen.rs"]
+mod mapgen_json;
 #[path = "types/tileset.rs"]
 mod tileset_json;
 
 pub fn invoke_handler() -> impl Fn(tauri::Invoke) + Send + Sync + 'static {
-  tauri::generate_handler![read_tileset_folder]
+  tauri::generate_handler![read_tileset_folder, read_mapgen_file]
 }
 
 #[tauri::command]
@@ -95,9 +97,18 @@ pub fn read_tileset_folder(tileset_path_name: &str) -> tileset_json::CDDATileSet
       }
     }
   }
-  let config_with_cache = tileset_json::CDDATileSetConfigWithCache {
-    textures: textures,
-    tile_data_index: tile_data_index,
-  };
+  let config_with_cache = tileset_json::CDDATileSetConfigWithCache { textures, tile_data_index };
   config_with_cache
+}
+
+#[tauri::command]
+pub fn read_mapgen_file(mapgen_file_path: &str) -> mapgen_json::CDDAMapgenWithCache {
+  let mut raw_tile_mapgen_file = File::open(mapgen_file_path).unwrap();
+  let mut raw_tile_mapgen_string = String::new();
+  raw_tile_mapgen_file.read_to_string(&mut raw_tile_mapgen_string).unwrap();
+  let raw_mapgen: mapgen_json::CDDAMapgenArray = serde_json::from_str(&raw_tile_mapgen_string).unwrap();
+
+  let mut parsed_map: Vec<Vec<String>> = vec![];
+  let mapgen_with_cache = mapgen_json::CDDAMapgenWithCache { raw_mapgen, parsed_map };
+  mapgen_with_cache
 }

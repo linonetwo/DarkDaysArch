@@ -2,6 +2,19 @@ use serde;
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CDDAMapgenWithCache {
+  /**
+   * Full mapgen file content, for code editor to display
+   */
+  pub raw_mapgen: CDDAMapgenArray,
+  /**
+   * Map 2D array that have place-holder characters replaced with actual item ID, for map view to display
+   */
+  pub parsed_map: Vec<Vec<String>>,
+}
+
 pub type CDDAMapgenArray = Vec<CDDAMapgen>;
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
