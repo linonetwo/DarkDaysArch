@@ -4,7 +4,7 @@ use std::collections::BTreeMap;
 
 pub type CDDAMapgenArray = Vec<CDDAMapgen>;
 
-#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct CDDAMapgen {
   #[serde(rename = "type")]
@@ -15,7 +15,7 @@ pub struct CDDAMapgen {
   pub object: CDDAMapgenObject,
 }
 
-#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct CDDAMapgenObject {
   #[serde(rename = "fill_ter")]
@@ -57,7 +57,7 @@ pub enum CDDAMapgenTerrainRandomListItem {
   RandomList((String, i32)),
 }
 
-#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct CDDAMapgenPlaceMonster {
   pub monster: String,
@@ -67,7 +67,7 @@ pub struct CDDAMapgenPlaceMonster {
   pub repeat: Vec<i64>,
 }
 
-#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct CDDAMapgenPlaceLoot {
   pub item: String,
@@ -91,7 +91,7 @@ pub enum CDDAMapgenFurniture {
   RandomList(Vec<String>),
 }
 
-#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct CDDAMapgenItemRandomListItem {
   pub item: String,
@@ -99,7 +99,7 @@ pub struct CDDAMapgenItemRandomListItem {
   pub repeat: Option<Vec<i64>>,
 }
 
-#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct CDDAMapgenTraps {
   #[serde(rename = "=")]
