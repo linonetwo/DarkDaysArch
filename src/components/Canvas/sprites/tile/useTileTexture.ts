@@ -21,11 +21,7 @@ export function useTileTexture(tileName: string): [Texture | undefined, Texture 
     Loader.shared.load((loader, resources) => {
       const tileSetData = resources[TILE_SET_CONFIG_FILE_NAME]?.data as CDDATileSetConfigWithCache['tileDataIndex'] | undefined;
       if (tileSetData !== undefined) {
-        // DEBUG: console
-        console.log(`tileSetData`, tileSetData);
         const tileSubSetData = tileSetData[tileName];
-        // DEBUG: console
-        console.log(`tileSubSetData`, tileSubSetData);
         if (tileSubSetData !== undefined) {
           const { texture: tileSetTexture } = resources[tileSubSetData.tileset.file] ?? {};
           if (tileSetTexture !== undefined) {
@@ -33,8 +29,6 @@ export function useTileTexture(tileName: string): [Texture | undefined, Texture 
             let direction: undefined;
 
             const newTileOptions = getNewTileOptions(tileSetTexture, { tileSubSetData, direction });
-            // DEBUG: console
-            console.log(`newTileOptions`, newTileOptions);
             tileWidthHeightSetter([newTileOptions.tileWidth, newTileOptions.tileHeight]);
 
             // a tile can have foreground texture and a background texture
