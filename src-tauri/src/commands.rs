@@ -7,6 +7,8 @@ use std::io::Read;
 
 #[path = "types/mapgen.rs"]
 mod mapgen_json;
+#[path = "types/palette.rs"]
+mod palette_json;
 #[path = "types/tileset.rs"]
 mod tileset_json;
 
@@ -103,15 +105,53 @@ pub fn read_tileset_folder(tileset_path_name: &str) -> tileset_json::CDDATileSet
 
 #[tauri::command]
 pub fn read_mapgen_file(mapgen_file_path: &str) -> mapgen_json::CDDAMapgenWithCache {
-  let mut raw_tile_mapgen_file = File::open(mapgen_file_path).unwrap();
-  let mut raw_tile_mapgen_string = String::new();
-  raw_tile_mapgen_file.read_to_string(&mut raw_tile_mapgen_string).unwrap();
-  let raw_mapgen: mapgen_json::CDDAMapgenArray = serde_json::from_str(&raw_tile_mapgen_string).unwrap();
+  // read mapgen
+  let mut raw_mapgen_file = File::open(mapgen_file_path).unwrap();
+  let mut raw_mapgen_string = String::new();
+  raw_mapgen_file.read_to_string(&mut raw_mapgen_string).unwrap();
+  let raw_mapgen: mapgen_json::CDDAMapgenArray = serde_json::from_str(&raw_mapgen_string).unwrap();
+  // read palette
+  let mut raw_palette_file = File::open("/Users/linonetwo/Desktop/repo/DarkDaysArch/src/store/models/house_general_palette.json").unwrap();
+  let mut raw_palette_string = String::new();
+  raw_palette_file.read_to_string(&mut raw_palette_string).unwrap();
+  let raw_palette: palette_json::CDDAPaletteArray = serde_json::from_str(&raw_palette_string).unwrap();
+
+  // TODO: search for correct palette to use
+  // TODO: merge mapgen palette and raw_palette
+  let standard_domestic_palette = raw_palette.get(0).unwrap();
 
   let parsed_map: Vec<Vec<Vec<String>>> = raw_mapgen
     .iter()
-    .map(|mapgen| mapgen.object.rows.iter().map(|row| row.chars().map(|c| c.to_string()).collect()).collect())
+    .map(|mapgen| {
+      mapgen
+        .object
+        .rows
+        .iter()
+        .map(|row| row.chars().map(|c| lookup_mapgen_char_in_palette(&c, standard_domestic_palette)).collect())
+        .collect()
+    })
     .collect();
   let mapgen_with_cache = mapgen_json::CDDAMapgenWithCache { raw_mapgen, parsed_map };
   mapgen_with_cache
+}
+
+fn lookup_mapgen_char_in_palette(character: &char, palette: &palette_json::CDDAPalette) -> String {
+  let char_string = character.to_string();
+  // let terrain_value_option = palette.terrain.get(&char_string);
+  // match terrain_value_option {
+  //   Some(terrain_value) => match terrain_value {
+  //     palette_json::CDDAPaletteTerrainValue::Id(id) => id.clone(),
+  //   },
+  //   None => match palette.furniture {
+  //     Some(furniture) => {
+  //       let furniture_value_option = furniture.get(&char_string);
+  //       match furniture_value_option {
+  //         Some(furniture_value) => match furniture_value {
+  //           palette_json::CDDAPaletteFurnitureValue::Id(id) => id.clone(),
+  //         },
+  //       }
+  //     }
+  //   },
+  // }
+  char_string
 }
