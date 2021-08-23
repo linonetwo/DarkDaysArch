@@ -1,10 +1,11 @@
 use serde;
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
+use typescript_type_def::{TypeDef};
 
 pub type CDDAPaletteArray = Vec<CDDAPalette>;
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
 #[serde(rename_all = "camelCase")]
 pub struct CDDAPalette {
   #[serde(rename = "type")]
@@ -24,7 +25,7 @@ pub struct CDDAPalette {
   pub monsters: Option<BTreeMap<String, Vec<CDDAPaletteMonstersValue>>>,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
 #[serde(rename_all = "camelCase")]
 pub struct CDDAPaletteParametersValue {
   #[serde(rename = "type")]
@@ -32,7 +33,7 @@ pub struct CDDAPaletteParametersValue {
   pub default: CDDAPaletteParametersValueDefault,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
 #[serde(untagged)]
 pub enum CDDAPaletteDistribution {
   Id(String),
@@ -41,21 +42,21 @@ pub enum CDDAPaletteDistribution {
   RecursiveMixed(Vec<CDDAPaletteDistributionMixed>),
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
 #[serde(untagged)]
 pub enum CDDAPaletteDistributionMixed {
   Id(String),
   IdWithWeight(String, i64),
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
 #[serde(untagged)]
 pub enum CDDAPaletteFurnitureValue {
   Id(String),
   RandomList(CDDAPaletteDistribution),
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
 #[serde(untagged)]
 pub enum CDDAPaletteTerrainValue {
   Id(String),
@@ -63,25 +64,25 @@ pub enum CDDAPaletteTerrainValue {
   ParamRef(CDDAPaletteTerrainValueParameterReference),
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
 pub struct CDDAPaletteTerrainValueParameterReference {
   pub param: String,
   pub fallback: String,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
 pub struct CDDAPaletteParametersValueDefault {
   pub distribution: CDDAPaletteDistribution,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
 #[serde(untagged)]
 pub enum CDDAPaletteItemValue {
   Item(CDDAPaletteItemsValueItem),
   ItemList(Vec<CDDAPaletteItemsValueItem>),
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
 pub struct CDDAPaletteItemsValueItem {
   item: String,
   chance: i64,
@@ -90,13 +91,13 @@ pub struct CDDAPaletteItemsValueItem {
   magazine: Option<i64>,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
 pub struct CDDAPaletteLiquidsValue {
   liquid: String,
   amount: (i64, i64),
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
 pub struct CDDAPaletteMonstersValue {
   monster: String,
   chance: i64,
