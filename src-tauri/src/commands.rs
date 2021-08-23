@@ -108,7 +108,10 @@ pub fn read_mapgen_file(mapgen_file_path: &str) -> mapgen_json::CDDAMapgenWithCa
   raw_tile_mapgen_file.read_to_string(&mut raw_tile_mapgen_string).unwrap();
   let raw_mapgen: mapgen_json::CDDAMapgenArray = serde_json::from_str(&raw_tile_mapgen_string).unwrap();
 
-  let mut parsed_map: Vec<Vec<String>> = vec![];
+  let parsed_map: Vec<Vec<Vec<String>>> = raw_mapgen
+    .iter()
+    .map(|mapgen| mapgen.object.rows.iter().map(|row| row.chars().map(|c| c.to_string()).collect()).collect())
+    .collect();
   let mapgen_with_cache = mapgen_json::CDDAMapgenWithCache { raw_mapgen, parsed_map };
   mapgen_with_cache
 }

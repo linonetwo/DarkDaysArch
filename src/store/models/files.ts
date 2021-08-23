@@ -88,12 +88,13 @@ export const files = createModel<RootModel>()({
         console.error(error);
       }
     },
-    async loadFile(filePath: string) {
+    async loadFile(mapgenFilePath: string) {
       try {
         // eslint-disable-next-line @typescript-eslint/await-thenable
-        const content = await invoke<mapgen.CDDAMapgenWithCache>('');
-        const newFile = { path: filePath, content: JSON.stringify(content, undefined, '  ') };
-        // TODO: call tauri dialog api
+        const mapgenWithCache = await invoke<mapgen.CDDAMapgenWithCache>('read_mapgen_file', {
+          mapgenFilePath,
+        });
+        const newFile = { path: mapgenFilePath, content: JSON.stringify(mapgenWithCache.rawMapgen, undefined, '  ') };
         dispatch.files.addNewOpenedFiles(newFile);
       } catch (error) {
         console.error(error);

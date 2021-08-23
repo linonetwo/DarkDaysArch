@@ -27,8 +27,8 @@ export default function App(): JSX.Element {
   // TODO: debug code, load example file
   useEffect(() => {
     void dispatch.files.popDialogAndLoadFileTree();
-    void dispatch.files.loadFile('magic_academy.json').then(() => {
-      dispatch.files.selectFile('magic_academy.json');
+    void dispatch.files.loadFile('/Users/lindongwu/Desktop/github/DarkDaysArch/src/store/models/magic_academy.json').then(() => {
+      dispatch.files.selectFile('/Users/lindongwu/Desktop/github/DarkDaysArch/src/store/models/magic_academy.json');
     });
     void dispatch.files.loadTextures('/Users/lindongwu/Desktop/github/DarkDaysArch/public/assets/ChibiUltica');
   }, []);
