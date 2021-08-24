@@ -20,7 +20,7 @@ fn main() {
     // println!("{:?}", raw_map);
     // println!("{}",map_json);
 
-    let palette_file_path = "../src/store/models/house_general_palette.json";
+    let palette_file_path = "../public/json/house_general_palette.json";
     let mut raw_palette_file = File::open(palette_file_path).unwrap();
     let mut raw_palette_string = String::new();
     raw_palette_file
