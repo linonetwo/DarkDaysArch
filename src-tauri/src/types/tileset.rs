@@ -1,7 +1,6 @@
-use serde;
-use serde::{Deserialize, Serialize};
+use serde::{self, Deserialize, Serialize};
 use std::collections::BTreeMap;
-use typescript_type_def::{TypeDef};
+use typescript_type_def::TypeDef;
 
 /**
  * Have all original JSON CDDATileSetConfig have, but with additional inverse index for fast look at things

@@ -1,7 +1,6 @@
-use serde;
-use serde::{Deserialize, Serialize};
+use serde::{self, Deserialize, Serialize};
 use std::collections::BTreeMap;
-use typescript_type_def::{TypeDef};
+use typescript_type_def::TypeDef;
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
 #[serde(rename_all = "camelCase")]
@@ -128,5 +127,5 @@ pub struct CDDAMapgenItemRandomListItem {
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
 #[serde(rename_all = "camelCase")]
 pub struct CDDAMapgenTrapObject {
-  pub trap: String
+  pub trap: String,
 }
