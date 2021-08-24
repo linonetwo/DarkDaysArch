@@ -98,6 +98,7 @@ export const files = createModel<RootModel>()({
         dispatch.files.addNewOpenedFiles(newFile);
         // load map to display
         dispatch.maps.mapsInOpenedFileSetter(mapgenWithCache.parsedMap);
+        dispatch.maps.activeOpenedMapIndexSetter(0);
       } catch (error) {
         console.error(error);
       }

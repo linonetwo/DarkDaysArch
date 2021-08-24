@@ -1,14 +1,28 @@
+/* eslint-disable unicorn/no-null */
+import { useSelector } from 'react-redux';
+import { RootState } from 'src/store/store';
+
 import Tile from '.';
 
 export default function Tiles(): JSX.Element {
-  // const tiles = useMappedQuery(positions, (props: MappedComponentProps<[typeof VisibleItem, typeof TileComponent]>) => {
-  //   const { x, y, texture } = props.components[0];
-  //   return <Tile x={x} y={y} textureName={texture} />;
-  // });
+  const openedMapMatrix = useSelector((state: RootState) =>
+    typeof state.maps.activeOpenedMapIndex === 'number' ? state.maps.mapsInOpenedFile[state.maps.activeOpenedMapIndex] : [],
+  );
 
   return (
     <>
-      <Tile x={100} y={0} tileName={'ranch_camp_17'} />
+      {openedMapMatrix.map((rows, rowIndex) =>
+        rows.map((cell, columnIndex) => {
+          const cellItem = cell[0];
+          if (Array.isArray(cellItem)) {
+            const [idType, id] = cellItem;
+            if (typeof id === 'string') {
+              return <Tile x={columnIndex * 30} y={rowIndex * 30} tileName={id} />;
+            }
+          }
+          return null;
+        }),
+      )}
     </>
   );
 }
