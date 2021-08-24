@@ -1,12 +1,12 @@
 use serde;
 use serde::{Deserialize, Serialize};
-use typescript_type_def::{TypeDef};
+use typescript_type_def::TypeDef;
 
 pub type CDDAFurnArray = Vec<CDDAFurniture>;
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
 #[serde(untagged)]
-pub enum CDDAFurniture{
+pub enum CDDAFurniture {
     //type using color
     Color(CDDAFurnitureCr),
     //type using bgcolor
@@ -15,7 +15,7 @@ pub enum CDDAFurniture{
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
 #[serde(rename_all = "camelCase")]
-pub struct CDDAFurnitureBase{
+pub struct CDDAFurnitureBase {
     //mandatory
     #[serde(rename = "type")]
     pub type_field: String,
@@ -40,15 +40,15 @@ pub struct CDDAFurnitureBase{
     #[serde(rename = "light_emitted")]
     #[serde(default)]
     pub light_emitted: i64,
-    
+
     #[serde(default)]
     pub coverage: i64,
-    
+
     #[serde(rename = "crafting_pseudo_item")]
     #[serde(default)]
     #[serde(skip_serializing_if = "String::is_empty")]
     pub crafting_pseudo_item: String,
-    
+
     // #[serde(default)]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub workbench: Option<CDDAFurnWorkbench>,
@@ -62,9 +62,7 @@ pub struct CDDAFurnitureBase{
     #[serde(default)]
     pub surgery_skill_multiplier: f64,
 
-
     //furn ter common key
-
     #[serde(rename = "looks_like")]
     #[serde(default)]
     #[serde(skip_serializing_if = "String::is_empty")]
@@ -114,12 +112,11 @@ pub struct CDDAFurnitureBase{
     #[serde(rename = "bonus_fire_warmth_feet")]
     #[serde(default)]
     pub bonus_fire_warmth_feet: i64,
-
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
 #[serde(rename_all = "camelCase")]
-pub struct CDDAFurnitureCr{
+pub struct CDDAFurnitureCr {
     pub color: CDDAColor,
 
     #[serde(flatten)]
@@ -128,7 +125,7 @@ pub struct CDDAFurnitureCr{
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
 #[serde(rename_all = "camelCase")]
-pub struct CDDAFurnitureBg{
+pub struct CDDAFurnitureBg {
     pub bgcolor: CDDAColor,
 
     #[serde(flatten)]
@@ -137,21 +134,21 @@ pub struct CDDAFurnitureBg{
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
 #[serde(rename_all = "camelCase")]
-pub struct CDDATranslation{
+pub struct CDDATranslation {
     //emmmmm
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
 #[serde(rename_all = "camelCase")]
-pub struct CDDAFurnWorkbench{
+pub struct CDDAFurnWorkbench {
     pub multiplier: f64,
     pub mass: CDDAMass,
-    pub volume: CDDAVolume
+    pub volume: CDDAVolume,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
 #[serde(rename_all = "camelCase")]
-pub struct CDDAFurnPlant{
+pub struct CDDAFurnPlant {
     pub transform: String,
     pub base: String,
     #[serde(rename = "growth_multiplier")]
@@ -162,7 +159,7 @@ pub struct CDDAFurnPlant{
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
 #[serde(rename_all = "camelCase")]
-pub struct CDDAFurnBash{
+pub struct CDDAFurnBash {
     #[serde(rename = "str_min")]
     #[serde(default)]
     pub str_min: i64,
@@ -232,13 +229,12 @@ pub struct CDDABashDeconItem {
     pub count: Option<CDDAIntRange>,
     pub charges: Option<CDDAIntRange>,
     #[serde(default)]
-    pub prob: i64
+    pub prob: i64,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
 #[serde(rename_all = "camelCase")]
-pub struct CDDAFurnDecon{
-
+pub struct CDDAFurnDecon {
     #[serde(rename = "deconstruct_above")]
     #[serde(default)]
     pub deconstruct_above: bool,
@@ -259,30 +255,30 @@ pub struct CDDAFurnDecon{
 #[serde(untagged)]
 pub enum CDDAName {
     Name(String),
-    Translation(CDDATranslation)
+    Translation(CDDATranslation),
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
 #[serde(untagged)]
-pub enum CDDAMass{
+pub enum CDDAMass {
     // without unit
     Wounit(i64),
-    // with unit 
+    // with unit
     Wunit(String),
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
 #[serde(untagged)]
-pub enum CDDAVolume{
+pub enum CDDAVolume {
     // without unit
     Wounit(i64),
-    // with unit 
+    // with unit
     Wunit(String),
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
 #[serde(untagged)]
-pub enum CDDAColor{
+pub enum CDDAColor {
     // one color
     Single(String),
     // four colors for four season, 2, 3 not sure
@@ -291,9 +287,9 @@ pub enum CDDAColor{
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
 #[serde(untagged)]
-pub enum CDDAIntRange{
+pub enum CDDAIntRange {
     // without unit
     Single(i64),
-    // with unit 
+    // with unit
     Range((i64, i64)),
 }
