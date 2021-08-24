@@ -5,8 +5,17 @@ use typescript_type_def::{TypeDef};
 pub type CDDAFurnArray = Vec<CDDAFurniture>;
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[serde(untagged)]
+pub enum CDDAFurniture{
+    //type using color
+    Color(CDDAFurnitureCr),
+    //type using bgcolor
+    Background(CDDAFurnitureBg),
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
 #[serde(rename_all = "camelCase")]
-pub struct CDDAFurniture{
+pub struct CDDAFurnitureBase{
     //mandatory
     #[serde(rename = "type")]
     pub type_field: String,
@@ -18,8 +27,6 @@ pub struct CDDAFurniture{
     pub description: String,
 
     pub symbol: String,
-
-    pub color: CDDAColor,
 
     #[serde(rename = "move_cost_mod")]
     pub move_cost_mod: i64,
@@ -39,13 +46,16 @@ pub struct CDDAFurniture{
     
     #[serde(rename = "crafting_pseudo_item")]
     #[serde(default)]
+    #[serde(skip_serializing_if = "String::is_empty")]
     pub crafting_pseudo_item: String,
     
     // #[serde(default)]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub workbench: Option<CDDAFurnWorkbench>,
 
     #[serde(rename = "plant_data")]
     // #[serde(default)]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub plant_data: Option<CDDAFurnPlant>,
 
     #[serde(rename = "surgery_skill_multiplier")]
@@ -57,30 +67,36 @@ pub struct CDDAFurniture{
 
     #[serde(rename = "looks_like")]
     #[serde(default)]
+    #[serde(skip_serializing_if = "String::is_empty")]
     pub looks_like: String,
-
-    pub bgcolor: Option<CDDAColor>,
 
     #[serde(rename = "examine_action")]
     #[serde(default)]
+    #[serde(skip_serializing_if = "String::is_empty")]
     pub examine_action: String,
 
     // #[serde(default)]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub bash: Option<CDDAFurnBash>,
     #[serde(rename = "map_bash_info")]
     #[serde(default)]
+    #[serde(skip_serializing_if = "String::is_empty")]
     pub map_bash_info: String,
 
     // #[serde(default)]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub deconstruct: Option<CDDAFurnDecon>,
 
     #[serde(default)]
+    #[serde(skip_serializing_if = "String::is_empty")]
     pub close: String,
     #[serde(default)]
+    #[serde(skip_serializing_if = "String::is_empty")]
     pub open: String,
 
     #[serde(rename = "max_volume")]
     // #[serde(default)]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub max_volume: Option<CDDAVolume>,
 
     #[serde(default)]
@@ -99,6 +115,24 @@ pub struct CDDAFurniture{
     #[serde(default)]
     pub bonus_fire_warmth_feet: i64,
 
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[serde(rename_all = "camelCase")]
+pub struct CDDAFurnitureCr{
+    pub color: CDDAColor,
+
+    #[serde(flatten)]
+    pub base: CDDAFurnitureBase,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[serde(rename_all = "camelCase")]
+pub struct CDDAFurnitureBg{
+    pub bgcolor: CDDAColor,
+
+    #[serde(flatten)]
+    pub base: CDDAFurnitureBase,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
