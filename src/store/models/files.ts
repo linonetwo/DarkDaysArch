@@ -95,9 +95,9 @@ export const files = createModel<RootModel>()({
           mapgenFilePath,
         });
         const newFile = { path: mapgenFilePath, content: JSON.stringify(mapgenWithCache.rawMapgen, undefined, '  ') };
-        // DEBUG: console
-        console.log(`mapgenWithCache`, mapgenWithCache);
         dispatch.files.addNewOpenedFiles(newFile);
+        // load map to display
+        dispatch.maps.mapsInOpenedFileSetter(mapgenWithCache.parsedMap);
       } catch (error) {
         console.error(error);
       }
