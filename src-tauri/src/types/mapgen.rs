@@ -56,7 +56,7 @@ pub struct CDDAMapgenObject {
   /**
    * @example `{ "=": "tr_rollmat" }`
    */
-  pub traps: Option<BTreeMap<String, String>>,
+  pub traps: Option<BTreeMap<String, CDDAMapgenTrap>>,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
@@ -107,6 +107,13 @@ pub enum CDDAMapgenFurniture {
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[serde(untagged)]
+pub enum CDDAMapgenTrap {
+  Id(String),
+  Trap(CDDAMapgenTrapObject),
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
 #[serde(rename_all = "camelCase")]
 pub struct CDDAMapgenItemRandomListItem {
   pub item: String,
@@ -116,7 +123,6 @@ pub struct CDDAMapgenItemRandomListItem {
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
 #[serde(rename_all = "camelCase")]
-pub struct CDDAMapgenTraps {
-  #[serde(rename = "=")]
-  pub field: String,
+pub struct CDDAMapgenTrapObject {
+  pub trap: String
 }
