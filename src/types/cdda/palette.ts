@@ -11,13 +11,20 @@ export type CDDAPaletteParametersValueDefault={"distribution":types.CDDAPaletteD
 export type CDDAPaletteParametersValue={"type":string;"default":types.CDDAPaletteParametersValueDefault;};
 export type CDDAPaletteFurnitureValue=(string|types.CDDAPaletteDistribution);
 export type CDDAPaletteLiquidsValue={"liquid":string;"amount":[types.I64,types.I64];};
-export type CDDAPaletteItemsValueItem={"item":string;"chance":types.I64;"repeat":([types.I64,types.I64]|null);"ammo":(types.I64|null);"magazine":(types.I64|null);};
+export type CDDAIntRange=(types.I64|[types.I64,types.I64]);
+export type CDDAPaletteItemsValueItem={"item":string;"chance":types.I64;"repeat"?:types.CDDAIntRange;"ammo"?:types.I64;"magazine"?:types.I64;};
 export type CDDAPaletteItemValue=(types.CDDAPaletteItemsValueItem|(types.CDDAPaletteItemsValueItem)[]);
-export type CDDAPaletteMonstersValue={"monster":string;"chance":types.I64;};
-export type CDDAPalette={"type":string;"id":string;"terrain":Record<string,types.CDDAPaletteTerrainValue>;"//":(string|null);"parameters":(Record<string,types.CDDAPaletteParametersValue>|null);
+export type F64=number;
+export type CDDAPaletteMonstersValue={"monster":string;"chance":types.I64;"pubdensity"?:types.F64;};
+export type CDDAPalette={"type":string;"id":string;"terrain":Record<string,types.CDDAPaletteTerrainValue>;"//"?:string;"parameters"?:Record<string,types.CDDAPaletteParametersValue>;
 /**
  * * @example "toilets": { "&": { "amount": [ 0, 40 ] } }
  *    
  */
-"toilets":(Record<string,Record<string,(types.I64)[]>>|null);"furniture":(Record<string,types.CDDAPaletteFurnitureValue>|null);"liquids":(Record<string,types.CDDAPaletteLiquidsValue>|null);"items":(Record<string,types.CDDAPaletteItemValue>|null);"monsters":(Record<string,(types.CDDAPaletteMonstersValue)[]>|null);};
+"toilets"?:Record<string,Record<string,(types.I64)[]>>;
+/**
+ * * @example "furniture": { "c": "f_exercise", "u": [ "f_ergometer", "f_ergometer_mechanical" ]}
+ *    
+ */
+"furniture"?:Record<string,types.CDDAPaletteFurnitureValue>;"liquids"?:Record<string,types.CDDAPaletteLiquidsValue>;"items"?:Record<string,types.CDDAPaletteItemValue>;"monsters"?:Record<string,(types.CDDAPaletteMonstersValue)[]>;};
 }
