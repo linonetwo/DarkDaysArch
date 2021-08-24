@@ -1,7 +1,7 @@
 use serde;
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
-use typescript_type_def::{TypeDef};
+use typescript_type_def::TypeDef;
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
 #[serde(rename_all = "camelCase")]
@@ -12,9 +12,31 @@ pub struct CDDAMapgenWithCache {
   pub raw_mapgen: CDDAMapgenArray,
   /**
    * Map 2D array that have place-holder characters replaced with actual item ID, for map view to display
-   * And we have multiple mapgen in a file, so this will be a 3D array
+   * And we have multiple mapgen in a file, so this will be a 3D matrix.
+   * But each location can have terrain, furniture, item and so on, so each tile will be a list, so this is a 4D tensor
    */
-  pub parsed_map: Vec<Vec<Vec<String>>>,
+  pub parsed_map: Vec<Vec<Vec<Vec<ItemIDOrItemList>>>>,
+}
+
+/**
+ * A char in map rows can mean multiple item, like # mean a terrain and a furniture, and some terrain can have id same as a furniture, so we have to keep id's type in a tuple
+ */
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[serde(untagged)]
+pub enum ItemIDOrItemList {
+  /**
+   * (type, id), where type is like "terrain" or "furniture"
+   */
+  Id((MapgenPaletteKeys, String)),
+  ItemList(Vec<(MapgenPaletteKeys, String)>),
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+pub enum MapgenPaletteKeys {
+  #[allow(non_camel_case_types)]
+  terrain,
+  #[allow(non_camel_case_types)]
+  furniture,
 }
 
 pub type CDDAMapgenArray = Vec<CDDAMapgen>;
@@ -128,5 +150,5 @@ pub struct CDDAMapgenItemRandomListItem {
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
 #[serde(rename_all = "camelCase")]
 pub struct CDDAMapgenTrapObject {
-  pub trap: String
+  pub trap: String,
 }

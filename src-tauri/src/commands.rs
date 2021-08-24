@@ -111,7 +111,7 @@ pub fn read_mapgen_file(mapgen_file_path: &str) -> mapgen_json::CDDAMapgenWithCa
   raw_mapgen_file.read_to_string(&mut raw_mapgen_string).unwrap();
   let raw_mapgen: mapgen_json::CDDAMapgenArray = serde_json::from_str(&raw_mapgen_string).unwrap();
   // read palette
-  let mut raw_palette_file = File::open("/Users/linonetwo/Desktop/repo/DarkDaysArch/src/store/models/house_general_palette.json").unwrap();
+  let mut raw_palette_file = File::open("../src/store/models/house_general_palette.json").unwrap();
   let mut raw_palette_string = String::new();
   raw_palette_file.read_to_string(&mut raw_palette_string).unwrap();
   let raw_palette: palette_json::CDDAPaletteArray = serde_json::from_str(&raw_palette_string).unwrap();
@@ -120,7 +120,7 @@ pub fn read_mapgen_file(mapgen_file_path: &str) -> mapgen_json::CDDAMapgenWithCa
   // TODO: merge mapgen palette and raw_palette
   let standard_domestic_palette = raw_palette.get(0).unwrap();
 
-  let parsed_map: Vec<Vec<Vec<String>>> = raw_mapgen
+  let parsed_map: Vec<Vec<Vec<Vec<mapgen_json::ItemIDOrItemList>>>> = raw_mapgen
     .iter()
     .map(|mapgen| {
       mapgen
@@ -135,23 +135,35 @@ pub fn read_mapgen_file(mapgen_file_path: &str) -> mapgen_json::CDDAMapgenWithCa
   mapgen_with_cache
 }
 
-fn lookup_mapgen_char_in_palette(character: &char, palette: &palette_json::CDDAPalette) -> String {
+fn lookup_mapgen_char_in_palette(character: &char, palette: &palette_json::CDDAPalette) -> Vec<mapgen_json::ItemIDOrItemList> {
   let char_string = character.to_string();
-  // let terrain_value_option = palette.terrain.get(&char_string);
-  // match terrain_value_option {
-  //   Some(terrain_value) => match terrain_value {
-  //     palette_json::CDDAPaletteTerrainValue::Id(id) => id.clone(),
-  //   },
-  //   None => match palette.furniture {
-  //     Some(furniture) => {
-  //       let furniture_value_option = furniture.get(&char_string);
-  //       match furniture_value_option {
-  //         Some(furniture_value) => match furniture_value {
-  //           palette_json::CDDAPaletteFurnitureValue::Id(id) => id.clone(),
-  //         },
-  //       }
+  let mut items_this_tile: Vec<mapgen_json::ItemIDOrItemList> = vec![];
+  // each type may have some different logic, so we cannot abstract these
+
+  // terrain
+  let terrain_value_option = palette.terrain.get(&char_string);
+  match terrain_value_option {
+    Some(terrain_value) => match terrain_value {
+      palette_json::CDDAPaletteTerrainValue::Id(id) => {
+        items_this_tile.push(mapgen_json::ItemIDOrItemList::Id((mapgen_json::MapgenPaletteKeys::terrain, id.clone())));
+      }
+      Others => {} // palette_json::CDDAPaletteTerrainValue::RandomList(ids) => {
+                   //   items_this_tile.push(mapgen_json::ItemIDOrItemList::Id((mapgen_json::MapgenPaletteKeys::terrain, id.clone())));
+                   // }
+    },
+    None => {}
+  };
+  // furniture
+  // let furniture_value_option = palette.furniture.get(&char_string);
+  // matchfurniture_value_option {
+  //   Some(furniture) => {
+  //     let furniture_value_option = furniture.get(&char_string);
+  //     match furniture_value_option {
+  //       Some(furniture_value) => match furniture_value {
+  //         palette_json::CDDAPaletteFurnitureValue::Id(id) => id.clone(),
+  //       },
   //     }
-  //   },
+  //   }
   // }
-  char_string
+  items_this_tile
 }
