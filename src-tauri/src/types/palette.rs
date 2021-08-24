@@ -13,16 +13,23 @@ pub struct CDDAPalette {
   pub id: String,
   pub terrain: BTreeMap<String, CDDAPaletteTerrainValue>,
   #[serde(rename = "//")]
-  pub comment: Option<String>,
-  pub parameters: Option<BTreeMap<String, CDDAPaletteParametersValue>>,
+  #[serde(default)]
+  pub comment: String,
+  #[serde(default)]
+  pub parameters: BTreeMap<String, CDDAPaletteParametersValue>,
   /**
    * @example "toilets": { "&": { "amount": [ 0, 40 ] } }
    */
-  pub toilets: Option<BTreeMap<String, BTreeMap<String, Vec<i64>>>>,
-  pub furniture: Option<BTreeMap<String, CDDAPaletteFurnitureValue>>,
-  pub liquids: Option<BTreeMap<String, CDDAPaletteLiquidsValue>>,
-  pub items: Option<BTreeMap<String, CDDAPaletteItemValue>>,
-  pub monsters: Option<BTreeMap<String, Vec<CDDAPaletteMonstersValue>>>,
+  #[serde(default)]
+  pub toilets: BTreeMap<String, BTreeMap<String, Vec<i64>>>,
+  #[serde(default)]
+  pub furniture: BTreeMap<String, CDDAPaletteFurnitureValue>,
+  #[serde(default)]
+  pub liquids: BTreeMap<String, CDDAPaletteLiquidsValue>,
+  #[serde(default)]
+  pub items: BTreeMap<String, CDDAPaletteItemValue>,
+  #[serde(default)]
+  pub monsters: BTreeMap<String, Vec<CDDAPaletteMonstersValue>>,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
@@ -86,9 +93,12 @@ pub enum CDDAPaletteItemValue {
 pub struct CDDAPaletteItemsValueItem {
   item: String,
   chance: i64,
-  repeat: Option<(i64, i64)>,
-  ammo: Option<i64>,
-  magazine: Option<i64>,
+  #[serde(default)]
+  repeat: (i64, i64),
+  #[serde(default)]
+  ammo: i64,
+  #[serde(default)]
+  magazine: i64,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]

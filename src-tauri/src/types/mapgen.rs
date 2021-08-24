@@ -48,15 +48,18 @@ pub struct CDDAMapgenObject {
   /**
    * @example `{ "=": "f_magic_bench", "-": "f_alembic", "?": "f_rack_wood" }`
    */
-  pub furniture: Option<BTreeMap<String, CDDAMapgenFurniture>>,
+  #[serde(default)]
+  pub furniture: BTreeMap<String, CDDAMapgenFurniture>,
   #[serde(rename = "place_loot")]
   #[serde(default)]
   pub place_loot: Vec<CDDAMapgenPlaceLoot>,
-  pub items: Option<BTreeMap<String, CDDAMapgenItem>>,
+  #[serde(default)]
+  pub items: BTreeMap<String, CDDAMapgenItem>,
   /**
    * @example `{ "=": "tr_rollmat" }`
    */
-  pub traps: Option<BTreeMap<String, CDDAMapgenTrap>>,
+  #[serde(default)]
+  pub traps: BTreeMap<String, CDDAMapgenTrap>,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
@@ -118,7 +121,8 @@ pub enum CDDAMapgenTrap {
 pub struct CDDAMapgenItemRandomListItem {
   pub item: String,
   pub chance: i64,
-  pub repeat: Option<Vec<i64>>,
+  #[serde(default)]
+  pub repeat: Vec<i64>,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
