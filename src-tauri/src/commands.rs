@@ -1,9 +1,7 @@
 use glob::glob;
 use image_base64::to_base64;
 use regex::Regex;
-use std::collections::BTreeMap;
-use std::fs::File;
-use std::io::Read;
+use std::{collections::BTreeMap, fs::File, io::Read};
 
 #[path = "types/mapgen.rs"]
 mod mapgen_json;

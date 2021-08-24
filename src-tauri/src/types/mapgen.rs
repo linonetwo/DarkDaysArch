@@ -1,5 +1,4 @@
-use serde;
-use serde::{Deserialize, Serialize};
+use serde::{self, Deserialize, Serialize};
 use std::collections::BTreeMap;
 use typescript_type_def::TypeDef;
 
