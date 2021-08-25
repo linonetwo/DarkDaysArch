@@ -5,6 +5,12 @@ use std::{
 };
 use schemars::{schema_for, JsonSchema};
 
+/**
+ * convert serde to jsonschema: https://imfeld.dev/writing/generating_typescript_types_from_rust
+ *  with way to optimize
+ * convert jsonschema to ts: https://github.com/bcherny/json-schema-to-typescript
+*/
+
 #[path = "../src/types/tileset.rs"]
 mod tileset_json;
 #[path = "../src/types/furniture.rs"]
