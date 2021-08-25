@@ -139,7 +139,7 @@ fn lookup_mapgen_char_in_palette(character: &char, palette: &palette_json::CDDAP
   // each type may have some different logic, so we cannot abstract these
 
   // terrain
-  let terrain_value_option = palette.terrain.get(&char_string);
+  let terrain_value_option = palette.mapping_object.terrain.get(&char_string);
   match terrain_value_option {
     Some(terrain_value) => match terrain_value {
       palette_json::CDDAPaletteTerrainValue::Id(id) => {
