@@ -1,10 +1,10 @@
 use serde::{self, Deserialize, Serialize};
 use std::collections::BTreeMap;
-use typescript_type_def::TypeDef;
+use schemars::JsonSchema;
 
 pub type CDDAPaletteArray = Vec<CDDAPalette>;
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct CDDAPalette {
   #[serde(rename = "type")]
@@ -30,7 +30,7 @@ pub struct CDDAPalette {
 
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct CDDAMapgenMapping {
   #[serde(default)]
@@ -87,7 +87,7 @@ pub struct CDDAMapgenMapping {
   pub ter_furn_transforms: BTreeMap<String, CDDAPaletteTransformValue>,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct CDDAPaletteParametersValue {
   #[serde(rename = "type")]
@@ -95,7 +95,7 @@ pub struct CDDAPaletteParametersValue {
   pub default: CDDAPaletteParametersValueDefault,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(untagged)]
 pub enum CDDAPaletteDistribution {
   Id(String),
@@ -104,7 +104,7 @@ pub enum CDDAPaletteDistribution {
   RecursiveMixed(Vec<CDDAPaletteDistributionMixed>),
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(untagged)]
 pub enum CDDAPaletteDistributionMixed {
   Id(String),
@@ -114,7 +114,7 @@ pub enum CDDAPaletteDistributionMixed {
    * @docs MAPGEN.md      Terrain, furniture and traps can specified as a single string, not a json object
 */
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(untagged)]
 pub enum CDDAPaletteFurnitureValue {
   Id(String),
@@ -123,7 +123,7 @@ pub enum CDDAPaletteFurnitureValue {
   ParamRef(CDDAPaletteParameterReference),
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(untagged)]
 pub enum CDDAPaletteTerrainValue {
   Id(String),
@@ -132,7 +132,7 @@ pub enum CDDAPaletteTerrainValue {
   ParamRef(CDDAPaletteParameterReference),
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(untagged)]
 pub enum CDDAPaletteTrapsValue {
   Id(String),
@@ -141,144 +141,144 @@ pub enum CDDAPaletteTrapsValue {
   ParamRef(CDDAPaletteParameterReference),
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDAPaletteParameterReference {
   pub param: String,
   pub fallback: String,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDAPaletteParametersValueDefault {
   pub distribution: CDDAPaletteDistribution,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(untagged)]
 pub enum CDDAPaletteItemsValue {
   Item(CDDAPaletteItemsValueItem),
   ItemList(Vec<CDDAPaletteItemsValueItem>),
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(untagged)]
 pub enum CDDAPaletteNpcsValue {
   Npc(CDDAPaletteNpcsValueNpc),
   NpcList(Vec<CDDAPaletteNpcsValueNpc>),
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(untagged)]
 pub enum CDDAPaletteFieldsValue {
   Field(CDDAPaletteFieldsValueField),
   FieldList(Vec<CDDAPaletteFieldsValueField>)
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(untagged)]
 pub enum CDDAPaletteSignsValue {
   Sign(CDDAPaletteSignsValueSign),
   SignList(Vec<CDDAPaletteSignsValueSign>)
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(untagged)]
 pub enum CDDAPaletteVendingsValue {
   Vending(CDDAPaletteVendingsValueVending),
   VendingList(Vec<CDDAPaletteVendingsValueVending>)
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(untagged)]
 pub enum CDDAPaletteToiletsValue {
   Toilet(CDDAPaletteToiletsValueToilet),
   ToiletList(Vec<CDDAPaletteToiletsValueToilet>)
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(untagged)]
 pub enum CDDAPaletteGaspumpsValue {
   Gaspump(CDDAPaletteGaspumpsValueGaspump),
   GaspumpList(Vec<CDDAPaletteGaspumpsValueGaspump>)
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(untagged)]
 pub enum CDDAPaletteVehiclesValue {
   Vehicle(CDDAPaletteVehiclesValueVehicle),
   VehicleList(Vec<CDDAPaletteVehiclesValueVehicle>)
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(untagged)]
 pub enum CDDAPaletteItemValue {
   Item(CDDAPaletteItemValueItem),
   ItemList(Vec<CDDAPaletteItemValueItem>),
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(untagged)]
 pub enum CDDAPaletteMonstersValue {
   Monster(CDDAPaletteMonstersValueMonster),
   MonsterList(Vec<CDDAPaletteMonstersValueMonster>),
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(untagged)]
 pub enum CDDAPaletteMonsterValue {
   Monster(CDDAPaletteMonsterValueMonster),
   MonsterList(Vec<CDDAPaletteMonsterValueMonster>),
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(untagged)]
 pub enum CDDAPaletteTrapsValueObject {
   Trap(CDDAPaletteTrapsValueTrap),
   TrapList(Vec<CDDAPaletteTrapsValueTrap>),
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(untagged)]
 pub enum CDDAPaletteSealedValue {
   Sealed(CDDAPaletteSealedValueSealed),
   SealedList(Vec<CDDAPaletteSealedValueSealed>),
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(untagged)]
 pub enum CDDAPaletteSealedValueSealed {
   Item(CDDAPaletteSealedValueSealedItem),
   Itemgroup(CDDAPaletteSealedValueSealedItems),
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(untagged)]
 pub enum CDDAPaletteGraffitiValue {
   Sign(CDDAPaletteGraffitiValueGraffiti),
   SignList(Vec<CDDAPaletteGraffitiValueGraffiti>)
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(untagged)]
 pub enum CDDAPaletteZonesValue {
   Zone(CDDAPaletteZonesValueZone),
   ZoneList(Vec<CDDAPaletteZonesValueZone>),
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(untagged)]
 pub enum CDDAPaletteRubbleValue {
   Rubble(CDDAPaletteRubbleValueRubble),
   RubbleList(Vec<CDDAPaletteRubbleValueRubble>),
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(untagged)]
 pub enum CDDAPaletteTranslateValue {
   Translate(CDDAPaletteTranslateValueTranslate),
   TranslateList(Vec<CDDAPaletteTranslateValueTranslate>),
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(untagged)]
 pub enum CDDAPaletteTransformValue {
   Transform(CDDAPaletteTransformValueTransform),
@@ -286,7 +286,7 @@ pub enum CDDAPaletteTransformValue {
 }
 
 // only used in update_mapgen
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDAPaletteTransformValueTransform {
   /**
    * @docs MAPGEN.md    the id of the `ter_furn_transform` to run
@@ -295,7 +295,7 @@ pub struct CDDAPaletteTransformValueTransform {
 }
 
 // only used in update_mapgen
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDAPaletteTranslateValueTranslate {
   /**
    * @docs MAPGEN.md    the terrain id of the terrain to be transformed
@@ -307,7 +307,7 @@ pub struct CDDAPaletteTranslateValueTranslate {
   pub to: String,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDAPaletteRubbleValueRubble {
   /**
    * @docs MAPGEN.md    furniture id     default is f_rubble
@@ -333,7 +333,7 @@ pub struct CDDAPaletteRubbleValueRubble {
   pub overwrite: bool,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDAPaletteZonesValueZone {
   /**
    * @docs MAPGEN.md    Values: `"NPC_RETREAT"`, `"NPC_NO_INVESTIGATE"`, or `"NPC_INVESTIGATE_ONLY"`
@@ -352,7 +352,7 @@ pub struct CDDAPaletteZonesValueZone {
 }
 
 // at least one key    not used!!!
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDAPaletteGraffitiValueGraffiti {
   /**
    * @docs MAPGEN.md    the massage shown
@@ -366,7 +366,7 @@ pub struct CDDAPaletteGraffitiValueGraffiti {
   pub snippet: String,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDAPaletteSealedValueSealedItem {
   pub furniture: String,
   /**
@@ -376,7 +376,7 @@ pub struct CDDAPaletteSealedValueSealedItem {
   pub item: Option<CDDAPaletteItemValue>,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDAPaletteSealedValueSealedItems {
   pub furniture: String,
   /**
@@ -386,22 +386,22 @@ pub struct CDDAPaletteSealedValueSealedItems {
   pub items: Option<CDDAPaletteItemsValue>,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDAPaletteTrapsValueTrap {
   pub trap: String
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDAPaletteTerrainValueTerrain {
   pub terrain: String
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDAPaletteFurnitureValueFurniture {
   pub furniture: String
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDAPaletteMonsterValueMonster {
   pub monster: String,
   /**
@@ -423,7 +423,7 @@ pub struct CDDAPaletteMonsterValueMonster {
   pub target: bool,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDAPaletteItemValueItem {
   pub item: String,
   /**
@@ -448,7 +448,7 @@ pub struct CDDAPaletteItemValueItem {
   // TODO: variant and custom_flags    same for items
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDAPaletteVehiclesValueVehicle {
   /**
    * @docs MAPGEN.md    if of vehicle id or vehicle group id
@@ -461,7 +461,7 @@ pub struct CDDAPaletteVehiclesValueVehicle {
   pub feul:String,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDAPaletteGaspumpsValueGaspump {
   /**
    * @docs MAPGEN.md    default is random? or zero?
@@ -475,7 +475,7 @@ pub struct CDDAPaletteGaspumpsValueGaspump {
   pub feul:String,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDAPaletteToiletsValueToilet {
   /**
    * @docs MAPGEN.md    default is random? or zero?
@@ -484,7 +484,7 @@ pub struct CDDAPaletteToiletsValueToilet {
   pub amount: CDDAIntRangeOne,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDAPaletteVendingsValueVending {
   /**
    * @docs MAPGEN.md    default randomly choose one of "vending_food" or "vending_drink"
@@ -516,7 +516,7 @@ pub struct CDDAPaletteVendingsValueVending {
 }
 
 // at least one key
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDAPaletteSignsValueSign {
   /**
    * @docs MAPGEN.md    the massage shown
@@ -531,7 +531,7 @@ pub struct CDDAPaletteSignsValueSign {
 }
 
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDAPaletteNpcsValueNpc {
   // npc class id
   pub class: String,
@@ -548,7 +548,7 @@ pub struct CDDAPaletteNpcsValueNpc {
   pub add_trait: CDDAStringArray,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDAPaletteFieldsValueField {
   pub field: String,
   /**
@@ -563,7 +563,7 @@ pub struct CDDAPaletteFieldsValueField {
   pub age: i64,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDAPaletteItemsValueItem {
   pub item: String,
   /**
@@ -585,7 +585,7 @@ pub struct CDDAPaletteItemsValueItem {
   pub magazine: i64,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDAPaletteLiquidsValue {
   pub liquid: String,
   pub amount: (i64, i64),
@@ -597,7 +597,7 @@ pub struct CDDAPaletteLiquidsValue {
   pub chance: CDDAIntRangeOne,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDAPaletteMonstersValueMonster {
   pub monster: String,
   /**
@@ -610,13 +610,13 @@ pub struct CDDAPaletteMonstersValueMonster {
    * @docs MAPGEN.md    if not present, use default density limited by distance between city center
    * use -1.0 to represent default
    */
-  // #[serde(default = "default_m1_f64")]
+  #[serde(default = "default_m1_f64")]
   // #[serde(skip_serializing_if = "is_default_m1_f64")]
-  #[serde(default)]
+  // #[serde(default)]
   pub density: f64,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(untagged)]
 pub enum CDDAStringArray {
   // without unit
@@ -631,7 +631,7 @@ impl Default for CDDAStringArray {
 }
 
 // integer or range default with 1
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(untagged)]
 pub enum CDDAIntRangeOne {
   // without unit
@@ -651,7 +651,7 @@ impl Default for CDDAIntRangeOne {
 }
 
 // integer or range default with 100
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(untagged)]
 pub enum CDDAIntRangeHun {
   // without unit
@@ -668,6 +668,10 @@ impl Default for CDDAIntRangeHun {
   fn default() -> Self {
     CDDAIntRangeHun::Single(100)
   }
+}
+
+fn default_m1_f64() -> f64 {
+  -1.0
 }
 
 fn is_default<T: Default + PartialEq>(t: &T) -> bool {
