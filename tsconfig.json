@@ -1,19 +1,16 @@
 {
-  "include": [
-    "src",
-    "features"
-  ],
+  "include": ["src", "features"],
   "ts-node": {
-    "files": true
+    "files": true,
+    "compilerOptions": {
+      "module": "commonjs"
+    }
   },
   "compilerOptions": {
     "baseUrl": "./",
     "target": "es2019",
     "module": "esnext",
-    "lib": [
-      "esnext",
-      "dom"
-    ],
+    "lib": ["esnext", "dom"],
     "allowJs": true,
     "jsx": "react-jsx",
     "declaration": true,

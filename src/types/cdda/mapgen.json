@@ -1,0 +1,339 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CDDAMapgenWithCache",
+  "type": "object",
+  "required": [
+    "parsedMap",
+    "rawMapgen"
+  ],
+  "properties": {
+    "parsedMap": {
+      "description": "Map 2D array that have place-holder characters replaced with actual item ID, for map view to display And we have multiple mapgen in a file, so this will be a 3D matrix. But each location can have terrain, furniture, item and so on, so each tile will be a list, so this is a 4D tensor",
+      "type": "array",
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/ItemIDOrItemList"
+            }
+          }
+        }
+      }
+    },
+    "rawMapgen": {
+      "description": "Full mapgen file content, for code editor to display",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/CDDAMapgen"
+      }
+    }
+  },
+  "definitions": {
+    "CDDAMapgen": {
+      "type": "object",
+      "required": [
+        "method",
+        "object",
+        "om_terrain",
+        "type"
+      ],
+      "properties": {
+        "method": {
+          "type": "string"
+        },
+        "object": {
+          "$ref": "#/definitions/CDDAMapgenObject"
+        },
+        "om_terrain": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        }
+      }
+    },
+    "CDDAMapgenFurniture": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "CDDAMapgenItem": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "$ref": "#/definitions/CDDAMapgenItemRandomListItem"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CDDAMapgenItemRandomListItem"
+          }
+        }
+      ]
+    },
+    "CDDAMapgenItemRandomListItem": {
+      "type": "object",
+      "required": [
+        "chance",
+        "item"
+      ],
+      "properties": {
+        "chance": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "item": {
+          "type": "string"
+        },
+        "repeat": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      }
+    },
+    "CDDAMapgenObject": {
+      "type": "object",
+      "required": [
+        "fill_ter",
+        "rows",
+        "terrain"
+      ],
+      "properties": {
+        "fill_ter": {
+          "type": "string"
+        },
+        "furniture": {
+          "description": "@example `{ \"=\": \"f_magic_bench\", \"-\": \"f_alembic\", \"?\": \"f_rack_wood\" }`",
+          "default": {},
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/CDDAMapgenFurniture"
+          }
+        },
+        "items": {
+          "default": {},
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/CDDAMapgenItem"
+          }
+        },
+        "palettes": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "place_loot": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CDDAMapgenPlaceLoot"
+          }
+        },
+        "place_monsters": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CDDAMapgenPlaceMonster"
+          }
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "terrain": {
+          "description": "@example `{ \"_\": \"t_open_air\", \")\": \"t_wall_glass\", \"#\": \"t_rock_wall\", \"-\": \"t_floor\", \"]\": \"t_door_glass_c\" }`",
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/CDDAMapgenTerrain"
+          }
+        },
+        "traps": {
+          "description": "@example `{ \"=\": \"tr_rollmat\" }`",
+          "default": {},
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/CDDAMapgenTrap"
+          }
+        }
+      }
+    },
+    "CDDAMapgenPlaceLoot": {
+      "type": "object",
+      "required": [
+        "chance",
+        "item",
+        "x",
+        "y"
+      ],
+      "properties": {
+        "chance": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "item": {
+          "type": "string"
+        },
+        "x": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "y": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "CDDAMapgenPlaceMonster": {
+      "type": "object",
+      "required": [
+        "density",
+        "monster",
+        "repeat",
+        "x",
+        "y"
+      ],
+      "properties": {
+        "density": {
+          "type": "number",
+          "format": "double"
+        },
+        "monster": {
+          "type": "string"
+        },
+        "repeat": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        "x": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "y": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "CDDAMapgenTerrain": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CDDAMapgenTerrainRandomListItem"
+          }
+        }
+      ]
+    },
+    "CDDAMapgenTerrainRandomListItem": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "integer",
+              "format": "int32"
+            }
+          ],
+          "maxItems": 2,
+          "minItems": 2
+        }
+      ]
+    },
+    "CDDAMapgenTrap": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "$ref": "#/definitions/CDDAMapgenTrapObject"
+        }
+      ]
+    },
+    "CDDAMapgenTrapObject": {
+      "type": "object",
+      "required": [
+        "trap"
+      ],
+      "properties": {
+        "trap": {
+          "type": "string"
+        }
+      }
+    },
+    "ItemIDOrItemList": {
+      "description": "A char in map rows can mean multiple item, like # mean a terrain and a furniture, and some terrain can have id same as a furniture, so we have to keep id's type in a tuple",
+      "anyOf": [
+        {
+          "description": "(type, id), where type is like \"terrain\" or \"furniture\"",
+          "type": "array",
+          "items": [
+            {
+              "$ref": "#/definitions/MapgenPaletteKeys"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "maxItems": 2,
+          "minItems": 2
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": [
+              {
+                "$ref": "#/definitions/MapgenPaletteKeys"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "maxItems": 2,
+            "minItems": 2
+          }
+        }
+      ]
+    },
+    "MapgenPaletteKeys": {
+      "type": "string",
+      "enum": [
+        "terrain",
+        "furniture"
+      ]
+    }
+  }
+}

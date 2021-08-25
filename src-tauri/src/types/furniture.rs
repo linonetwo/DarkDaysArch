@@ -1,10 +1,10 @@
 use serde;
 use serde::{Deserialize, Serialize};
-use typescript_type_def::TypeDef;
+use schemars::JsonSchema;
 
 pub type CDDAFurnArray = Vec<CDDAFurniture>;
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(untagged)]
 pub enum CDDAFurniture {
   //type using color
@@ -13,7 +13,7 @@ pub enum CDDAFurniture {
   Background(CDDAFurnitureBg),
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct CDDAFurnitureBase {
   //mandatory
@@ -114,7 +114,7 @@ pub struct CDDAFurnitureBase {
   pub bonus_fire_warmth_feet: i64,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct CDDAFurnitureCr {
   pub color: CDDAColor,
@@ -123,7 +123,7 @@ pub struct CDDAFurnitureCr {
   pub base: CDDAFurnitureBase,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct CDDAFurnitureBg {
   pub bgcolor: CDDAColor,
@@ -132,13 +132,13 @@ pub struct CDDAFurnitureBg {
   pub base: CDDAFurnitureBase,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct CDDATranslation {
   //emmmmm
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct CDDAFurnWorkbench {
   pub multiplier: f64,
@@ -146,7 +146,7 @@ pub struct CDDAFurnWorkbench {
   pub volume: CDDAVolume,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct CDDAFurnPlant {
   pub transform: String,
@@ -157,7 +157,7 @@ pub struct CDDAFurnPlant {
   pub harvest_multiplier: f64,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct CDDAFurnBash {
   #[serde(rename = "str_min")]
@@ -222,7 +222,7 @@ pub struct CDDAFurnBash {
   pub items: Vec<CDDABashDeconItem>,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct CDDABashDeconItem {
   pub item: String,
@@ -232,7 +232,7 @@ pub struct CDDABashDeconItem {
   pub prob: i64,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct CDDAFurnDecon {
   #[serde(rename = "deconstruct_above")]
@@ -251,14 +251,14 @@ pub struct CDDAFurnDecon {
   pub items: Vec<CDDABashDeconItem>,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(untagged)]
 pub enum CDDAName {
   Name(String),
   Translation(CDDATranslation),
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(untagged)]
 pub enum CDDAMass {
   // without unit
@@ -267,7 +267,7 @@ pub enum CDDAMass {
   Wunit(String),
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(untagged)]
 pub enum CDDAVolume {
   // without unit
@@ -276,7 +276,7 @@ pub enum CDDAVolume {
   Wunit(String),
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(untagged)]
 pub enum CDDAColor {
   // one color
@@ -285,7 +285,7 @@ pub enum CDDAColor {
   Multiple(Vec<String>),
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(untagged)]
 pub enum CDDAIntRange {
   // without unit

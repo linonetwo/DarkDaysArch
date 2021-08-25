@@ -1,11 +1,11 @@
 use serde::{self, Deserialize, Serialize};
 use std::collections::BTreeMap;
-use typescript_type_def::TypeDef;
+use schemars::JsonSchema;
 
 /**
  * Have all original JSON CDDATileSetConfig have, but with additional inverse index for fast look at things
  */
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct CDDATileSetConfigWithCache {
   /**
@@ -21,7 +21,7 @@ pub struct CDDATileSetConfigWithCache {
 /**
  * value for tile_data_index
  */
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDATileSetInverseIndexedTileData {
   /**
    * copy of tile data
@@ -40,7 +40,7 @@ pub struct CDDATileSetInverseIndexedTileData {
 /**
  * Auto generated type from tile_config.json, enum are adjusted by hand.
  */
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct CDDATileSetConfig {
   #[serde(rename = "tile_info")]
@@ -49,7 +49,7 @@ pub struct CDDATileSetConfig {
   pub tiles_new: Vec<CDDATileSetTilesNew>,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct CDDATileSetTileInfo {
   pub pixelscale: i64,
@@ -57,7 +57,7 @@ pub struct CDDATileSetTileInfo {
   pub height: i64,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct CDDATileSetTilesNew {
   pub file: String,
@@ -76,13 +76,13 @@ pub struct CDDATileSetTilesNew {
   pub ascii: Vec<CDDATileSetAscii>,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDATileSetRandomSpriteDescItem {
   sprite: i64,
   weight: i64,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(untagged)]
 pub enum CDDATileSetImageID {
   Id(i64),
@@ -90,14 +90,14 @@ pub enum CDDATileSetImageID {
   RandomList(Vec<CDDATileSetRandomSpriteDescItem>),
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(untagged)]
 pub enum CDDATileSetID {
   Id(String),
   IdList(Vec<String>),
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct CDDATileSetTile {
   pub id: CDDATileSetID,
@@ -113,7 +113,7 @@ pub struct CDDATileSetTile {
   pub comment: Option<String>,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct CDDATileSetAdditionalTile {
   pub id: String,
@@ -121,7 +121,7 @@ pub struct CDDATileSetAdditionalTile {
   pub bg: Option<CDDATileSetImageID>,
 }
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, TypeDef)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct CDDATileSetAscii {
   pub offset: i64,

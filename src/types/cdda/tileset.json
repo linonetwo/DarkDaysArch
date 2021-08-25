@@ -1,0 +1,283 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CDDATileSetConfigWithCache",
+  "description": "Have all original JSON CDDATileSetConfig have, but with additional inverse index for fast look at things",
+  "type": "object",
+  "required": [
+    "textures",
+    "tileDataIndex"
+  ],
+  "properties": {
+    "textures": {
+      "description": "key is file name like `large.png`, value is base64 blob data string",
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "tileDataIndex": {
+      "description": "inverse index to quick lookup tile data, key is tile name like `ranch_camp_17`, value is data I think useful for React renderer.",
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/CDDATileSetInverseIndexedTileData"
+      }
+    }
+  },
+  "definitions": {
+    "CDDATileSetAdditionalTile": {
+      "type": "object",
+      "required": [
+        "id"
+      ],
+      "properties": {
+        "bg": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/CDDATileSetImageID"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "fg": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/CDDATileSetImageID"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "id": {
+          "type": "string"
+        }
+      }
+    },
+    "CDDATileSetAscii": {
+      "type": "object",
+      "required": [
+        "bold",
+        "color",
+        "offset"
+      ],
+      "properties": {
+        "bold": {
+          "type": "boolean"
+        },
+        "color": {
+          "type": "string"
+        },
+        "offset": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "CDDATileSetID": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "CDDATileSetImageID": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "format": "int64"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CDDATileSetRandomSpriteDescItem"
+          }
+        }
+      ]
+    },
+    "CDDATileSetInverseIndexedTileData": {
+      "description": "value for tile_data_index",
+      "type": "object",
+      "required": [
+        "start_id",
+        "tile",
+        "tileset"
+      ],
+      "properties": {
+        "start_id": {
+          "description": "id in whole tileset is consequent, so each png 's tile 's id should have minus the start_id of this png",
+          "type": "integer",
+          "format": "int64"
+        },
+        "tile": {
+          "description": "copy of tile data",
+          "allOf": [
+            {
+              "$ref": "#/definitions/CDDATileSetTile"
+            }
+          ]
+        },
+        "tileset": {
+          "description": "copy of tileset image data, omit the `tiles` `ascii` field.",
+          "allOf": [
+            {
+              "$ref": "#/definitions/CDDATileSetTilesNew"
+            }
+          ]
+        }
+      }
+    },
+    "CDDATileSetRandomSpriteDescItem": {
+      "type": "object",
+      "required": [
+        "sprite",
+        "weight"
+      ],
+      "properties": {
+        "sprite": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "weight": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "CDDATileSetTile": {
+      "type": "object",
+      "required": [
+        "id"
+      ],
+      "properties": {
+        "//": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "additional_tiles": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CDDATileSetAdditionalTile"
+          }
+        },
+        "animated": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "bg": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/CDDATileSetImageID"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "fg": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/CDDATileSetImageID"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "id": {
+          "$ref": "#/definitions/CDDATileSetID"
+        },
+        "multitile": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "rotates": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        }
+      }
+    },
+    "CDDATileSetTilesNew": {
+      "type": "object",
+      "required": [
+        "file",
+        "tiles"
+      ],
+      "properties": {
+        "//": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "ascii": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CDDATileSetAscii"
+          }
+        },
+        "file": {
+          "type": "string"
+        },
+        "sprite_height": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "int64"
+        },
+        "sprite_offset_x": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "int64"
+        },
+        "sprite_offset_y": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "int64"
+        },
+        "sprite_width": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "int64"
+        },
+        "tiles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CDDATileSetTile"
+          }
+        }
+      }
+    }
+  }
+}
