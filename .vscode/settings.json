@@ -6,6 +6,7 @@
     "Mapgen",
     "PIXI",
     "craco",
+    "jsonschema",
     "languagedetector",
     "tileset",
     "typesync"

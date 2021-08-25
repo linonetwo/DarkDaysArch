@@ -31,8 +31,8 @@ where
 
 fn main() {
   let project_root = &get_project_root().unwrap();
-  generate::<tileset_json::CDDATileSetConfigWithCache>(Path::join(project_root, "../src/types/tileset.json"));
-  generate::<mapgen_json::CDDAMapgenWithCache>(Path::join(project_root, "../src/types/mapgen.json"));
-  generate::<palette_json::CDDAPaletteArray>(Path::join(project_root, "../src/types/palette.json"));
-  generate::<furniture_json::CDDAFurnArray>(Path::join(project_root, "../src/types/furniture.json"));
+  generate::<tileset_json::CDDATileSetConfigWithCache>(Path::join(project_root, "../src/types/cdda/tileset.json"));
+  generate::<mapgen_json::CDDAMapgenWithCache>(Path::join(project_root, "../src/types/cdda/mapgen.json"));
+  generate::<palette_json::CDDAPaletteArray>(Path::join(project_root, "../src/types/cdda/palette.json"));
+  generate::<furniture_json::CDDAFurnArray>(Path::join(project_root, "../src/types/cdda/furniture.json"));
 }
