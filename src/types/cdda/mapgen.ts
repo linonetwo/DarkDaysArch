@@ -10,8 +10,10 @@ export type CDDAMapgenTerrainRandomListItem=(string|[string,types.I32]);
 export type CDDAMapgenTerrain=(string|(types.CDDAMapgenTerrainRandomListItem)[]);
 export type CDDAMapgenFurniture=(string|(string)[]);
 export type CDDAMapgenPlaceLoot={"item":string;"x":types.I64;"y":types.I64;"chance":types.I64;};
-export type CDDAMapgenItemRandomListItem={"item":string;"chance":types.I64;"repeat":((types.I64)[]|null);};
+export type CDDAMapgenItemRandomListItem={"item":string;"chance":types.I64;"repeat"?:(types.I64)[];};
 export type CDDAMapgenItem=(string|types.CDDAMapgenItemRandomListItem|(types.CDDAMapgenItemRandomListItem)[]);
+export type CDDAMapgenTrapObject={"trap":string;};
+export type CDDAMapgenTrap=(string|types.CDDAMapgenTrapObject);
 export type CDDAMapgenObject={"fill_ter":string;"rows":(string)[];"palettes"?:(string)[];"place_monsters"?:(types.CDDAMapgenPlaceMonster)[];
 /**
  * * @example `{ "_": "t_open_air", ")": "t_wall_glass", "#": "t_rock_wall", "-": "t_floor", "]": "t_door_glass_c" }`
@@ -22,13 +24,20 @@ export type CDDAMapgenObject={"fill_ter":string;"rows":(string)[];"palettes"?:(s
  * * @example `{ "=": "f_magic_bench", "-": "f_alembic", "?": "f_rack_wood" }`
  *    
  */
-"furniture":(Record<string,types.CDDAMapgenFurniture>|null);"place_loot"?:(types.CDDAMapgenPlaceLoot)[];"items":(Record<string,types.CDDAMapgenItem>|null);
+"furniture"?:Record<string,types.CDDAMapgenFurniture>;"place_loot"?:(types.CDDAMapgenPlaceLoot)[];"items"?:Record<string,types.CDDAMapgenItem>;
 /**
  * * @example `{ "=": "tr_rollmat" }`
  *    
  */
-"traps":(Record<string,string>|null);};
+"traps"?:Record<string,types.CDDAMapgenTrap>;};
 export type CDDAMapgen={"type":string;"method":string;"om_terrain":string;"object":types.CDDAMapgenObject;};
+export type MapgenPaletteKeys=("terrain"|"furniture");
+
+/**
+ * * A char in map rows can mean multiple item, like # mean a terrain and a furniture, and some terrain can have id same as a furniture, so we have to keep id's type in a tuple
+ *  
+ */
+export type ItemIDOrItemList=([types.MapgenPaletteKeys,string]|([types.MapgenPaletteKeys,string])[]);
 export type CDDAMapgenWithCache={
 /**
  * * Full mapgen file content, for code editor to display
@@ -37,8 +46,9 @@ export type CDDAMapgenWithCache={
 "rawMapgen":(types.CDDAMapgen)[];
 /**
  * * Map 2D array that have place-holder characters replaced with actual item ID, for map view to display
- *    * And we have multiple mapgen in a file, so this will be a 3D array
+ *    * And we have multiple mapgen in a file, so this will be a 3D matrix.
+ *    * But each location can have terrain, furniture, item and so on, so each tile will be a list, so this is a 4D tensor
  *    
  */
-"parsedMap":(((string)[])[])[];};
+"parsedMap":((((types.ItemIDOrItemList)[])[])[])[];};
 }
