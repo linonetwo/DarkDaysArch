@@ -4,8 +4,10 @@ import { Loader, LoaderResource } from 'pixi.js';
 import { invoke } from '@tauri-apps/api';
 
 import type { RootModel } from './index';
-import { CDDATileSetConfigWithCache, TILE_SET_CONFIG_FILE_NAME } from 'src/types/cdda/tileset';
-import mapgen from 'src/types/cdda/mapgen';
+import { CDDATileSetConfigWithCache } from 'src/types/cdda/tileset';
+import { CDDAMapgenWithCache } from 'src/types/cdda/mapgen';
+
+export const TILE_SET_CONFIG_FILE_NAME = 'tile_config.json';
 
 export interface IFileTree {
   /** 文件夹的子文件 */
@@ -91,7 +93,7 @@ export const files = createModel<RootModel>()({
     async loadFile(mapgenFilePath: string) {
       try {
         // eslint-disable-next-line @typescript-eslint/await-thenable
-        const mapgenWithCache = await invoke<mapgen.CDDAMapgenWithCache>('read_mapgen_file', {
+        const mapgenWithCache = await invoke<CDDAMapgenWithCache>('read_mapgen_file', {
           mapgenFilePath,
         });
         const newFile = { path: mapgenFilePath, content: JSON.stringify(mapgenWithCache.rawMapgen, undefined, '  ') };

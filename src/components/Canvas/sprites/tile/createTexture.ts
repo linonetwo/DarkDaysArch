@@ -2,11 +2,19 @@ import { Texture, Rectangle, SCALE_MODES, BaseTexture } from 'pixi.js';
 
 import { textureManager } from 'src/store/global/textureManager';
 import { Direction, directionToIndex } from 'src/types/direction';
-import { CDDATileSetInverseIndexedTileData, ITileRandomSpriteDesc, ITileSetTile, TileLayers } from 'src/types/cdda/tileset';
+import { CDDATileSetInverseIndexedTileData, CDDATileSetRandomSpriteDescItem, CDDATileSetTile } from 'src/types/cdda/tileset';
 
 export interface ITileContext {
   direction?: Direction;
   tileSubSetData: CDDATileSetInverseIndexedTileData;
+}
+
+/**
+ * CDDA tile can have foreground and background
+ */
+export enum CDDATileLayers {
+  bg = 'bg',
+  fg = 'fg',
 }
 
 /**
@@ -26,7 +34,7 @@ function getTileColumnRow(id: number, idStart: number, totalColumns: number): { 
 interface INewTileOptions {
   direction?: Direction;
   idStart: number;
-  layer: TileLayers;
+  layer: CDDATileLayers;
   tileHeight: number;
   tileID: number;
   tileName: string;
@@ -55,7 +63,7 @@ function createTileTextureFromBaseTexture(baseTexture: BaseTexture, newTileOptio
  * @param tileSpriteDesc
  * @returns
  */
-function pickRandomTextureForTile(tileSpriteDesc: ITileRandomSpriteDesc): number {
+function pickRandomTextureForTile(tileSpriteDesc: CDDATileSetRandomSpriteDescItem[]): number {
   const weightCount = tileSpriteDesc.reduce((previous, current) => previous + current.weight, 0);
   let randomSpriteIndex = Math.floor(Math.random() * weightCount);
   for (const [index, element] of tileSpriteDesc.entries()) {
@@ -70,7 +78,7 @@ function pickRandomTextureForTile(tileSpriteDesc: ITileRandomSpriteDesc): number
 export interface ICreateTileOptions {
   idStart: number;
   tileHeight: number;
-  tileToRender: ITileSetTile | undefined;
+  tileToRender: CDDATileSetTile | undefined;
   tileWidth: number;
   totalColumns: number;
 }
@@ -86,6 +94,12 @@ export function getNewTileOptions(tileSetTexture: Texture, context: ITileContext
   const { tileSubSetData } = context;
   const tileWidth = tileSubSetData.tileset.sprite_width;
   const tileHeight = tileSubSetData.tileset.sprite_height;
+  if (typeof tileWidth !== 'number') {
+    throw new TypeError(`tileWidth is ${typeof tileWidth} in getNewTileOptions, ${JSON.stringify(context)}`);
+  }
+  if (typeof tileHeight !== 'number') {
+    throw new TypeError(`tileHeight is ${typeof tileHeight} in getNewTileOptions, ${JSON.stringify(context)}`);
+  }
   // id can be string or array, array means ids in the array share the same texture
   const tileToRender = tileSubSetData.tile;
   const totalColumns = tileSetTexture.orig.width / tileWidth;
@@ -112,7 +126,7 @@ export function getNewTileOptions(tileSetTexture: Texture, context: ITileContext
 export function createTileTextures(
   tileName: string,
   tileSetTexture: Texture,
-  layer: TileLayers,
+  layer: CDDATileLayers,
   context: { direction?: Direction } & ICreateTileOptions,
 ): Texture {
   const { direction, tileWidth, tileHeight, tileToRender, totalColumns, idStart } = context;
@@ -135,7 +149,7 @@ export function createTileTextures(
   if (tileToRender !== undefined && Array.isArray(tileToRender[layer])) {
     const tileDirectionIndex = directionToIndex[direction ?? Direction.up];
     const tileIDs = tileToRender[layer];
-    if (typeof (tileIDs as number[] | ITileRandomSpriteDesc)[0] === 'number') {
+    if (typeof (tileIDs as number[] | CDDATileSetRandomSpriteDescItem[])[0] === 'number') {
       newTileTexture = createTileTextureFromBaseTexture(tileSetTexture.baseTexture, {
         idStart,
         tileHeight,
@@ -147,13 +161,13 @@ export function createTileTextures(
         // with direction option
         direction,
       });
-    } else if (typeof (tileIDs as ITileRandomSpriteDesc)[0].spirit === 'number') {
+    } else if (typeof (tileIDs as CDDATileSetRandomSpriteDescItem[])[0].spirit === 'number') {
       // or it can be single direction but randomly picked texture
-      const index = pickRandomTextureForTile(tileIDs as ITileRandomSpriteDesc);
+      const index = pickRandomTextureForTile(tileIDs as CDDATileSetRandomSpriteDescItem[]);
       newTileTexture = createTileTextureFromBaseTexture(tileSetTexture.baseTexture, {
         idStart,
         tileHeight,
-        tileID: (tileIDs as ITileRandomSpriteDesc)[index].spirit,
+        tileID: (tileIDs as CDDATileSetRandomSpriteDescItem[])[index].sprite,
         tileName,
         tileWidth,
         totalColumns,

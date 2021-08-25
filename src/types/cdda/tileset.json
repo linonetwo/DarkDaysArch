@@ -9,7 +9,7 @@
   ],
   "properties": {
     "textures": {
-      "description": "key is file name like `large.png`, value is base64 blob data string",
+      "description": "tileset in base64 format key is file name like `large.png`, value is base64 blob data string",
       "type": "object",
       "additionalProperties": {
         "type": "string"
@@ -132,7 +132,7 @@
           ]
         },
         "tileset": {
-          "description": "copy of tileset image data, omit the `tiles` `ascii` field.",
+          "description": "copy of tileset image data, omit the `tiles` `ascii` field.  (become empty array). required field is enforced by rust side",
           "allOf": [
             {
               "$ref": "#/definitions/CDDATileSetTilesNew"

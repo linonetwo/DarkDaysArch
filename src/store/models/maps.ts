@@ -2,11 +2,11 @@
 import { createModel } from '@rematch/core';
 import type { RootModel } from './index';
 
-import mapgen from 'src/types/cdda/mapgen';
+import { CDDAMapgenWithCache } from 'src/types/cdda/mapgen';
 
 interface IMaps {
   activeOpenedMapIndex?: number;
-  mapsInOpenedFile: mapgen.CDDAMapgenWithCache['parsedMap'];
+  mapsInOpenedFile: CDDAMapgenWithCache['parsedMap'];
 }
 
 /**
@@ -15,7 +15,7 @@ interface IMaps {
 export const maps = createModel<RootModel>()({
   state: { mapsInOpenedFile: [], activeOpenedMapIndex: undefined } as IMaps,
   reducers: {
-    mapsInOpenedFileSetter(state, newMaps: mapgen.CDDAMapgenWithCache['parsedMap']) {
+    mapsInOpenedFileSetter(state, newMaps: CDDAMapgenWithCache['parsedMap']) {
       state.mapsInOpenedFile = newMaps;
       return state;
     },

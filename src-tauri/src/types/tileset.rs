@@ -9,6 +9,7 @@ use schemars::JsonSchema;
 #[serde(rename_all = "camelCase")]
 pub struct CDDATileSetConfigWithCache {
   /**
+   * tileset in base64 format
    * key is file name like `large.png`, value is base64 blob data string
    */
   pub textures: BTreeMap<String, String>,
@@ -28,7 +29,8 @@ pub struct CDDATileSetInverseIndexedTileData {
    */
   pub tile: CDDATileSetTile,
   /**
-   * copy of tileset image data, omit the `tiles` `ascii` field.
+   * copy of tileset image data, omit the `tiles` `ascii` field.  (become empty array).
+   * required field is enforced by rust side
    */
   pub tileset: CDDATileSetTilesNew,
   /**
