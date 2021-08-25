@@ -24,7 +24,7 @@ where
 
 fn main() {
   let project_root = &get_project_root().unwrap();
-  generate::<mapgen_json::CDDAMapgenWithCache>(Path::join(project_root, "../src/types/mapgen.ts"));
-  generate::<palette_json::CDDAPaletteArray>(Path::join(project_root, "../src/types/palette.ts"));
-  generate::<furniture_json::CDDAFurnArray>(Path::join(project_root, "../src/types/furniture.ts"));
+  generate::<mapgen_json::CDDAMapgenWithCache>(Path::join(project_root, "../src/types/cdda/mapgen.ts"));
+  generate::<palette_json::CDDAPaletteArray>(Path::join(project_root, "../src/types/cdda/palette.ts"));
+  generate::<furniture_json::CDDAFurnArray>(Path::join(project_root, "../src/types/cdda/furniture.ts"));
 }
