@@ -14,7 +14,7 @@ mod palette_json;
 
 fn generate<T>(path: PathBuf)
 where
-  T: ?Sized + TypeDef,
+  T: ?Sized + TypeDef, // Sized or ?Sized are both ok, click https://zhuanlan.zhihu.com/p/21820917 to learn why
 {
   let mut buf = Vec::new();
   write_definition_file::<_, T>(&mut buf, Default::default()).unwrap();
