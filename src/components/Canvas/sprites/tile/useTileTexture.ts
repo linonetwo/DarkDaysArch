@@ -1,10 +1,10 @@
 import { Texture, Loader } from 'pixi.js';
 import { useState, useLayoutEffect } from 'react';
 
-import { textureManager } from 'src/store/global/textureManager';
+import { textureManager, CDDATileLayers } from 'src/store/global/textureManager';
 import { TILE_SET_CONFIG_FILE_NAME } from 'src/store/models/files';
 import { CDDATileSetConfigWithCache } from 'src/types/cdda/tileset';
-import { getNewTileOptions, createTileTextures, CDDATileLayers } from './createTexture';
+import { getNewTileOptions, createTileTextures } from './createTexture';
 
 /**
  * 在 componentDidMount 的时候加载地块所需的贴图
@@ -34,7 +34,7 @@ export function useTileTexture(tileName: string): [Texture | undefined, Texture 
 
             // a tile can have foreground texture and a background texture
             fgTileTextureSetter(
-              textureManager.getOrCreateTexture(textureManager.getTileCacheID(tileName, 'fg', direction), () =>
+              textureManager.getOrCreateTexture(textureManager.getTileCacheID(tileName, CDDATileLayers.fg, direction), () =>
                 createTileTextures(tileName, tileSetTexture, CDDATileLayers.fg, {
                   direction,
                   ...newTileOptions,
@@ -42,7 +42,7 @@ export function useTileTexture(tileName: string): [Texture | undefined, Texture 
               ),
             );
             bgTileTextureSetter(
-              textureManager.getOrCreateTexture(textureManager.getTileCacheID(tileName, 'bg', direction), () =>
+              textureManager.getOrCreateTexture(textureManager.getTileCacheID(tileName, CDDATileLayers.bg, direction), () =>
                 createTileTextures(tileName, tileSetTexture, CDDATileLayers.bg, {
                   direction,
                   ...newTileOptions,

@@ -1,7 +1,14 @@
 import { Texture } from 'pixi.js';
 
 import { Direction } from 'src/types/direction';
-import { TileLayers } from 'src/types/cdda/tileset';
+
+/**
+ * CDDA tile can have foreground and background
+ */
+export enum CDDATileLayers {
+  bg = 'bg',
+  fg = 'fg',
+}
 
 export interface ITileTextures {
   bg?: Texture;
@@ -24,7 +31,7 @@ class TextureManager {
     return this.textures[tileName];
   }
 
-  public getTileCacheID(tileName: string, layer: TileLayers, direction?: Direction): string {
+  public getTileCacheID(tileName: string, layer: CDDATileLayers, direction?: Direction): string {
     return `${tileName}_${layer}${direction ?? ''}`;
   }
 }

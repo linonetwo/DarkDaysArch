@@ -1,20 +1,12 @@
 import { Texture, Rectangle, SCALE_MODES, BaseTexture } from 'pixi.js';
 
-import { textureManager } from 'src/store/global/textureManager';
+import { CDDATileLayers, textureManager } from 'src/store/global/textureManager';
 import { Direction, directionToIndex } from 'src/types/direction';
 import { CDDATileSetInverseIndexedTileData, CDDATileSetRandomSpriteDescItem, CDDATileSetTile } from 'src/types/cdda/tileset';
 
 export interface ITileContext {
   direction?: Direction;
   tileSubSetData: CDDATileSetInverseIndexedTileData;
-}
-
-/**
- * CDDA tile can have foreground and background
- */
-export enum CDDATileLayers {
-  bg = 'bg',
-  fg = 'fg',
 }
 
 /**
