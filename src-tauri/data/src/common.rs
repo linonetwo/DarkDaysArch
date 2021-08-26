@@ -1,0 +1,65 @@
+pub mod int64;
+pub mod float64;
+
+use serde::{self, Deserialize, Serialize};
+// use std::collections::BTreeMap;
+use schemars::JsonSchema;
+
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[serde(untagged)]
+pub enum CDDAIntRange {
+  // without unit
+  Single(i64),
+  // with unit
+  Range((i64, i64)),
+}
+impl CDDAIntRange {
+  pub fn default_int_range_1()-> CDDAIntRange {
+    CDDAIntRange::Single(1)
+  }
+  
+  pub fn is_default_int_range_1(t: &CDDAIntRange)-> bool {
+    t == &CDDAIntRange::default_int_range_1()
+  }
+
+  pub fn default_int_range_100()-> CDDAIntRange {
+    CDDAIntRange::Single(100)
+  }
+  
+  pub fn is_default_int_range_100(t: &CDDAIntRange)-> bool {
+    t == &CDDAIntRange::default_int_range_100()
+  }
+
+  pub fn default_int_range_0()-> CDDAIntRange {
+    CDDAIntRange::Single(0)
+  }
+  
+  pub fn is_default_int_range_0(t: &CDDAIntRange)-> bool {
+    t == &CDDAIntRange::default_int_range_0()
+  }
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[serde(untagged)]
+pub enum CDDAStringArray {
+// without unit
+Single(String),
+// with unit
+Multiple(Vec<String>),
+}
+
+impl CDDAStringArray {
+  pub fn default_string_array() -> CDDAStringArray {
+      CDDAStringArray::Multiple(Vec::<String>::new())
+  }
+
+  pub fn is_default_string_array(t: &CDDAStringArray) -> bool {
+      t == &CDDAStringArray::default_string_array()
+  }
+}
+
+
+// fn is_default<T: Default + PartialEq>(t: &T) -> bool {
+//   t == &T::default()
+// }

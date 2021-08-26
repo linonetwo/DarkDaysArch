@@ -11,14 +11,7 @@ use schemars::{schema_for, JsonSchema};
  * convert jsonschema to ts: https://github.com/bcherny/json-schema-to-typescript
 */
 
-#[path = "../src/types/tileset.rs"]
-mod tileset_json;
-#[path = "../src/types/furniture.rs"]
-mod furniture_json;
-#[path = "../src/types/mapgen.rs"]
-mod mapgen_json;
-#[path = "../src/types/palette.rs"]
-mod palette_json;
+use data::types::{palette,furniture,mapgen,tileset};
 
 fn generate<T>(path: PathBuf)
 where
@@ -31,8 +24,8 @@ where
 
 fn main() {
   let project_root = &get_project_root().unwrap();
-  generate::<tileset_json::CDDATileSetConfigWithCache>(Path::join(project_root, "../src/types/cdda/tileset.json"));
-  generate::<mapgen_json::CDDAMapgenWithCache>(Path::join(project_root, "../src/types/cdda/mapgen.json"));
-  generate::<palette_json::CDDAPaletteArray>(Path::join(project_root, "../src/types/cdda/palette.json"));
-  generate::<furniture_json::CDDAFurnArray>(Path::join(project_root, "../src/types/cdda/furniture.json"));
+  generate::<tileset::CDDATileSetConfigWithCache>(Path::join(project_root, "../src/types/cdda/tileset.json"));
+  generate::<mapgen::CDDAMapgenWithCache>(Path::join(project_root, "../src/types/cdda/mapgen.json"));
+  generate::<palette::CDDAPaletteArray>(Path::join(project_root, "../src/types/cdda/palette.json"));
+  generate::<furniture::CDDAFurnArray>(Path::join(project_root, "../src/types/cdda/furniture.json"));
 }

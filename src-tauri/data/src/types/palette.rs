@@ -1,21 +1,25 @@
 use serde::{self, Deserialize, Serialize};
 use std::collections::BTreeMap;
 use schemars::JsonSchema;
+use crate::common;
+// use crate::common::{float64, int64};
 
 pub type CDDAPaletteArray = Vec<CDDAPalette>;
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct CDDAPalette {
-  #[serde(rename = "type")]
+  #[serde(rename= "type")]
   pub type_field: String,
   pub id: String,
 
-  #[serde(rename = "//")]
+  #[serde(rename(serialize = "//"))]
   #[serde(default)]
+  #[serde(skip_serializing_if = "String::is_empty")]
   pub comment: String,
 
   #[serde(default)]
+  #[serde(skip_serializing_if = "BTreeMap::is_empty")]
   pub parameters: BTreeMap<String, CDDAPaletteParametersValue>,
 
   // we can only use mapping in palette
@@ -26,71 +30,91 @@ pub struct CDDAPalette {
    * @docs MAPGEN.md   everything using mapping can be included
    */
   #[serde(default)]
+  #[serde(skip_serializing_if = "BTreeMap::is_empty")]
   pub mapping: BTreeMap<String,CDDAMapgenMapping>,
-
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct CDDAMapgenMapping {
   #[serde(default)]
+  #[serde(skip_serializing_if = "BTreeMap::is_empty")]
   pub terrain: BTreeMap<String, CDDAPaletteTerrainValue>,
   /**
    * @example "furniture": { "c": "f_exercise", "u": [ "f_ergometer", "f_ergometer_mechanical" ]}
    */
   #[serde(default)]
+  #[serde(skip_serializing_if = "BTreeMap::is_empty")]
   pub furniture: BTreeMap<String, CDDAPaletteFurnitureValue>,
   #[serde(default)]
+  #[serde(skip_serializing_if = "BTreeMap::is_empty")]
   pub items: BTreeMap<String, CDDAPaletteItemsValue>,
   #[serde(default)]
+  #[serde(skip_serializing_if = "BTreeMap::is_empty")]
   pub monsters: BTreeMap<String, Vec<CDDAPaletteMonstersValue>>,
   #[serde(default)]
+  #[serde(skip_serializing_if = "BTreeMap::is_empty")]
   pub fields: BTreeMap<String, Vec<CDDAPaletteFieldsValue>>,
   #[serde(default)]
+  #[serde(skip_serializing_if = "BTreeMap::is_empty")]
   pub npcs: BTreeMap<String, Vec<CDDAPaletteNpcsValue>>,
   #[serde(default)]
+  #[serde(skip_serializing_if = "BTreeMap::is_empty")]
   pub signs: BTreeMap<String, Vec<CDDAPaletteSignsValue>>,
   #[serde(default)]
+  #[serde(skip_serializing_if = "BTreeMap::is_empty")]
   pub vendingmachines: BTreeMap<String, Vec<CDDAPaletteVendingsValue>>,
   #[serde(default)]
+  #[serde(skip_serializing_if = "BTreeMap::is_empty")]
   pub liquids: BTreeMap<String, CDDAPaletteLiquidsValue>,
   #[serde(default)]
+  #[serde(skip_serializing_if = "BTreeMap::is_empty")]
   pub vehicles: BTreeMap<String, CDDAPaletteVehiclesValue>,
   #[serde(default)]
+  #[serde(skip_serializing_if = "BTreeMap::is_empty")]
   pub item: BTreeMap<String, CDDAPaletteItemValue>,
   #[serde(default)]
+  #[serde(skip_serializing_if = "BTreeMap::is_empty")]
   pub monster: BTreeMap<String, Vec<CDDAPaletteMonsterValue>>,
   #[serde(default)]
+  #[serde(skip_serializing_if = "BTreeMap::is_empty")]
   pub traps: BTreeMap<String, Vec<CDDAPaletteTrapsValue>>,
   #[serde(default)]
+  #[serde(skip_serializing_if = "BTreeMap::is_empty")]
   pub rubble: BTreeMap<String, Vec<CDDAPaletteRubbleValue>>,
   /**
    * @example "toilets": { "&": { "amount": [ 0, 40 ] } }
    */
   #[serde(default)]
+  #[serde(skip_serializing_if = "BTreeMap::is_empty")]
   pub toilets: BTreeMap<String, CDDAPaletteToiletsValue>,
   #[serde(default)]
+  #[serde(skip_serializing_if = "BTreeMap::is_empty")]
   pub gaspumps: BTreeMap<String, CDDAPaletteGaspumpsValue>,
-  #[serde(rename = "sealed_item")]
+  #[serde(rename(serialize = "sealed_item"))]
   #[serde(default)]
+  #[serde(skip_serializing_if = "BTreeMap::is_empty")]
   pub sealed_item: BTreeMap<String, CDDAPaletteSealedValue>,
   #[serde(default)]
+  #[serde(skip_serializing_if = "BTreeMap::is_empty")]
   pub graffiti: BTreeMap<String, CDDAPaletteGraffitiValue>,
   #[serde(default)]
+  #[serde(skip_serializing_if = "BTreeMap::is_empty")]
   pub zones: BTreeMap<String, CDDAPaletteZonesValue>,
-  // #[serde(rename = "translate_ter")]
+  // #[serde(rename(serialize = "translate_ter"))]
   // used only in mapgen
   // #[serde(default)]
   // pub translate_ter: BTreeMap<String, CDDAPaletteTranslateValue>,
-  #[serde(rename = "ter_furn_transforms")]
+  #[serde(rename(serialize = "ter_furn_transforms"))]
   #[serde(default)]
+  #[serde(skip_serializing_if = "BTreeMap::is_empty")]
   pub ter_furn_transforms: BTreeMap<String, CDDAPaletteTransformValue>,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct CDDAPaletteParametersValue {
-  #[serde(rename = "type")]
+  #[serde(rename= "type")]
   pub type_field: String,
   pub default: CDDAPaletteParametersValueDefault,
 }
@@ -144,6 +168,8 @@ pub enum CDDAPaletteTrapsValue {
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDAPaletteParameterReference {
   pub param: String,
+  #[serde(default)]
+  #[serde(skip_serializing_if = "String::is_empty")]
   pub fallback: String,
 }
 
@@ -312,7 +338,7 @@ pub struct CDDAPaletteRubbleValueRubble {
   /**
    * @docs MAPGEN.md    furniture id     default is f_rubble
    */
-  #[serde(rename = "rubble_type")]
+  #[serde(rename(serialize = "rubble_type"))]
   #[serde(default)]
   pub rubble_type: String,
   /**
@@ -323,7 +349,7 @@ pub struct CDDAPaletteRubbleValueRubble {
   /**
    * @docs MAPGEN.md    ter id     default is t_dirt
    */
-  #[serde(rename = "floor_type")]
+  #[serde(rename(serialize = "floor_type"))]
   #[serde(default)]
   pub floor_type: String,
   /**
@@ -338,7 +364,7 @@ pub struct CDDAPaletteZonesValueZone {
   /**
    * @docs MAPGEN.md    Values: `"NPC_RETREAT"`, `"NPC_NO_INVESTIGATE"`, or `"NPC_INVESTIGATE_ONLY"`
    */
-  #[serde(rename = "type")]
+  #[serde(rename= "type")]
   pub type_field: String,
   /**
    * @docs MAPGEN.md    fraction id
@@ -348,6 +374,7 @@ pub struct CDDAPaletteZonesValueZone {
    * @docs MAPGEN.md    the name of the zone
    */
   #[serde(default)]
+  #[serde(skip_serializing_if = "String::is_empty")]
   pub name: String,
 }
 
@@ -358,11 +385,13 @@ pub struct CDDAPaletteGraffitiValueGraffiti {
    * @docs MAPGEN.md    the massage shown
    */
   #[serde(default)]
+  #[serde(skip_serializing_if = "String::is_empty")]
   pub signage: String,
   /**
    * @docs MAPGEN.md   a category of snippet?
    */
   #[serde(default)]
+  #[serde(skip_serializing_if = "String::is_empty")]
   pub snippet: String,
 }
 
@@ -429,21 +458,21 @@ pub struct CDDAPaletteItemValueItem {
   /**
    * @docs MAPGEN.md    "chance": x means   one in x  int or min-max   default 1
    */
-  #[serde(default)]
-  #[serde(skip_serializing_if = "CDDAIntRangeOne::is_default")]
-  pub chance: CDDAIntRangeOne,
+  #[serde(default = "common::CDDAIntRange::default_int_range_1")]
+  #[serde(skip_serializing_if = "common::CDDAIntRange::is_default_int_range_1")]
+  pub chance: common::CDDAIntRange,
   /**
    * @docs MAPGEN.md   int or min-max  default 1
    */
-  #[serde(default)]
-  #[serde(skip_serializing_if = "CDDAIntRangeOne::is_default")]
-  pub amount: CDDAIntRangeOne,
+  #[serde(default = "common::CDDAIntRange::default_int_range_1")]
+  #[serde(skip_serializing_if = "common::CDDAIntRange::is_default_int_range_1")]
+  pub amount: common::CDDAIntRange,
   /**
    * @docs MAPGEN.md   int or min-max  default 1
    */
-  #[serde(default)]
-  #[serde(skip_serializing_if = "CDDAIntRangeOne::is_default")]
-  pub repeat: CDDAIntRangeOne,
+  #[serde(default = "common::CDDAIntRange::default_int_range_1")]
+  #[serde(skip_serializing_if = "common::CDDAIntRange::is_default_int_range_1")]
+  pub repeat: common::CDDAIntRange,
 
   // TODO: variant and custom_flags    same for items
 }
@@ -466,8 +495,9 @@ pub struct CDDAPaletteGaspumpsValueGaspump {
   /**
    * @docs MAPGEN.md    default is random? or zero?
    */
-  #[serde(default)]
-  pub amount: CDDAIntRangeOne,
+  #[serde(default = "common::CDDAIntRange::default_int_range_0")]
+  #[serde(skip_serializing_if = "common::CDDAIntRange::is_default_int_range_0")]
+  pub amount: common::CDDAIntRange,
   /**
    * @docs MAPGEN.md    type of fuel   default unknown   gasoline maybe?
    */
@@ -480,8 +510,9 @@ pub struct CDDAPaletteToiletsValueToilet {
   /**
    * @docs MAPGEN.md    default is random? or zero?
    */
-  #[serde(default)]
-  pub amount: CDDAIntRangeOne,
+  #[serde(default = "common::CDDAIntRange::default_int_range_0")]
+  #[serde(skip_serializing_if = "common::CDDAIntRange::is_default_int_range_0")]
+  pub amount: common::CDDAIntRange,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
@@ -489,29 +520,32 @@ pub struct CDDAPaletteVendingsValueVending {
   /**
    * @docs MAPGEN.md    default randomly choose one of "vending_food" or "vending_drink"
    */
-  #[serde(rename = "item_group")]
+  #[serde(rename(serialize = "item_group"))]
   #[serde(default)]
   pub item_group: String,
   /**
    * @docs MAPGEN.md    "chance": x means    x% int or min-max   default 1    1% low prob
    */
-  #[serde(default)]
-  #[serde(skip_serializing_if = "CDDAIntRangeOne::is_default")]
-  pub chance: CDDAIntRangeOne,
+  #[serde(default = "common::CDDAIntRange::default_int_range_1")]
+  #[serde(skip_serializing_if = "common::CDDAIntRange::is_default_int_range_1")]
+  pub chance: common::CDDAIntRange,
   /**
    * @docs MAPGEN.md   360 degree 
    */
-  #[serde(default)]
+  #[serde(default = "common::int64::default_i64_0")]
+  #[serde(skip_serializing_if = "common::int64::is_default_i64_0")]
   pub rotation: i64,
   /**
    * @docs MAPGEN.md    fuel status    default -1   -1 means 1%-7% fuel
    */
-  #[serde(default)]
+  #[serde(default = "common::int64::default_i64_m1")]
+  #[serde(skip_serializing_if = "common::int64::is_default_i64_m1")]
   pub feul: i64,
   /**
    * @docs MAPGEN.md    body status    default -1   -1 means light damage    0 perfect    1 heavy damage
    */
-  #[serde(default)]
+  #[serde(default = "common::int64::default_i64_m1")]
+  #[serde(skip_serializing_if = "common::int64::is_default_i64_m1")]
   pub status: i64,
 }
 
@@ -522,11 +556,13 @@ pub struct CDDAPaletteSignsValueSign {
    * @docs MAPGEN.md    the massage shown
    */
   #[serde(default)]
+  #[serde(skip_serializing_if = "String::is_empty")]
   pub signage: String,
   /**
    * @docs MAPGEN.md   a category of snippet?
    */
   #[serde(default)]
+  #[serde(skip_serializing_if = "String::is_empty")]
   pub snippet: String,
 }
 
@@ -544,8 +580,9 @@ pub struct CDDAPaletteNpcsValueNpc {
   /**
    * @docs MAPGEN.md   default 0
    */
-  #[serde(default)]
-  pub add_trait: CDDAStringArray,
+  #[serde(default = "common::CDDAStringArray::default_string_array")]
+  #[serde(skip_serializing_if = "common::CDDAStringArray::is_default_string_array")]
+  pub add_trait: common::CDDAStringArray,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
@@ -554,12 +591,14 @@ pub struct CDDAPaletteFieldsValueField {
   /**
    * @docs MAPGEN.md    default 1, possible 1, 2, 3 or more        originally density in old version
    */
-  #[serde(default)]
+  #[serde(default = "common::int64::default_i64_1")]
+  #[serde(skip_serializing_if = "common::int64::is_default_i64_1")]
   pub intensity: i64,
   /**
    * @docs MAPGEN.md   default 0
    */
-  #[serde(default)]
+  #[serde(default = "common::int64::default_i64_0")]
+  #[serde(skip_serializing_if = "common::int64::is_default_i64_0")]
   pub age: i64,
 }
 
@@ -569,115 +608,56 @@ pub struct CDDAPaletteItemsValueItem {
   /**
    * @docs MAPGEN.md    "chance": x means    x% int or min-max   default 100
    */
-  #[serde(default)]
-  #[serde(skip_serializing_if = "CDDAIntRangeHun::is_default")]
-  pub chance: CDDAIntRangeHun,
+  #[serde(default = "common::CDDAIntRange::default_int_range_100")]
+  #[serde(skip_serializing_if = "common::CDDAIntRange::is_default_int_range_100")]
+  pub chance: common::CDDAIntRange,
   /**
    * @docs MAPGEN.md   int or min-max  default 1
    */
-  #[serde(default)]
-  #[serde(skip_serializing_if = "CDDAIntRangeOne::is_default")]
-  pub repeat: CDDAIntRangeOne,
+  #[serde(default = "common::CDDAIntRange::default_int_range_1")]
+  #[serde(skip_serializing_if = "common::CDDAIntRange::is_default_int_range_1")]
+  pub repeat: common::CDDAIntRange,
 
-  #[serde(default)]
+  #[serde(default = "common::int64::default_i64_0")]
+  #[serde(skip_serializing_if = "common::int64::is_default_i64_0")]
   pub ammo: i64,
-  #[serde(default)]
+
+  #[serde(default = "common::int64::default_i64_0")]
+  #[serde(skip_serializing_if = "common::int64::is_default_i64_0")]
   pub magazine: i64,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDAPaletteLiquidsValue {
   pub liquid: String,
-  pub amount: (i64, i64),
   /**
-   * @docs MAPGEN.md    "chance": x means    one in x  int or min-max
+   * @docs MAPGEN.md    default 0 means using certain liquid defualt amount defined
    */
-  #[serde(default)]
-  #[serde(skip_serializing_if = "CDDAIntRangeOne::is_default")]
-  pub chance: CDDAIntRangeOne,
+  #[serde(default = "common::CDDAIntRange::default_int_range_0")]
+  #[serde(skip_serializing_if = "common::CDDAIntRange::is_default_int_range_0")]
+  pub amount: common::CDDAIntRange,
+  /**
+   * @docs MAPGEN.md    "chance": x means    one in x  int or min-max    default 1
+   */
+  #[serde(default = "common::CDDAIntRange::default_int_range_1")]
+  #[serde(skip_serializing_if = "common::CDDAIntRange::is_default_int_range_1")]
+  pub chance: common::CDDAIntRange,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDAPaletteMonstersValueMonster {
   pub monster: String,
   /**
-   * @docs MAPGEN.md    "chance": x means    one in x   int or min-max
+   * @docs MAPGEN.md    "chance": x means    one in x   int or min-max defualt 1
    */
-  #[serde(default)]
-  #[serde(skip_serializing_if = "CDDAIntRangeOne::is_default")]
-  pub chance: CDDAIntRangeOne,
+  #[serde(default = "common::CDDAIntRange::default_int_range_1")]
+  #[serde(skip_serializing_if = "common::CDDAIntRange::is_default_int_range_1")]
+  pub chance: common::CDDAIntRange,
   /**
    * @docs MAPGEN.md    if not present, use default density limited by distance between city center
    * use -1.0 to represent default
    */
-  #[serde(default = "default_m1_f64")]
-  // #[serde(skip_serializing_if = "is_default_m1_f64")]
-  // #[serde(default)]
+  #[serde(default = "common::float64::default_f64_m1")]
+  #[serde(skip_serializing_if = "common::float64::is_default_f64_m1")]
   pub density: f64,
-}
-
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
-#[serde(untagged)]
-pub enum CDDAStringArray {
-  // without unit
-  Single(String),
-  // with unit
-  Multiple(Vec<String>),
-}
-impl Default for CDDAStringArray {
-  fn default() -> Self {
-    CDDAStringArray::Single(String::new())
-  }
-}
-
-// integer or range default with 1
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
-#[serde(untagged)]
-pub enum CDDAIntRangeOne {
-  // without unit
-  Single(i64),
-  // with unit
-  Range((i64, i64)),
-}
-impl CDDAIntRangeOne {
-  pub fn is_default(&self) -> bool {
-    self == &CDDAIntRangeOne::Single(1)
-  }
-}
-impl Default for CDDAIntRangeOne {
-  fn default() -> Self {
-    CDDAIntRangeOne::Single(1)
-  }
-}
-
-// integer or range default with 100
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
-#[serde(untagged)]
-pub enum CDDAIntRangeHun {
-  // without unit
-  Single(i64),
-  // with unit
-  Range((i64, i64)),
-}
-impl CDDAIntRangeHun {
-  pub fn is_default(&self) -> bool {
-    self == &CDDAIntRangeHun::Single(100)
-  }
-}
-impl Default for CDDAIntRangeHun {
-  fn default() -> Self {
-    CDDAIntRangeHun::Single(100)
-  }
-}
-
-fn default_m1_f64() -> f64 {
-  -1.0
-}
-
-fn is_default<T: Default + PartialEq>(t: &T) -> bool {
-  t == &T::default()
-}
-
-fn is_default_m1_f64(t: &f64) -> bool {
-  t == &-0.1
 }

@@ -43,10 +43,10 @@ pub type CDDAMapgenArray = Vec<CDDAMapgen>;
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct CDDAMapgen {
-  #[serde(rename = "type")]
+  #[serde(rename= "type")]
   pub type_field: String,
   pub method: String,
-  #[serde(rename = "om_terrain")]
+  #[serde(rename(serialize = "om_terrain"))]
   pub om_terrain: String,
   pub object: CDDAMapgenObject,
 }
@@ -54,12 +54,12 @@ pub struct CDDAMapgen {
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct CDDAMapgenObject {
-  #[serde(rename = "fill_ter")]
+  #[serde(rename(serialize = "fill_ter"))]
   pub fill_ter: String,
   pub rows: Vec<String>,
   #[serde(default)]
   pub palettes: Vec<String>,
-  #[serde(rename = "place_monsters")]
+  #[serde(rename(serialize = "place_monsters"))]
   #[serde(default)]
   pub place_monsters: Vec<CDDAMapgenPlaceMonster>,
   /**
@@ -71,7 +71,7 @@ pub struct CDDAMapgenObject {
    */
   #[serde(default)]
   pub furniture: BTreeMap<String, CDDAMapgenFurniture>,
-  #[serde(rename = "place_loot")]
+  #[serde(rename(serialize = "place_loot"))]
   #[serde(default)]
   pub place_loot: Vec<CDDAMapgenPlaceLoot>,
   #[serde(default)]
