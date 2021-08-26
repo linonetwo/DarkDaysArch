@@ -1,9 +1,9 @@
+use super::palette::*;
+use schemars::JsonSchema;
 use serde::{self, Deserialize, Serialize};
 use std::collections::BTreeMap;
-use schemars::JsonSchema;
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
-#[serde(rename_all = "camelCase")]
 pub struct CDDAMapgenWithCache {
   /**
    * Full mapgen file content, for code editor to display
@@ -39,48 +39,73 @@ pub enum MapgenPaletteKeys {
 }
 
 pub type CDDAMapgenArray = Vec<CDDAMapgen>;
-
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
-#[serde(rename_all = "camelCase")]
-pub struct CDDAMapgen {
-  #[serde(rename= "type")]
-  pub type_field: String,
-  pub method: String,
-  #[serde(rename(serialize = "om_terrain"))]
-  pub om_terrain: String,
-  pub object: CDDAMapgenObject,
+#[serde(untagged)]
+pub enum CDDAMapgen {
+  Om(CDDAMapgenOM),
+  Update(CDDAMapgenUpdate),
+  Nested(CDDAMapgenNested),
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
-#[serde(rename_all = "camelCase")]
+pub struct CDDAMapgenCommon {
+  #[serde(rename = "type")]
+  pub type_field: String,
+  #[serde(default)]
+  pub method: String,
+  pub object: Option<CDDAMapgenObject>,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+pub struct CDDAMapgenOM {
+  pub om_terrain: String,
+  #[serde(flatten)]
+  pub common: CDDAMapgenCommon,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+pub struct CDDAMapgenUpdate {
+  pub update_mapgen_id: String,
+  #[serde(flatten)]
+  pub common: CDDAMapgenCommon,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+pub struct CDDAMapgenNested {
+  pub nested_mapgen_id: String,
+  #[serde(flatten)]
+  pub common: CDDAMapgenCommon,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDAMapgenObject {
-  #[serde(rename(serialize = "fill_ter"))]
   pub fill_ter: String,
   pub rows: Vec<String>,
   #[serde(default)]
   pub palettes: Vec<String>,
-  #[serde(rename(serialize = "place_monsters"))]
+  #[serde(flatten)]
+  pub mapping_object: CDDAMapgenMapping,
+
   #[serde(default)]
   pub place_monsters: Vec<CDDAMapgenPlaceMonster>,
-  /**
-   * @example `{ "_": "t_open_air", ")": "t_wall_glass", "#": "t_rock_wall", "-": "t_floor", "]": "t_door_glass_c" }`
-   */
-  pub terrain: BTreeMap<String, CDDAMapgenTerrain>,
-  /**
-   * @example `{ "=": "f_magic_bench", "-": "f_alembic", "?": "f_rack_wood" }`
-   */
-  #[serde(default)]
-  pub furniture: BTreeMap<String, CDDAMapgenFurniture>,
-  #[serde(rename(serialize = "place_loot"))]
+  // /**
+  //  * @example `{ "_": "t_open_air", ")": "t_wall_glass", "#": "t_rock_wall", "-": "t_floor", "]": "t_door_glass_c" }`
+  //  */
+  // pub terrain: BTreeMap<String, CDDAMapgenTerrain>,
+  // /**
+  //  * @example `{ "=": "f_magic_bench", "-": "f_alembic", "?": "f_rack_wood" }`
+  //  */
+  // #[serde(default)]
+  // pub furniture: BTreeMap<String, CDDAMapgenFurniture>,
   #[serde(default)]
   pub place_loot: Vec<CDDAMapgenPlaceLoot>,
-  #[serde(default)]
-  pub items: BTreeMap<String, CDDAMapgenItem>,
-  /**
-   * @example `{ "=": "tr_rollmat" }`
-   */
-  #[serde(default)]
-  pub traps: BTreeMap<String, CDDAMapgenTrap>,
+  // #[serde(default)]
+  // pub items: BTreeMap<String, CDDAMapgenItem>,
+  // /**
+  //  * @example `{ "=": "tr_rollmat" }`
+  //  */
+  // #[serde(default)]
+  // pub traps: BTreeMap<String, CDDAMapgenTrap>,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
@@ -89,6 +114,7 @@ pub enum CDDAMapgenTerrain {
   Id(String),
   RandomList(Vec<CDDAMapgenTerrainRandomListItem>),
 }
+
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(untagged)]
 pub enum CDDAMapgenTerrainRandomListItem {
@@ -97,7 +123,6 @@ pub enum CDDAMapgenTerrainRandomListItem {
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
-#[serde(rename_all = "camelCase")]
 pub struct CDDAMapgenPlaceMonster {
   pub monster: String,
   pub x: i64,
@@ -107,7 +132,6 @@ pub struct CDDAMapgenPlaceMonster {
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
-#[serde(rename_all = "camelCase")]
 pub struct CDDAMapgenPlaceLoot {
   pub item: String,
   pub x: i64,
@@ -138,7 +162,6 @@ pub enum CDDAMapgenTrap {
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
-#[serde(rename_all = "camelCase")]
 pub struct CDDAMapgenItemRandomListItem {
   pub item: String,
   pub chance: i64,
@@ -147,7 +170,6 @@ pub struct CDDAMapgenItemRandomListItem {
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
-#[serde(rename_all = "camelCase")]
 pub struct CDDAMapgenTrapObject {
   pub trap: String,
 }

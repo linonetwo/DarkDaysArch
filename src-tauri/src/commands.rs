@@ -7,7 +7,6 @@ use std::{collections::BTreeMap, fs::File, io::Read};
 use data::types::{palette,furniture,mapgen,tileset};
 
 
-
 pub fn invoke_handler() -> impl Fn(tauri::Invoke) + Send + Sync + 'static {
   tauri::generate_handler![read_tileset_folder, read_mapgen_file]
 }
