@@ -36,6 +36,7 @@ pub fn lookup_mapgen_char_in_palette(character: &char, palette: &palette::CDDAPa
         let reference_parameter_option = &palette.parameters.get(&ref_object.param);
         match reference_parameter_option {
           Some(palette_parameter) => {
+            // TODO: cache the choose, as https://github.com/CleverRaven/Cataclysm-DDA/blob/b3c2331b4788cf77cf3edd83e51f9434a8a73789/doc/MAPGEN.md#mapgen-parameters said this choice should be consistent during a mapgen
             let random_id = pick_random_list_id_by_distribution(&palette_parameter.default.distribution);
             match random_id {
               Some(id) => {
