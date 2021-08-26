@@ -42,7 +42,7 @@ pub struct CDDATileSetInverseIndexedTileData {
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDATileSetConfig {
   pub tile_info: Vec<CDDATileSetTileInfo>,
-
+  #[serde(rename = "tiles-new")]
   pub tiles_new: Vec<CDDATileSetTilesNew>,
 }
 

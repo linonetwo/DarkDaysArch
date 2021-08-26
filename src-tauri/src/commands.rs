@@ -1,11 +1,10 @@
+use data::types::{furniture, mapgen, palette, tileset};
 use glob::glob;
 use image_base64::to_base64;
 use project_root::get_project_root;
 use regex::Regex;
 use std::path::Path;
 use std::{collections::BTreeMap, fs::File, io::Read};
-use data::types::{palette,furniture,mapgen,tileset};
-
 
 pub fn invoke_handler() -> impl Fn(tauri::Invoke) + Send + Sync + 'static {
   tauri::generate_handler![read_tileset_folder, read_mapgen_file]
@@ -13,7 +12,10 @@ pub fn invoke_handler() -> impl Fn(tauri::Invoke) + Send + Sync + 'static {
 
 #[tauri::command]
 pub fn read_tileset_folder(tileset_path_name: &str) -> tileset::CDDATileSetConfigWithCache {
-  let tileset_absolute_file_path = Path::join(&Path::join(&get_project_root().unwrap(), "../public"), tileset_path_name).into_os_string().into_string().unwrap();
+  let tileset_absolute_file_path = Path::join(&Path::join(&get_project_root().unwrap(), "../public"), tileset_path_name)
+    .into_os_string()
+    .into_string()
+    .unwrap();
   let mut files_in_folder: Vec<std::string::String> = vec![];
   for entry in glob(&format!("{}/*", tileset_absolute_file_path)).expect("Failed to read glob pattern") {
     match entry {
@@ -119,13 +121,22 @@ pub fn read_mapgen_file(mapgen_file_path: &str) -> mapgen::CDDAMapgenWithCache {
 
   let parsed_map: Vec<Vec<Vec<Vec<mapgen::ItemIDOrItemList>>>> = raw_mapgen
     .iter()
-    .map(|mapgen| {
-      mapgen
-        .object
-        .rows
-        .iter()
-        .map(|row| row.chars().map(|c| lookup_mapgen_char_in_palette(&c, standard_domestic_palette)).collect())
-        .collect()
+    .map(|mapgen| match mapgen {
+      mapgen::CDDAMapgen::Om(om) => {
+        let object = &om.common.object;
+        match object {
+          Some(o) => o
+            .rows
+            .iter()
+            .map(|row| row.chars().map(|c| lookup_mapgen_char_in_palette(&c, standard_domestic_palette)).collect())
+            .collect(),
+          None => vec![],
+        }
+      }
+      // TODO: parse other type of mapgen
+      Others => {
+        vec![]
+      }
     })
     .collect();
   let mapgen_with_cache = mapgen::CDDAMapgenWithCache { raw_mapgen, parsed_map };
