@@ -20,7 +20,7 @@ export function useTileTexture(tileName: string): [Texture | undefined, Texture 
   useLayoutEffect(() => {
     // wait for texture to be generated from png image by PIXI loader
     Loader.shared.load((loader, resources) => {
-      const tileSetData = resources[TILE_SET_CONFIG_FILE_NAME]?.data as CDDATileSetConfigWithCache['tileDataIndex'] | undefined;
+      const tileSetData = resources[TILE_SET_CONFIG_FILE_NAME]?.data as CDDATileSetConfigWithCache['tile_data_index'] | undefined;
       if (tileSetData !== undefined) {
         const tileSubSetData = tileSetData[tileName];
         if (tileSubSetData !== undefined) {

@@ -6,7 +6,7 @@ import { CDDAMapgenWithCache } from 'src/types/cdda/mapgen';
 
 interface IMaps {
   activeOpenedMapIndex?: number;
-  mapsInOpenedFile: CDDAMapgenWithCache['parsedMap'];
+  mapsInOpenedFile: CDDAMapgenWithCache['parsed_map'];
 }
 
 /**
@@ -15,7 +15,7 @@ interface IMaps {
 export const maps = createModel<RootModel>()({
   state: { mapsInOpenedFile: [], activeOpenedMapIndex: undefined } as IMaps,
   reducers: {
-    mapsInOpenedFileSetter(state, newMaps: CDDAMapgenWithCache['parsedMap']) {
+    mapsInOpenedFileSetter(state, newMaps: CDDAMapgenWithCache['parsed_map']) {
       state.mapsInOpenedFile = newMaps;
       return state;
     },
