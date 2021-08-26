@@ -9,10 +9,10 @@ fn main() {
   raw_map_file.read_to_string(&mut raw_map_string).unwrap();
   let raw_map: mapgen::CDDAMapgenArray = serde_json::from_str(&raw_map_string).unwrap();
 
-  let map_json = serde_json::to_string(&raw_map).unwrap();
+  let map_json = serde_json::to_string_pretty(&raw_map).unwrap();
 
-  println!("{:?}", raw_map);
-  // println!("{}",map_json);
+  // println!("{:?}", raw_map);
+  println!("{}",map_json);
 
   // let palette_file_path = "../public/json/house_general_palette.json";
   // let mut raw_palette_file = File::open(palette_file_path).unwrap();

@@ -1,7 +1,6 @@
 use super::palette::*;
 use schemars::JsonSchema;
 use serde::{self, Deserialize, Serialize};
-use std::collections::BTreeMap;
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDAMapgenWithCache {
@@ -88,38 +87,8 @@ pub struct CDDAMapgenObject {
 
   #[serde(default)]
   pub place_monsters: Vec<CDDAMapgenPlaceMonster>,
-  // /**
-  //  * @example `{ "_": "t_open_air", ")": "t_wall_glass", "#": "t_rock_wall", "-": "t_floor", "]": "t_door_glass_c" }`
-  //  */
-  // pub terrain: BTreeMap<String, CDDAMapgenTerrain>,
-  // /**
-  //  * @example `{ "=": "f_magic_bench", "-": "f_alembic", "?": "f_rack_wood" }`
-  //  */
-  // #[serde(default)]
-  // pub furniture: BTreeMap<String, CDDAMapgenFurniture>,
   #[serde(default)]
   pub place_loot: Vec<CDDAMapgenPlaceLoot>,
-  // #[serde(default)]
-  // pub items: BTreeMap<String, CDDAMapgenItem>,
-  // /**
-  //  * @example `{ "=": "tr_rollmat" }`
-  //  */
-  // #[serde(default)]
-  // pub traps: BTreeMap<String, CDDAMapgenTrap>,
-}
-
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
-#[serde(untagged)]
-pub enum CDDAMapgenTerrain {
-  Id(String),
-  RandomList(Vec<CDDAMapgenTerrainRandomListItem>),
-}
-
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
-#[serde(untagged)]
-pub enum CDDAMapgenTerrainRandomListItem {
-  Id(String),
-  RandomList((String, i32)),
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
@@ -137,39 +106,4 @@ pub struct CDDAMapgenPlaceLoot {
   pub x: i64,
   pub y: i64,
   pub chance: i64,
-}
-
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
-#[serde(untagged)]
-pub enum CDDAMapgenItem {
-  Id(String),
-  Item(CDDAMapgenItemRandomListItem),
-  RandomList(Vec<CDDAMapgenItemRandomListItem>),
-}
-
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
-#[serde(untagged)]
-pub enum CDDAMapgenFurniture {
-  Id(String),
-  RandomList(Vec<String>),
-}
-
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
-#[serde(untagged)]
-pub enum CDDAMapgenTrap {
-  Id(String),
-  Trap(CDDAMapgenTrapObject),
-}
-
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
-pub struct CDDAMapgenItemRandomListItem {
-  pub item: String,
-  pub chance: i64,
-  #[serde(default)]
-  pub repeat: Vec<i64>,
-}
-
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
-pub struct CDDAMapgenTrapObject {
-  pub trap: String,
 }

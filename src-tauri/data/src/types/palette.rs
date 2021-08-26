@@ -101,6 +101,9 @@ pub struct CDDAMapgenMapping {
   #[serde(default)]
   #[serde(skip_serializing_if = "BTreeMap::is_empty")]
   pub zones: BTreeMap<String, CDDAPaletteZonesValue>,
+  #[serde(default)]
+  #[serde(skip_serializing_if = "BTreeMap::is_empty")]
+  pub nested: BTreeMap<String, CDDAPaletteNestedValue>,
   // #[serde(rename = "translate_ter")]
   // used only in mapgen
   // #[serde(default)]
@@ -161,6 +164,13 @@ pub enum CDDAPaletteTrapsValue {
   Object(CDDAPaletteTrapsValueObject),
   RandomList(CDDAPaletteDistribution),
   ParamRef(CDDAPaletteParameterReference),
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[serde(untagged)]
+pub enum CDDAPaletteNestedValueNestedChuncks {
+  Id(String),
+  RandomList(CDDAPaletteDistribution),
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
@@ -328,6 +338,55 @@ pub enum CDDAPaletteComputersValueComputerOptions {
 pub enum CDDAPaletteComputersValueComputerFailures {
   Computer(CDDAPaletteComputersValueComputerFailuresFailure),
   ComputerList(Vec<CDDAPaletteComputersValueComputerFailuresFailure>),
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[serde(untagged)]
+pub enum CDDAPaletteNestedValue {
+  Nested(CDDAPaletteNestedValueNested),
+  NestedList(Vec<CDDAPaletteNestedValueNested>),
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+pub struct CDDAPaletteNestedValueNestedNeighbors {
+  /**
+   * @srcs mapgen.cpp    jmapgen_nested
+   */
+  #[serde(default = "CDDAStringArray::default_string_array")]
+  #[serde(skip_serializing_if = "CDDAStringArray::is_default_string_array")]
+  pub west: CDDAStringArray,
+  #[serde(default = "CDDAStringArray::default_string_array")]
+  #[serde(skip_serializing_if = "CDDAStringArray::is_default_string_array")]
+  pub east: CDDAStringArray,
+  #[serde(default = "CDDAStringArray::default_string_array")]
+  #[serde(skip_serializing_if = "CDDAStringArray::is_default_string_array")]
+  pub north:CDDAStringArray,
+  #[serde(default = "CDDAStringArray::default_string_array")]
+  #[serde(skip_serializing_if = "CDDAStringArray::is_default_string_array")]
+  pub south: CDDAStringArray,
+  #[serde(default = "CDDAStringArray::default_string_array")]
+  #[serde(skip_serializing_if = "CDDAStringArray::is_default_string_array")]
+  pub above: CDDAStringArray,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+pub struct CDDAPaletteNestedValueNested {
+  /**
+   * @srcs mapgen.cpp    jmapgen_nested
+   */
+  #[serde(default)]
+  #[serde(skip_serializing_if = "Vec::is_empty")]
+  pub chunks: Vec<CDDAPaletteNestedValueNestedChuncks>,
+  /**
+   * @srcs mapgen.cpp    jmapgen_nested
+   */
+  #[serde(default)]
+  #[serde(skip_serializing_if = "Vec::is_empty")]
+  pub else_chunks: Vec<CDDAPaletteNestedValueNestedChuncks>,
+  /**
+   * @srcs mapgen.cpp    jmapgen_nested
+   */
+  pub neighbors: CDDAPaletteNestedValueNestedNeighbors
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
