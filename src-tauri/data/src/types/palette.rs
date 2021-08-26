@@ -16,10 +16,6 @@ pub struct CDDAPalette {
   #[serde(skip_serializing_if = "String::is_empty")]
   pub comment: String,
 
-  #[serde(default)]
-  #[serde(skip_serializing_if = "BTreeMap::is_empty")]
-  pub parameters: BTreeMap<String, CDDAPaletteParametersValue>,
-
   // we can only use mapping in palette
   #[serde(flatten)]
   pub mapping_object: CDDAMapgenMapping,
@@ -34,6 +30,10 @@ pub struct CDDAPalette {
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDAMapgenMapping {
+  #[serde(default)]
+  #[serde(skip_serializing_if = "BTreeMap::is_empty")]
+  pub parameters: BTreeMap<String, CDDAPaletteParametersValue>,
+  
   #[serde(default)]
   #[serde(skip_serializing_if = "BTreeMap::is_empty")]
   pub terrain: BTreeMap<String, CDDAPaletteTerrainValue>,

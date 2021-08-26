@@ -29,8 +29,3 @@ data = {path = "./data"}
 [features]
 default = ["custom-protocol"]
 custom-protocol = ["tauri/custom-protocol"]
-
-[workspace]
-"members" = [
-    "data"
-]
