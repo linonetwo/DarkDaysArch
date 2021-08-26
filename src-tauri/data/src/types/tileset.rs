@@ -103,7 +103,7 @@ pub struct CDDATileSetTile {
 
   #[serde(default)]
   pub additional_tiles: Vec<CDDATileSetAdditionalTile>,
-  #[serde(serialize = "//")]
+  #[serde(rename = "//")]
   pub comment: Option<String>,
 }
 
