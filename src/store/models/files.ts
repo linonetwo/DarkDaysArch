@@ -99,7 +99,7 @@ export const files = createModel<RootModel>()({
         const newFile = { path: mapgenFilePath, content: JSON.stringify(mapgenWithCache.rawMapgen, undefined, '  ') };
         dispatch.files.addNewOpenedFiles(newFile);
         // load map to display
-        dispatch.maps.mapsInOpenedFileSetter(mapgenWithCache.parsedMap);
+        dispatch.maps.mapsInOpenedFileSetter(mapgenWithCache.parsed_map);
         dispatch.maps.activeOpenedMapIndexSetter(0);
       } catch (error) {
         console.error(error);
@@ -108,13 +108,13 @@ export const files = createModel<RootModel>()({
     async loadTextures(tilesetPathName: string) {
       // prevent Unhandled Rejection (TypeError): window.rpc is undefined when open in browser
       try {
-        const tileConfig = await invoke<CDDATileSetConfigWithCache>('read_tileset_folder', {
+        const { tile_data_index: tileDataIndex, textures } = await invoke<CDDATileSetConfigWithCache>('read_tileset_folder', {
           tilesetPathName,
         });
         const tileConfigResource = new LoaderResource(TILE_SET_CONFIG_FILE_NAME, TILE_SET_CONFIG_FILE_NAME);
-        tileConfigResource.data = tileConfig.tileDataIndex;
+        tileConfigResource.data = tileDataIndex;
         Loader.shared.resources[tileConfigResource.name] = tileConfigResource;
-        for (const [tilesetName, tilesetImage] of Object.entries(tileConfig.textures)) {
+        for (const [tilesetName, tilesetImage] of Object.entries(textures)) {
           Loader.shared.add(tilesetName, tilesetImage);
         }
       } catch (error) {
