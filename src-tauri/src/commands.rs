@@ -2,7 +2,6 @@ use data::types::{furniture, mapgen, palette, tileset};
 use glob::glob;
 use image_base64::to_base64;
 use project_root::get_project_root;
-use regex::Regex;
 use std::path::Path;
 use std::{collections::BTreeMap, fs::File, io::Read};
 
@@ -39,66 +38,8 @@ pub fn read_tileset_folder(tileset_path_name: &str) -> tileset::CDDATileSetConfi
     let texture_image_file_path = format!("{}/{}", tileset_absolute_file_path, tile_config_item.file);
     textures.insert(tile_config_item.file.clone(), to_base64(&texture_image_file_path));
   }
-  // prepare inverse index
-  let default_tileset_info = tileset::CDDATileSetTileInfo {
-    width: 32,
-    height: 32,
-    pixelscale: 1,
-  };
-  let id_start_matching_regex = Regex::new(r"range (\d+) to (\d+)").unwrap();
-  let mut tile_data_index: BTreeMap<String, tileset::CDDATileSetInverseIndexedTileData> = BTreeMap::new();
-  for tile_config_item in &raw_tile_config.tiles_new {
-    let mut cloned_tile_config_item = tile_config_item.clone();
-    cloned_tile_config_item.tiles = vec![];
-    cloned_tile_config_item.ascii = vec![];
-    cloned_tile_config_item.sprite_height = Some(
-      cloned_tile_config_item
-        .sprite_height
-        .unwrap_or(raw_tile_config.tile_info.get(0).unwrap_or(&default_tileset_info).height),
-    );
-    cloned_tile_config_item.sprite_width = Some(
-      cloned_tile_config_item
-        .sprite_width
-        .unwrap_or(raw_tile_config.tile_info.get(0).unwrap_or(&default_tileset_info).width),
-    );
-    cloned_tile_config_item.sprite_offset_x = Some(cloned_tile_config_item.sprite_offset_x.unwrap_or(0));
-    cloned_tile_config_item.sprite_offset_y = Some(cloned_tile_config_item.sprite_offset_y.unwrap_or(0));
-    cloned_tile_config_item.comment = Some(cloned_tile_config_item.comment.unwrap_or(String::from("range 1 to 63")));
-    let id_start_matching_result: i64 = id_start_matching_regex
-      .captures(&cloned_tile_config_item.comment.clone().unwrap())
-      .unwrap()
-      .get(1)
-      .unwrap()
-      .as_str()
-      .parse::<i64>()
-      .unwrap();
-    for tile_data_item in &tile_config_item.tiles {
-      match &tile_data_item.id {
-        tileset::CDDATileSetID::Id(tile_id_string) => {
-          tile_data_index.insert(
-            tile_id_string.clone(),
-            tileset::CDDATileSetInverseIndexedTileData {
-              tile: tile_data_item.clone(),
-              tileset: cloned_tile_config_item.clone(),
-              start_id: id_start_matching_result,
-            },
-          );
-        }
-        tileset::CDDATileSetID::IdList(tile_id_list) => {
-          for tile_id_string_in_list in tile_id_list {
-            tile_data_index.insert(
-              tile_id_string_in_list.clone(),
-              tileset::CDDATileSetInverseIndexedTileData {
-                tile: tile_data_item.clone(),
-                tileset: cloned_tile_config_item.clone(),
-                start_id: id_start_matching_result,
-              },
-            );
-          }
-        }
-      }
-    }
-  }
+
+  let tile_data_index = parsers::tileset::prepare_tile_data_index(raw_tile_config);
   let config_with_cache = tileset::CDDATileSetConfigWithCache { textures, tile_data_index };
   config_with_cache
 }
@@ -130,7 +71,12 @@ pub fn read_mapgen_file(mapgen_file_path: &str) -> mapgen::CDDAMapgenWithCache {
           Some(o) => o
             .rows
             .iter()
-            .map(|row| row.chars().map(|c| parsers::palette::lookup_mapgen_char_in_palette(&c, standard_domestic_palette)).collect())
+            .map(|row| {
+              row
+                .chars()
+                .map(|c| parsers::palette::lookup_mapgen_char_in_palette(&c, standard_domestic_palette))
+                .collect()
+            })
             .collect(),
           None => vec![],
         }
