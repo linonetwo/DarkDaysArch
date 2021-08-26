@@ -22,17 +22,17 @@ fn main() {
 
   let palette_json = serde_json::to_string_pretty(&raw_palette).unwrap();
 
-  println!("{:?}", raw_palette);
-  // println!("{}", palette_json);
+  // println!("{:?}", raw_palette);
+  println!("{}", palette_json);
 
-  // let furn_file_path = "../public/json/furniture-medical.json";
-  // let mut raw_furn_file = File::open(furn_file_path).unwrap();
-  // let mut raw_furn_string = String::new();
-  // raw_furn_file.read_to_string(&mut raw_furn_string).unwrap();
-  // let raw_furn: furniture::CDDAFurnArray = serde_json::from_str(&raw_furn_string).unwrap();
+  let furn_file_path = "../public/json/furniture-medical.json";
+  let mut raw_furn_file = File::open(furn_file_path).unwrap();
+  let mut raw_furn_string = String::new();
+  raw_furn_file.read_to_string(&mut raw_furn_string).unwrap();
+  let raw_furn: furniture::CDDAFurnArray = serde_json::from_str(&raw_furn_string).unwrap();
 
-  // let furn_json = serde_json::to_string(&raw_furn).unwrap();
+  let furn_json = serde_json::to_string(&raw_furn).unwrap();
 
-  // println!("{:?}", raw_furn);
-  // println!("{}",furn_json);
+  println!("{:?}", raw_furn);
+  println!("{}",furn_json);
 }
