@@ -5,17 +5,17 @@
   "type": "object",
   "required": [
     "textures",
-    "tileDataIndex"
+    "tile_data_index"
   ],
   "properties": {
     "textures": {
-      "description": "tileset in base64 format key is file name like `large.png`, value is base64 blob data string",
+      "description": "key is file name like `large.png`, value is base64 blob data string",
       "type": "object",
       "additionalProperties": {
         "type": "string"
       }
     },
-    "tileDataIndex": {
+    "tile_data_index": {
       "description": "inverse index to quick lookup tile data, key is tile name like `ranch_camp_17`, value is data I think useful for React renderer.",
       "type": "object",
       "additionalProperties": {
@@ -132,7 +132,7 @@
           ]
         },
         "tileset": {
-          "description": "copy of tileset image data, omit the `tiles` `ascii` field.  (become empty array). required field is enforced by rust side",
+          "description": "copy of tileset image data, omit the `tiles` `ascii` field.",
           "allOf": [
             {
               "$ref": "#/definitions/CDDATileSetTilesNew"

@@ -5,6 +5,13 @@
  * and run json-schema-to-typescript to regenerate this file.
  */
 
+export type CDDAPaletteComputersValue = CDDAPaletteComputersValueComputer | CDDAPaletteComputersValueComputer[];
+export type CDDAPaletteComputersValueComputerFailures =
+  | CDDAPaletteComputersValueComputerFailuresFailure
+  | CDDAPaletteComputersValueComputerFailuresFailure[];
+export type CDDAPaletteComputersValueComputerOptions =
+  | CDDAPaletteComputersValueComputerOptionsOption
+  | CDDAPaletteComputersValueComputerOptionsOption[];
 export type CDDAPaletteFieldsValue = CDDAPaletteFieldsValueField | CDDAPaletteFieldsValueField[];
 /**
  * @docs MAPGEN.md      Terrain, furniture and traps can specified as a single string, not a json object
@@ -17,11 +24,10 @@ export type CDDAPaletteFurnitureValue =
 export type CDDAPaletteDistribution = string | string[] | [string, number] | CDDAPaletteDistributionMixed[];
 export type CDDAPaletteDistributionMixed = string | [string, number];
 export type CDDAPaletteGaspumpsValue = CDDAPaletteGaspumpsValueGaspump | CDDAPaletteGaspumpsValueGaspump[];
-export type CDDAIntRangeOne = number | [number, number];
+export type CDDAIntRange = number | [number, number];
 export type CDDAPaletteGraffitiValue = CDDAPaletteGraffitiValueGraffiti | CDDAPaletteGraffitiValueGraffiti[];
 export type CDDAPaletteItemValue = CDDAPaletteItemValueItem | CDDAPaletteItemValueItem[];
 export type CDDAPaletteItemsValue = CDDAPaletteItemsValueItem | CDDAPaletteItemsValueItem[];
-export type CDDAIntRangeHun = number | [number, number];
 export type CDDAPaletteMonsterValue = CDDAPaletteMonsterValueMonster | CDDAPaletteMonsterValueMonster[];
 export type CDDAPaletteMonstersValue = CDDAPaletteMonstersValueMonster | CDDAPaletteMonstersValueMonster[];
 export type CDDAPaletteNpcsValue = CDDAPaletteNpcsValueNpc | CDDAPaletteNpcsValueNpc[];
@@ -50,8 +56,11 @@ export type ArrayOf_CDDAPalette = CDDAPalette[];
 
 export interface CDDAPalette {
   "//"?: string;
+  computers?: {
+    [k: string]: CDDAPaletteComputersValue;
+  };
   fields?: {
-    [k: string]: CDDAPaletteFieldsValue[];
+    [k: string]: CDDAPaletteFieldsValue;
   };
   /**
    * @example "furniture": { "c": "f_exercise", "u": [ "f_ergometer", "f_ergometer_mechanical" ]}
@@ -82,25 +91,25 @@ export interface CDDAPalette {
     [k: string]: CDDAMapgenMapping;
   };
   monster?: {
-    [k: string]: CDDAPaletteMonsterValue[];
+    [k: string]: CDDAPaletteMonsterValue;
   };
   monsters?: {
-    [k: string]: CDDAPaletteMonstersValue[];
+    [k: string]: CDDAPaletteMonstersValue;
   };
   npcs?: {
-    [k: string]: CDDAPaletteNpcsValue[];
+    [k: string]: CDDAPaletteNpcsValue;
   };
   parameters?: {
     [k: string]: CDDAPaletteParametersValue;
   };
   rubble?: {
-    [k: string]: CDDAPaletteRubbleValue[];
+    [k: string]: CDDAPaletteRubbleValue;
   };
   sealed_item?: {
     [k: string]: CDDAPaletteSealedValue;
   };
   signs?: {
-    [k: string]: CDDAPaletteSignsValue[];
+    [k: string]: CDDAPaletteSignsValue;
   };
   ter_furn_transforms?: {
     [k: string]: CDDAPaletteTransformValue;
@@ -115,18 +124,67 @@ export interface CDDAPalette {
     [k: string]: CDDAPaletteToiletsValue;
   };
   traps?: {
-    [k: string]: CDDAPaletteTrapsValue[];
+    [k: string]: CDDAPaletteTrapsValue;
   };
   type: string;
   vehicles?: {
     [k: string]: CDDAPaletteVehiclesValue;
   };
   vendingmachines?: {
-    [k: string]: CDDAPaletteVendingsValue[];
+    [k: string]: CDDAPaletteVendingsValue;
   };
   zones?: {
     [k: string]: CDDAPaletteZonesValue;
   };
+  [k: string]: unknown;
+}
+export interface CDDAPaletteComputersValueComputer {
+  /**
+   * @srcs mapgen.cpp   jmapgen_computer
+   */
+  access_denied?: string;
+  /**
+   * @srcs mapgen.cpp   jmapgen_computer
+   */
+  failures?: CDDAPaletteComputersValueComputerFailures[];
+  /**
+   * @srcs mapgen.cpp   jmapgen_computer
+   */
+  name?: string;
+  /**
+   * @srcs mapgen.cpp   jmapgen_computer
+   */
+  options?: CDDAPaletteComputersValueComputerOptions[];
+  /**
+   * @srcs mapgen.cpp   jmapgen_computer default 0
+   */
+  security?: number;
+  /**
+   * @srcs mapgen.cpp   jmapgen_computer   default false       mission target maybe
+   */
+  target?: boolean;
+  [k: string]: unknown;
+}
+export interface CDDAPaletteComputersValueComputerFailuresFailure {
+  /**
+   * @srcs mapgen.cpp   jmapgen_computer
+   */
+  action: string;
+  [k: string]: unknown;
+}
+export interface CDDAPaletteComputersValueComputerOptionsOption {
+  /**
+   * @srcs mapgen.cpp   jmapgen_computer
+   */
+  action: string;
+  /**
+   * @srcs mapgen.cpp   jmapgen_computer
+   */
+  name?: string;
+  /**
+   * @srcs mapgen.cpp   jmapgen_computer  default 0
+   */
+  security?: number;
   [k: string]: unknown;
 }
 export interface CDDAPaletteFieldsValueField {
@@ -146,7 +204,7 @@ export interface CDDAPaletteFurnitureValueFurniture {
   [k: string]: unknown;
 }
 export interface CDDAPaletteParameterReference {
-  fallback: string;
+  fallback?: string;
   param: string;
   [k: string]: unknown;
 }
@@ -154,7 +212,7 @@ export interface CDDAPaletteGaspumpsValueGaspump {
   /**
    * @docs MAPGEN.md    default is random? or zero?
    */
-  amount?: CDDAIntRangeOne & number;
+  amount?: CDDAIntRange;
   /**
    * @docs MAPGEN.md    type of fuel   default unknown   gasoline maybe?
    */
@@ -176,16 +234,16 @@ export interface CDDAPaletteItemValueItem {
   /**
    * @docs MAPGEN.md   int or min-max  default 1
    */
-  amount?: CDDAIntRangeOne;
+  amount?: CDDAIntRange;
   /**
    * @docs MAPGEN.md    "chance": x means   one in x  int or min-max   default 1
    */
-  chance?: CDDAIntRangeOne;
+  chance?: CDDAIntRange;
   item: string;
   /**
    * @docs MAPGEN.md   int or min-max  default 1
    */
-  repeat?: CDDAIntRangeOne;
+  repeat?: CDDAIntRange;
   [k: string]: unknown;
 }
 export interface CDDAPaletteItemsValueItem {
@@ -193,27 +251,33 @@ export interface CDDAPaletteItemsValueItem {
   /**
    * @docs MAPGEN.md    "chance": x means    x% int or min-max   default 100
    */
-  chance?: CDDAIntRangeHun;
+  chance?: CDDAIntRange;
   item: string;
   magazine?: number;
   /**
    * @docs MAPGEN.md   int or min-max  default 1
    */
-  repeat?: CDDAIntRangeOne;
+  repeat?: CDDAIntRange;
   [k: string]: unknown;
 }
 export interface CDDAPaletteLiquidsValue {
-  amount: [number, number];
   /**
-   * @docs MAPGEN.md    "chance": x means    one in x  int or min-max
+   * @docs MAPGEN.md    default 0 means using certain liquid defualt amount defined
    */
-  chance?: CDDAIntRangeOne;
+  amount?: CDDAIntRange;
+  /**
+   * @docs MAPGEN.md    "chance": x means    one in x  int or min-max    default 1
+   */
+  chance?: CDDAIntRange;
   liquid: string;
   [k: string]: unknown;
 }
 export interface CDDAMapgenMapping {
+  computers?: {
+    [k: string]: CDDAPaletteComputersValue;
+  };
   fields?: {
-    [k: string]: CDDAPaletteFieldsValue[];
+    [k: string]: CDDAPaletteFieldsValue;
   };
   /**
    * @example "furniture": { "c": "f_exercise", "u": [ "f_ergometer", "f_ergometer_mechanical" ]}
@@ -237,22 +301,22 @@ export interface CDDAMapgenMapping {
     [k: string]: CDDAPaletteLiquidsValue;
   };
   monster?: {
-    [k: string]: CDDAPaletteMonsterValue[];
+    [k: string]: CDDAPaletteMonsterValue;
   };
   monsters?: {
-    [k: string]: CDDAPaletteMonstersValue[];
+    [k: string]: CDDAPaletteMonstersValue;
   };
   npcs?: {
-    [k: string]: CDDAPaletteNpcsValue[];
+    [k: string]: CDDAPaletteNpcsValue;
   };
   rubble?: {
-    [k: string]: CDDAPaletteRubbleValue[];
+    [k: string]: CDDAPaletteRubbleValue;
   };
   sealed_item?: {
     [k: string]: CDDAPaletteSealedValue;
   };
   signs?: {
-    [k: string]: CDDAPaletteSignsValue[];
+    [k: string]: CDDAPaletteSignsValue;
   };
   ter_furn_transforms?: {
     [k: string]: CDDAPaletteTransformValue;
@@ -267,13 +331,13 @@ export interface CDDAMapgenMapping {
     [k: string]: CDDAPaletteToiletsValue;
   };
   traps?: {
-    [k: string]: CDDAPaletteTrapsValue[];
+    [k: string]: CDDAPaletteTrapsValue;
   };
   vehicles?: {
     [k: string]: CDDAPaletteVehiclesValue;
   };
   vendingmachines?: {
-    [k: string]: CDDAPaletteVendingsValue[];
+    [k: string]: CDDAPaletteVendingsValue;
   };
   zones?: {
     [k: string]: CDDAPaletteZonesValue;
@@ -298,9 +362,9 @@ export interface CDDAPaletteMonsterValueMonster {
 }
 export interface CDDAPaletteMonstersValueMonster {
   /**
-   * @docs MAPGEN.md    "chance": x means    one in x   int or min-max
+   * @docs MAPGEN.md    "chance": x means    one in x   int or min-max defualt 1
    */
-  chance?: CDDAIntRangeOne;
+  chance?: CDDAIntRange;
   /**
    * @docs MAPGEN.md    if not present, use default density limited by distance between city center use -1.0 to represent default
    */
@@ -312,7 +376,7 @@ export interface CDDAPaletteNpcsValueNpc {
   /**
    * @docs MAPGEN.md   default 0
    */
-  add_trait?: CDDAStringArray & string;
+  add_trait?: CDDAStringArray;
   class: string;
   /**
    * @docs MAPGEN.md    a mission target or not   default false @srcs mapgen.cpp     jmapgen_npc   constructor
@@ -381,7 +445,7 @@ export interface CDDAPaletteToiletsValueToilet {
   /**
    * @docs MAPGEN.md    default is random? or zero?
    */
-  amount?: CDDAIntRangeOne & number;
+  amount?: CDDAIntRange;
   [k: string]: unknown;
 }
 export interface CDDAPaletteTrapsValueTrap {
@@ -403,7 +467,7 @@ export interface CDDAPaletteVendingsValueVending {
   /**
    * @docs MAPGEN.md    "chance": x means    x% int or min-max   default 1    1% low prob
    */
-  chance?: CDDAIntRangeOne;
+  chance?: CDDAIntRange;
   /**
    * @docs MAPGEN.md    fuel status    default -1   -1 means 1%-7% fuel
    */

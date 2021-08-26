@@ -10,63 +10,322 @@
  */
 export type ItemIDOrItemList = [MapgenPaletteKeys, string] | [MapgenPaletteKeys, string][];
 export type MapgenPaletteKeys = "terrain" | "furniture";
-export type CDDAMapgenFurniture = string | string[];
-export type CDDAMapgenItem = string | CDDAMapgenItemRandomListItem | CDDAMapgenItemRandomListItem[];
-export type CDDAMapgenTerrain = string | CDDAMapgenTerrainRandomListItem[];
-export type CDDAMapgenTerrainRandomListItem = string | [string, number];
-export type CDDAMapgenTrap = string | CDDAMapgenTrapObject;
+export type CDDAMapgen = CDDAMapgenOM | CDDAMapgenUpdate | CDDAMapgenNested;
+export type CDDAPaletteComputersValue = CDDAPaletteComputersValueComputer | CDDAPaletteComputersValueComputer[];
+export type CDDAPaletteComputersValueComputerFailures =
+  | CDDAPaletteComputersValueComputerFailuresFailure
+  | CDDAPaletteComputersValueComputerFailuresFailure[];
+export type CDDAPaletteComputersValueComputerOptions =
+  | CDDAPaletteComputersValueComputerOptionsOption
+  | CDDAPaletteComputersValueComputerOptionsOption[];
+export type CDDAPaletteFieldsValue = CDDAPaletteFieldsValueField | CDDAPaletteFieldsValueField[];
+/**
+ * @docs MAPGEN.md      Terrain, furniture and traps can specified as a single string, not a json object
+ */
+export type CDDAPaletteFurnitureValue =
+  | string
+  | CDDAPaletteFurnitureValueFurniture
+  | CDDAPaletteDistribution
+  | CDDAPaletteParameterReference;
+export type CDDAPaletteDistribution = string | string[] | [string, number] | CDDAPaletteDistributionMixed[];
+export type CDDAPaletteDistributionMixed = string | [string, number];
+export type CDDAPaletteGaspumpsValue = CDDAPaletteGaspumpsValueGaspump | CDDAPaletteGaspumpsValueGaspump[];
+export type CDDAIntRange = number | [number, number];
+export type CDDAPaletteGraffitiValue = CDDAPaletteGraffitiValueGraffiti | CDDAPaletteGraffitiValueGraffiti[];
+export type CDDAPaletteItemValue = CDDAPaletteItemValueItem | CDDAPaletteItemValueItem[];
+export type CDDAPaletteItemsValue = CDDAPaletteItemsValueItem | CDDAPaletteItemsValueItem[];
+export type CDDAPaletteMonsterValue = CDDAPaletteMonsterValueMonster | CDDAPaletteMonsterValueMonster[];
+export type CDDAPaletteMonstersValue = CDDAPaletteMonstersValueMonster | CDDAPaletteMonstersValueMonster[];
+export type CDDAPaletteNpcsValue = CDDAPaletteNpcsValueNpc | CDDAPaletteNpcsValueNpc[];
+export type CDDAStringArray = string | string[];
+export type CDDAPaletteRubbleValue = CDDAPaletteRubbleValueRubble | CDDAPaletteRubbleValueRubble[];
+export type CDDAPaletteSealedValue = CDDAPaletteSealedValueSealed | CDDAPaletteSealedValueSealed[];
+export type CDDAPaletteSealedValueSealed = CDDAPaletteSealedValueSealedItem | CDDAPaletteSealedValueSealedItems;
+export type CDDAPaletteSignsValue = CDDAPaletteSignsValueSign | CDDAPaletteSignsValueSign[];
+export type CDDAPaletteTransformValue = CDDAPaletteTransformValueTransform | CDDAPaletteTransformValueTransform[];
+export type CDDAPaletteTerrainValue =
+  | string
+  | CDDAPaletteTerrainValueTerrain
+  | CDDAPaletteDistribution
+  | CDDAPaletteParameterReference;
+export type CDDAPaletteToiletsValue = CDDAPaletteToiletsValueToilet | CDDAPaletteToiletsValueToilet[];
+export type CDDAPaletteTrapsValue =
+  | string
+  | CDDAPaletteTrapsValueObject
+  | CDDAPaletteDistribution
+  | CDDAPaletteParameterReference;
+export type CDDAPaletteTrapsValueObject = CDDAPaletteTrapsValueTrap | CDDAPaletteTrapsValueTrap[];
+export type CDDAPaletteVehiclesValue = CDDAPaletteVehiclesValueVehicle | CDDAPaletteVehiclesValueVehicle[];
+export type CDDAPaletteVendingsValue = CDDAPaletteVendingsValueVending | CDDAPaletteVendingsValueVending[];
+export type CDDAPaletteZonesValue = CDDAPaletteZonesValueZone | CDDAPaletteZonesValueZone[];
 
 export interface CDDAMapgenWithCache {
   /**
    * Map 2D array that have place-holder characters replaced with actual item ID, for map view to display And we have multiple mapgen in a file, so this will be a 3D matrix. But each location can have terrain, furniture, item and so on, so each tile will be a list, so this is a 4D tensor
    */
-  parsedMap: ItemIDOrItemList[][][][];
+  parsed_map: ItemIDOrItemList[][][][];
   /**
    * Full mapgen file content, for code editor to display
    */
-  rawMapgen: CDDAMapgen[];
+  raw_mapgen: CDDAMapgen[];
   [k: string]: unknown;
 }
-export interface CDDAMapgen {
-  method: string;
-  object: CDDAMapgenObject;
+export interface CDDAMapgenOM {
+  method?: string;
+  object?: CDDAMapgenObject | null;
   om_terrain: string;
   type: string;
   [k: string]: unknown;
 }
 export interface CDDAMapgenObject {
+  computers?: {
+    [k: string]: CDDAPaletteComputersValue;
+  };
+  fields?: {
+    [k: string]: CDDAPaletteFieldsValue;
+  };
   fill_ter: string;
   /**
-   * @example `{ "=": "f_magic_bench", "-": "f_alembic", "?": "f_rack_wood" }`
+   * @example "furniture": { "c": "f_exercise", "u": [ "f_ergometer", "f_ergometer_mechanical" ]}
    */
   furniture?: {
-    [k: string]: CDDAMapgenFurniture;
+    [k: string]: CDDAPaletteFurnitureValue;
+  };
+  gaspumps?: {
+    [k: string]: CDDAPaletteGaspumpsValue;
+  };
+  graffiti?: {
+    [k: string]: CDDAPaletteGraffitiValue;
+  };
+  item?: {
+    [k: string]: CDDAPaletteItemValue;
   };
   items?: {
-    [k: string]: CDDAMapgenItem;
+    [k: string]: CDDAPaletteItemsValue;
+  };
+  liquids?: {
+    [k: string]: CDDAPaletteLiquidsValue;
+  };
+  monster?: {
+    [k: string]: CDDAPaletteMonsterValue;
+  };
+  monsters?: {
+    [k: string]: CDDAPaletteMonstersValue;
+  };
+  npcs?: {
+    [k: string]: CDDAPaletteNpcsValue;
   };
   palettes?: string[];
   place_loot?: CDDAMapgenPlaceLoot[];
   place_monsters?: CDDAMapgenPlaceMonster[];
   rows: string[];
-  /**
-   * @example `{ "_": "t_open_air", ")": "t_wall_glass", "#": "t_rock_wall", "-": "t_floor", "]": "t_door_glass_c" }`
-   */
-  terrain: {
-    [k: string]: CDDAMapgenTerrain;
+  rubble?: {
+    [k: string]: CDDAPaletteRubbleValue;
+  };
+  sealed_item?: {
+    [k: string]: CDDAPaletteSealedValue;
+  };
+  signs?: {
+    [k: string]: CDDAPaletteSignsValue;
+  };
+  ter_furn_transforms?: {
+    [k: string]: CDDAPaletteTransformValue;
+  };
+  terrain?: {
+    [k: string]: CDDAPaletteTerrainValue;
   };
   /**
-   * @example `{ "=": "tr_rollmat" }`
+   * @example "toilets": { "&": { "amount": [ 0, 40 ] } }
    */
+  toilets?: {
+    [k: string]: CDDAPaletteToiletsValue;
+  };
   traps?: {
-    [k: string]: CDDAMapgenTrap;
+    [k: string]: CDDAPaletteTrapsValue;
+  };
+  vehicles?: {
+    [k: string]: CDDAPaletteVehiclesValue;
+  };
+  vendingmachines?: {
+    [k: string]: CDDAPaletteVendingsValue;
+  };
+  zones?: {
+    [k: string]: CDDAPaletteZonesValue;
   };
   [k: string]: unknown;
 }
-export interface CDDAMapgenItemRandomListItem {
-  chance: number;
+export interface CDDAPaletteComputersValueComputer {
+  /**
+   * @srcs mapgen.cpp   jmapgen_computer
+   */
+  access_denied?: string;
+  /**
+   * @srcs mapgen.cpp   jmapgen_computer
+   */
+  failures?: CDDAPaletteComputersValueComputerFailures[];
+  /**
+   * @srcs mapgen.cpp   jmapgen_computer
+   */
+  name?: string;
+  /**
+   * @srcs mapgen.cpp   jmapgen_computer
+   */
+  options?: CDDAPaletteComputersValueComputerOptions[];
+  /**
+   * @srcs mapgen.cpp   jmapgen_computer default 0
+   */
+  security?: number;
+  /**
+   * @srcs mapgen.cpp   jmapgen_computer   default false       mission target maybe
+   */
+  target?: boolean;
+  [k: string]: unknown;
+}
+export interface CDDAPaletteComputersValueComputerFailuresFailure {
+  /**
+   * @srcs mapgen.cpp   jmapgen_computer
+   */
+  action: string;
+  [k: string]: unknown;
+}
+export interface CDDAPaletteComputersValueComputerOptionsOption {
+  /**
+   * @srcs mapgen.cpp   jmapgen_computer
+   */
+  action: string;
+  /**
+   * @srcs mapgen.cpp   jmapgen_computer
+   */
+  name?: string;
+  /**
+   * @srcs mapgen.cpp   jmapgen_computer  default 0
+   */
+  security?: number;
+  [k: string]: unknown;
+}
+export interface CDDAPaletteFieldsValueField {
+  /**
+   * @docs MAPGEN.md   default 0
+   */
+  age?: number;
+  field: string;
+  /**
+   * @docs MAPGEN.md    default 1, possible 1, 2, 3 or more        originally density in old version
+   */
+  intensity?: number;
+  [k: string]: unknown;
+}
+export interface CDDAPaletteFurnitureValueFurniture {
+  furniture: string;
+  [k: string]: unknown;
+}
+export interface CDDAPaletteParameterReference {
+  fallback?: string;
+  param: string;
+  [k: string]: unknown;
+}
+export interface CDDAPaletteGaspumpsValueGaspump {
+  /**
+   * @docs MAPGEN.md    default is random? or zero?
+   */
+  amount?: CDDAIntRange;
+  /**
+   * @docs MAPGEN.md    type of fuel   default unknown   gasoline maybe?
+   */
+  feul?: string;
+  [k: string]: unknown;
+}
+export interface CDDAPaletteGraffitiValueGraffiti {
+  /**
+   * @docs MAPGEN.md    the massage shown
+   */
+  signage?: string;
+  /**
+   * @docs MAPGEN.md   a category of snippet?
+   */
+  snippet?: string;
+  [k: string]: unknown;
+}
+export interface CDDAPaletteItemValueItem {
+  /**
+   * @docs MAPGEN.md   int or min-max  default 1
+   */
+  amount?: CDDAIntRange;
+  /**
+   * @docs MAPGEN.md    "chance": x means   one in x  int or min-max   default 1
+   */
+  chance?: CDDAIntRange;
   item: string;
-  repeat?: number[];
+  /**
+   * @docs MAPGEN.md   int or min-max  default 1
+   */
+  repeat?: CDDAIntRange;
+  [k: string]: unknown;
+}
+export interface CDDAPaletteItemsValueItem {
+  ammo?: number;
+  /**
+   * @docs MAPGEN.md    "chance": x means    x% int or min-max   default 100
+   */
+  chance?: CDDAIntRange;
+  item: string;
+  magazine?: number;
+  /**
+   * @docs MAPGEN.md   int or min-max  default 1
+   */
+  repeat?: CDDAIntRange;
+  [k: string]: unknown;
+}
+export interface CDDAPaletteLiquidsValue {
+  /**
+   * @docs MAPGEN.md    default 0 means using certain liquid defualt amount defined
+   */
+  amount?: CDDAIntRange;
+  /**
+   * @docs MAPGEN.md    "chance": x means    one in x  int or min-max    default 1
+   */
+  chance?: CDDAIntRange;
+  liquid: string;
+  [k: string]: unknown;
+}
+export interface CDDAPaletteMonsterValueMonster {
+  /**
+   * @docs MAPGEN.md    default is false
+   */
+  friendly?: boolean;
+  monster: string;
+  /**
+   * @docs MAPGEN.md    special name default is nameless @srcs mapgen.cpp     jmapgen_monster   constructor  default  "None"?
+   */
+  name?: string;
+  /**
+   * @docs MAPGEN.md    a mission target or not @srcs mapgen.cpp     jmapgen_monster   constructor  default false
+   */
+  target?: boolean;
+  [k: string]: unknown;
+}
+export interface CDDAPaletteMonstersValueMonster {
+  /**
+   * @docs MAPGEN.md    "chance": x means    one in x   int or min-max defualt 1
+   */
+  chance?: CDDAIntRange;
+  /**
+   * @docs MAPGEN.md    if not present, use default density limited by distance between city center use -1.0 to represent default
+   */
+  density?: number;
+  monster: string;
+  [k: string]: unknown;
+}
+export interface CDDAPaletteNpcsValueNpc {
+  /**
+   * @docs MAPGEN.md   default 0
+   */
+  add_trait?: CDDAStringArray;
+  class: string;
+  /**
+   * @docs MAPGEN.md    a mission target or not   default false @srcs mapgen.cpp     jmapgen_npc   constructor
+   */
+  target?: boolean;
   [k: string]: unknown;
 }
 export interface CDDAMapgenPlaceLoot {
@@ -84,7 +343,134 @@ export interface CDDAMapgenPlaceMonster {
   y: number;
   [k: string]: unknown;
 }
-export interface CDDAMapgenTrapObject {
+export interface CDDAPaletteRubbleValueRubble {
+  /**
+   * @docs MAPGEN.md    ter id     default is t_dirt
+   */
+  floor_type?: string;
+  /**
+   * @docs MAPGEN.md    bashing items will or not   default is false
+   */
+  items?: boolean;
+  /**
+   * @docs MAPGEN.md    if true it just writes on top of what currently exists  default false
+   */
+  overwrite?: boolean;
+  /**
+   * @docs MAPGEN.md    furniture id     default is f_rubble
+   */
+  rubble_type?: string;
+  [k: string]: unknown;
+}
+export interface CDDAPaletteSealedValueSealedItem {
+  furniture: string;
+  /**
+   * @docs MAPGEN.md    single item
+   */
+  item?: CDDAPaletteItemValue | null;
+  [k: string]: unknown;
+}
+export interface CDDAPaletteSealedValueSealedItems {
+  furniture: string;
+  /**
+   * @docs MAPGEN.md    item group
+   */
+  items?: CDDAPaletteItemsValue | null;
+  [k: string]: unknown;
+}
+export interface CDDAPaletteSignsValueSign {
+  /**
+   * @docs MAPGEN.md    the massage shown
+   */
+  signage?: string;
+  /**
+   * @docs MAPGEN.md   a category of snippet?
+   */
+  snippet?: string;
+  [k: string]: unknown;
+}
+export interface CDDAPaletteTransformValueTransform {
+  /**
+   * @docs MAPGEN.md    the id of the `ter_furn_transform` to run
+   */
+  transform: string;
+  [k: string]: unknown;
+}
+export interface CDDAPaletteTerrainValueTerrain {
+  terrain: string;
+  [k: string]: unknown;
+}
+export interface CDDAPaletteToiletsValueToilet {
+  /**
+   * @docs MAPGEN.md    default is random? or zero?
+   */
+  amount?: CDDAIntRange;
+  [k: string]: unknown;
+}
+export interface CDDAPaletteTrapsValueTrap {
   trap: string;
+  [k: string]: unknown;
+}
+export interface CDDAPaletteVehiclesValueVehicle {
+  /**
+   * @docs MAPGEN.md    type of fuel   default unknown   gasoline maybe?
+   */
+  feul?: string;
+  /**
+   * @docs MAPGEN.md    if of vehicle id or vehicle group id
+   */
+  vehicle: string;
+  [k: string]: unknown;
+}
+export interface CDDAPaletteVendingsValueVending {
+  /**
+   * @docs MAPGEN.md    "chance": x means    x% int or min-max   default 1    1% low prob
+   */
+  chance?: CDDAIntRange;
+  /**
+   * @docs MAPGEN.md    fuel status    default -1   -1 means 1%-7% fuel
+   */
+  feul?: number;
+  /**
+   * @docs MAPGEN.md    default randomly choose one of "vending_food" or "vending_drink"
+   */
+  item_group?: string;
+  /**
+   * @docs MAPGEN.md   360 degree
+   */
+  rotation?: number;
+  /**
+   * @docs MAPGEN.md    body status    default -1   -1 means light damage    0 perfect    1 heavy damage
+   */
+  status?: number;
+  [k: string]: unknown;
+}
+export interface CDDAPaletteZonesValueZone {
+  /**
+   * @docs MAPGEN.md    fraction id
+   */
+  faction: string;
+  /**
+   * @docs MAPGEN.md    the name of the zone
+   */
+  name?: string;
+  /**
+   * @docs MAPGEN.md    Values: `"NPC_RETREAT"`, `"NPC_NO_INVESTIGATE"`, or `"NPC_INVESTIGATE_ONLY"`
+   */
+  type: string;
+  [k: string]: unknown;
+}
+export interface CDDAMapgenUpdate {
+  method?: string;
+  object?: CDDAMapgenObject | null;
+  type: string;
+  update_mapgen_id: string;
+  [k: string]: unknown;
+}
+export interface CDDAMapgenNested {
+  method?: string;
+  nested_mapgen_id: string;
+  object?: CDDAMapgenObject | null;
+  type: string;
   [k: string]: unknown;
 }

@@ -6,30 +6,7 @@
     "$ref": "#/definitions/CDDAPalette"
   },
   "definitions": {
-    "CDDAIntRangeHun": {
-      "anyOf": [
-        {
-          "type": "integer",
-          "format": "int64"
-        },
-        {
-          "type": "array",
-          "items": [
-            {
-              "type": "integer",
-              "format": "int64"
-            },
-            {
-              "type": "integer",
-              "format": "int64"
-            }
-          ],
-          "maxItems": 2,
-          "minItems": 2
-        }
-      ]
-    },
-    "CDDAIntRangeOne": {
+    "CDDAIntRange": {
       "anyOf": [
         {
           "type": "integer",
@@ -55,125 +32,98 @@
     "CDDAMapgenMapping": {
       "type": "object",
       "properties": {
-        "fields": {
-          "default": {},
+        "computers": {
           "type": "object",
           "additionalProperties": {
-            "type": "array",
-            "items": {
-              "$ref": "#/definitions/CDDAPaletteFieldsValue"
-            }
+            "$ref": "#/definitions/CDDAPaletteComputersValue"
+          }
+        },
+        "fields": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/CDDAPaletteFieldsValue"
           }
         },
         "furniture": {
           "description": "@example \"furniture\": { \"c\": \"f_exercise\", \"u\": [ \"f_ergometer\", \"f_ergometer_mechanical\" ]}",
-          "default": {},
           "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/CDDAPaletteFurnitureValue"
           }
         },
         "gaspumps": {
-          "default": {},
           "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/CDDAPaletteGaspumpsValue"
           }
         },
         "graffiti": {
-          "default": {},
           "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/CDDAPaletteGraffitiValue"
           }
         },
         "item": {
-          "default": {},
           "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/CDDAPaletteItemValue"
           }
         },
         "items": {
-          "default": {},
           "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/CDDAPaletteItemsValue"
           }
         },
         "liquids": {
-          "default": {},
           "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/CDDAPaletteLiquidsValue"
           }
         },
         "monster": {
-          "default": {},
           "type": "object",
           "additionalProperties": {
-            "type": "array",
-            "items": {
-              "$ref": "#/definitions/CDDAPaletteMonsterValue"
-            }
+            "$ref": "#/definitions/CDDAPaletteMonsterValue"
           }
         },
         "monsters": {
-          "default": {},
           "type": "object",
           "additionalProperties": {
-            "type": "array",
-            "items": {
-              "$ref": "#/definitions/CDDAPaletteMonstersValue"
-            }
+            "$ref": "#/definitions/CDDAPaletteMonstersValue"
           }
         },
         "npcs": {
-          "default": {},
           "type": "object",
           "additionalProperties": {
-            "type": "array",
-            "items": {
-              "$ref": "#/definitions/CDDAPaletteNpcsValue"
-            }
+            "$ref": "#/definitions/CDDAPaletteNpcsValue"
           }
         },
         "rubble": {
-          "default": {},
           "type": "object",
           "additionalProperties": {
-            "type": "array",
-            "items": {
-              "$ref": "#/definitions/CDDAPaletteRubbleValue"
-            }
+            "$ref": "#/definitions/CDDAPaletteRubbleValue"
           }
         },
         "sealed_item": {
-          "default": {},
           "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/CDDAPaletteSealedValue"
           }
         },
         "signs": {
-          "default": {},
           "type": "object",
           "additionalProperties": {
-            "type": "array",
-            "items": {
-              "$ref": "#/definitions/CDDAPaletteSignsValue"
-            }
+            "$ref": "#/definitions/CDDAPaletteSignsValue"
           }
         },
         "ter_furn_transforms": {
-          "default": {},
           "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/CDDAPaletteTransformValue"
           }
         },
         "terrain": {
-          "default": {},
           "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/CDDAPaletteTerrainValue"
@@ -181,41 +131,30 @@
         },
         "toilets": {
           "description": "@example \"toilets\": { \"&\": { \"amount\": [ 0, 40 ] } }",
-          "default": {},
           "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/CDDAPaletteToiletsValue"
           }
         },
         "traps": {
-          "default": {},
           "type": "object",
           "additionalProperties": {
-            "type": "array",
-            "items": {
-              "$ref": "#/definitions/CDDAPaletteTrapsValue"
-            }
+            "$ref": "#/definitions/CDDAPaletteTrapsValue"
           }
         },
         "vehicles": {
-          "default": {},
           "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/CDDAPaletteVehiclesValue"
           }
         },
         "vendingmachines": {
-          "default": {},
           "type": "object",
           "additionalProperties": {
-            "type": "array",
-            "items": {
-              "$ref": "#/definitions/CDDAPaletteVendingsValue"
-            }
+            "$ref": "#/definitions/CDDAPaletteVendingsValue"
           }
         },
         "zones": {
-          "default": {},
           "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/CDDAPaletteZonesValue"
@@ -231,36 +170,34 @@
       ],
       "properties": {
         "//": {
-          "default": "",
           "type": "string"
         },
-        "fields": {
-          "default": {},
+        "computers": {
           "type": "object",
           "additionalProperties": {
-            "type": "array",
-            "items": {
-              "$ref": "#/definitions/CDDAPaletteFieldsValue"
-            }
+            "$ref": "#/definitions/CDDAPaletteComputersValue"
+          }
+        },
+        "fields": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/CDDAPaletteFieldsValue"
           }
         },
         "furniture": {
           "description": "@example \"furniture\": { \"c\": \"f_exercise\", \"u\": [ \"f_ergometer\", \"f_ergometer_mechanical\" ]}",
-          "default": {},
           "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/CDDAPaletteFurnitureValue"
           }
         },
         "gaspumps": {
-          "default": {},
           "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/CDDAPaletteGaspumpsValue"
           }
         },
         "graffiti": {
-          "default": {},
           "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/CDDAPaletteGraffitiValue"
@@ -270,21 +207,18 @@
           "type": "string"
         },
         "item": {
-          "default": {},
           "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/CDDAPaletteItemValue"
           }
         },
         "items": {
-          "default": {},
           "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/CDDAPaletteItemsValue"
           }
         },
         "liquids": {
-          "default": {},
           "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/CDDAPaletteLiquidsValue"
@@ -292,85 +226,60 @@
         },
         "mapping": {
           "description": "@docs MAPGEN.md   everything using mapping can be included",
-          "default": {},
           "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/CDDAMapgenMapping"
           }
         },
         "monster": {
-          "default": {},
           "type": "object",
           "additionalProperties": {
-            "type": "array",
-            "items": {
-              "$ref": "#/definitions/CDDAPaletteMonsterValue"
-            }
+            "$ref": "#/definitions/CDDAPaletteMonsterValue"
           }
         },
         "monsters": {
-          "default": {},
           "type": "object",
           "additionalProperties": {
-            "type": "array",
-            "items": {
-              "$ref": "#/definitions/CDDAPaletteMonstersValue"
-            }
+            "$ref": "#/definitions/CDDAPaletteMonstersValue"
           }
         },
         "npcs": {
-          "default": {},
           "type": "object",
           "additionalProperties": {
-            "type": "array",
-            "items": {
-              "$ref": "#/definitions/CDDAPaletteNpcsValue"
-            }
+            "$ref": "#/definitions/CDDAPaletteNpcsValue"
           }
         },
         "parameters": {
-          "default": {},
           "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/CDDAPaletteParametersValue"
           }
         },
         "rubble": {
-          "default": {},
           "type": "object",
           "additionalProperties": {
-            "type": "array",
-            "items": {
-              "$ref": "#/definitions/CDDAPaletteRubbleValue"
-            }
+            "$ref": "#/definitions/CDDAPaletteRubbleValue"
           }
         },
         "sealed_item": {
-          "default": {},
           "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/CDDAPaletteSealedValue"
           }
         },
         "signs": {
-          "default": {},
           "type": "object",
           "additionalProperties": {
-            "type": "array",
-            "items": {
-              "$ref": "#/definitions/CDDAPaletteSignsValue"
-            }
+            "$ref": "#/definitions/CDDAPaletteSignsValue"
           }
         },
         "ter_furn_transforms": {
-          "default": {},
           "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/CDDAPaletteTransformValue"
           }
         },
         "terrain": {
-          "default": {},
           "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/CDDAPaletteTerrainValue"
@@ -378,48 +287,145 @@
         },
         "toilets": {
           "description": "@example \"toilets\": { \"&\": { \"amount\": [ 0, 40 ] } }",
-          "default": {},
           "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/CDDAPaletteToiletsValue"
           }
         },
         "traps": {
-          "default": {},
           "type": "object",
           "additionalProperties": {
-            "type": "array",
-            "items": {
-              "$ref": "#/definitions/CDDAPaletteTrapsValue"
-            }
+            "$ref": "#/definitions/CDDAPaletteTrapsValue"
           }
         },
         "type": {
           "type": "string"
         },
         "vehicles": {
-          "default": {},
           "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/CDDAPaletteVehiclesValue"
           }
         },
         "vendingmachines": {
-          "default": {},
           "type": "object",
           "additionalProperties": {
-            "type": "array",
-            "items": {
-              "$ref": "#/definitions/CDDAPaletteVendingsValue"
-            }
+            "$ref": "#/definitions/CDDAPaletteVendingsValue"
           }
         },
         "zones": {
-          "default": {},
           "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/CDDAPaletteZonesValue"
           }
+        }
+      }
+    },
+    "CDDAPaletteComputersValue": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/CDDAPaletteComputersValueComputer"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CDDAPaletteComputersValueComputer"
+          }
+        }
+      ]
+    },
+    "CDDAPaletteComputersValueComputer": {
+      "type": "object",
+      "properties": {
+        "access_denied": {
+          "description": "@srcs mapgen.cpp   jmapgen_computer",
+          "type": "string"
+        },
+        "failures": {
+          "description": "@srcs mapgen.cpp   jmapgen_computer",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CDDAPaletteComputersValueComputerFailures"
+          }
+        },
+        "name": {
+          "description": "@srcs mapgen.cpp   jmapgen_computer",
+          "type": "string"
+        },
+        "options": {
+          "description": "@srcs mapgen.cpp   jmapgen_computer",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CDDAPaletteComputersValueComputerOptions"
+          }
+        },
+        "security": {
+          "description": "@srcs mapgen.cpp   jmapgen_computer default 0",
+          "type": "integer",
+          "format": "int64"
+        },
+        "target": {
+          "description": "@srcs mapgen.cpp   jmapgen_computer   default false       mission target maybe",
+          "type": "boolean"
+        }
+      }
+    },
+    "CDDAPaletteComputersValueComputerFailures": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/CDDAPaletteComputersValueComputerFailuresFailure"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CDDAPaletteComputersValueComputerFailuresFailure"
+          }
+        }
+      ]
+    },
+    "CDDAPaletteComputersValueComputerFailuresFailure": {
+      "type": "object",
+      "required": [
+        "action"
+      ],
+      "properties": {
+        "action": {
+          "description": "@srcs mapgen.cpp   jmapgen_computer",
+          "type": "string"
+        }
+      }
+    },
+    "CDDAPaletteComputersValueComputerOptions": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/CDDAPaletteComputersValueComputerOptionsOption"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CDDAPaletteComputersValueComputerOptionsOption"
+          }
+        }
+      ]
+    },
+    "CDDAPaletteComputersValueComputerOptionsOption": {
+      "type": "object",
+      "required": [
+        "action"
+      ],
+      "properties": {
+        "action": {
+          "description": "@srcs mapgen.cpp   jmapgen_computer",
+          "type": "string"
+        },
+        "name": {
+          "description": "@srcs mapgen.cpp   jmapgen_computer",
+          "type": "string"
+        },
+        "security": {
+          "description": "@srcs mapgen.cpp   jmapgen_computer  default 0",
+          "type": "integer",
+          "format": "int64"
         }
       }
     },
@@ -498,7 +504,6 @@
       "properties": {
         "age": {
           "description": "@docs MAPGEN.md   default 0",
-          "default": 0,
           "type": "integer",
           "format": "int64"
         },
@@ -507,7 +512,6 @@
         },
         "intensity": {
           "description": "@docs MAPGEN.md    default 1, possible 1, 2, 3 or more        originally density in old version",
-          "default": 0,
           "type": "integer",
           "format": "int64"
         }
@@ -559,10 +563,9 @@
       "properties": {
         "amount": {
           "description": "@docs MAPGEN.md    default is random? or zero?",
-          "default": 1,
           "allOf": [
             {
-              "$ref": "#/definitions/CDDAIntRangeOne"
+              "$ref": "#/definitions/CDDAIntRange"
             }
           ]
         },
@@ -591,12 +594,10 @@
       "properties": {
         "signage": {
           "description": "@docs MAPGEN.md    the massage shown",
-          "default": "",
           "type": "string"
         },
         "snippet": {
           "description": "@docs MAPGEN.md   a category of snippet?",
-          "default": "",
           "type": "string"
         }
       }
@@ -624,7 +625,7 @@
           "description": "@docs MAPGEN.md   int or min-max  default 1",
           "allOf": [
             {
-              "$ref": "#/definitions/CDDAIntRangeOne"
+              "$ref": "#/definitions/CDDAIntRange"
             }
           ]
         },
@@ -632,7 +633,7 @@
           "description": "@docs MAPGEN.md    \"chance\": x means   one in x  int or min-max   default 1",
           "allOf": [
             {
-              "$ref": "#/definitions/CDDAIntRangeOne"
+              "$ref": "#/definitions/CDDAIntRange"
             }
           ]
         },
@@ -643,7 +644,7 @@
           "description": "@docs MAPGEN.md   int or min-max  default 1",
           "allOf": [
             {
-              "$ref": "#/definitions/CDDAIntRangeOne"
+              "$ref": "#/definitions/CDDAIntRange"
             }
           ]
         }
@@ -669,7 +670,6 @@
       ],
       "properties": {
         "ammo": {
-          "default": 0,
           "type": "integer",
           "format": "int64"
         },
@@ -677,7 +677,7 @@
           "description": "@docs MAPGEN.md    \"chance\": x means    x% int or min-max   default 100",
           "allOf": [
             {
-              "$ref": "#/definitions/CDDAIntRangeHun"
+              "$ref": "#/definitions/CDDAIntRange"
             }
           ]
         },
@@ -685,7 +685,6 @@
           "type": "string"
         },
         "magazine": {
-          "default": 0,
           "type": "integer",
           "format": "int64"
         },
@@ -693,7 +692,7 @@
           "description": "@docs MAPGEN.md   int or min-max  default 1",
           "allOf": [
             {
-              "$ref": "#/definitions/CDDAIntRangeOne"
+              "$ref": "#/definitions/CDDAIntRange"
             }
           ]
         }
@@ -702,30 +701,22 @@
     "CDDAPaletteLiquidsValue": {
       "type": "object",
       "required": [
-        "amount",
         "liquid"
       ],
       "properties": {
         "amount": {
-          "type": "array",
-          "items": [
-            {
-              "type": "integer",
-              "format": "int64"
-            },
-            {
-              "type": "integer",
-              "format": "int64"
-            }
-          ],
-          "maxItems": 2,
-          "minItems": 2
-        },
-        "chance": {
-          "description": "@docs MAPGEN.md    \"chance\": x means    one in x  int or min-max",
+          "description": "@docs MAPGEN.md    default 0 means using certain liquid defualt amount defined",
           "allOf": [
             {
-              "$ref": "#/definitions/CDDAIntRangeOne"
+              "$ref": "#/definitions/CDDAIntRange"
+            }
+          ]
+        },
+        "chance": {
+          "description": "@docs MAPGEN.md    \"chance\": x means    one in x  int or min-max    default 1",
+          "allOf": [
+            {
+              "$ref": "#/definitions/CDDAIntRange"
             }
           ]
         },
@@ -755,7 +746,6 @@
       "properties": {
         "friendly": {
           "description": "@docs MAPGEN.md    default is false",
-          "default": false,
           "type": "boolean"
         },
         "monster": {
@@ -768,7 +758,6 @@
         },
         "target": {
           "description": "@docs MAPGEN.md    a mission target or not @srcs mapgen.cpp     jmapgen_monster   constructor  default false",
-          "default": false,
           "type": "boolean"
         }
       }
@@ -793,16 +782,15 @@
       ],
       "properties": {
         "chance": {
-          "description": "@docs MAPGEN.md    \"chance\": x means    one in x   int or min-max",
+          "description": "@docs MAPGEN.md    \"chance\": x means    one in x   int or min-max defualt 1",
           "allOf": [
             {
-              "$ref": "#/definitions/CDDAIntRangeOne"
+              "$ref": "#/definitions/CDDAIntRange"
             }
           ]
         },
         "density": {
           "description": "@docs MAPGEN.md    if not present, use default density limited by distance between city center use -1.0 to represent default",
-          "default": -1.0,
           "type": "number",
           "format": "double"
         },
@@ -832,7 +820,6 @@
       "properties": {
         "add_trait": {
           "description": "@docs MAPGEN.md   default 0",
-          "default": "",
           "allOf": [
             {
               "$ref": "#/definitions/CDDAStringArray"
@@ -844,7 +831,6 @@
         },
         "target": {
           "description": "@docs MAPGEN.md    a mission target or not   default false @srcs mapgen.cpp     jmapgen_npc   constructor",
-          "default": false,
           "type": "boolean"
         }
       }
@@ -852,7 +838,6 @@
     "CDDAPaletteParameterReference": {
       "type": "object",
       "required": [
-        "fallback",
         "param"
       ],
       "properties": {
@@ -913,12 +898,10 @@
         },
         "items": {
           "description": "@docs MAPGEN.md    bashing items will or not   default is false",
-          "default": false,
           "type": "boolean"
         },
         "overwrite": {
           "description": "@docs MAPGEN.md    if true it just writes on top of what currently exists  default false",
-          "default": false,
           "type": "boolean"
         },
         "rubble_type": {
@@ -1015,12 +998,10 @@
       "properties": {
         "signage": {
           "description": "@docs MAPGEN.md    the massage shown",
-          "default": "",
           "type": "string"
         },
         "snippet": {
           "description": "@docs MAPGEN.md   a category of snippet?",
-          "default": "",
           "type": "string"
         }
       }
@@ -1070,10 +1051,9 @@
       "properties": {
         "amount": {
           "description": "@docs MAPGEN.md    default is random? or zero?",
-          "default": 1,
           "allOf": [
             {
-              "$ref": "#/definitions/CDDAIntRangeOne"
+              "$ref": "#/definitions/CDDAIntRange"
             }
           ]
         }
@@ -1194,13 +1174,12 @@
           "description": "@docs MAPGEN.md    \"chance\": x means    x% int or min-max   default 1    1% low prob",
           "allOf": [
             {
-              "$ref": "#/definitions/CDDAIntRangeOne"
+              "$ref": "#/definitions/CDDAIntRange"
             }
           ]
         },
         "feul": {
           "description": "@docs MAPGEN.md    fuel status    default -1   -1 means 1%-7% fuel",
-          "default": 0,
           "type": "integer",
           "format": "int64"
         },
@@ -1211,13 +1190,11 @@
         },
         "rotation": {
           "description": "@docs MAPGEN.md   360 degree",
-          "default": 0,
           "type": "integer",
           "format": "int64"
         },
         "status": {
           "description": "@docs MAPGEN.md    body status    default -1   -1 means light damage    0 perfect    1 heavy damage",
-          "default": 0,
           "type": "integer",
           "format": "int64"
         }
@@ -1249,7 +1226,6 @@
         },
         "name": {
           "description": "@docs MAPGEN.md    the name of the zone",
-          "default": "",
           "type": "string"
         },
         "type": {

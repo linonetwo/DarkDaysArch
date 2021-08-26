@@ -3,11 +3,11 @@
   "title": "CDDAMapgenWithCache",
   "type": "object",
   "required": [
-    "parsedMap",
-    "rawMapgen"
+    "parsed_map",
+    "raw_mapgen"
   ],
   "properties": {
-    "parsedMap": {
+    "parsed_map": {
       "description": "Map 2D array that have place-holder characters replaced with actual item ID, for map view to display And we have multiple mapgen in a file, so this will be a 3D matrix. But each location can have terrain, furniture, item and so on, so each tile will be a list, so this is a 4D tensor",
       "type": "array",
       "items": {
@@ -23,7 +23,7 @@
         }
       }
     },
-    "rawMapgen": {
+    "raw_mapgen": {
       "description": "Full mapgen file content, for code editor to display",
       "type": "array",
       "items": {
@@ -32,20 +32,91 @@
     }
   },
   "definitions": {
+    "CDDAIntRange": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "format": "int64"
+        },
+        {
+          "type": "array",
+          "items": [
+            {
+              "type": "integer",
+              "format": "int64"
+            },
+            {
+              "type": "integer",
+              "format": "int64"
+            }
+          ],
+          "maxItems": 2,
+          "minItems": 2
+        }
+      ]
+    },
     "CDDAMapgen": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/CDDAMapgenOM"
+        },
+        {
+          "$ref": "#/definitions/CDDAMapgenUpdate"
+        },
+        {
+          "$ref": "#/definitions/CDDAMapgenNested"
+        }
+      ]
+    },
+    "CDDAMapgenNested": {
       "type": "object",
       "required": [
-        "method",
-        "object",
+        "nested_mapgen_id",
+        "type"
+      ],
+      "properties": {
+        "method": {
+          "default": "",
+          "type": "string"
+        },
+        "nested_mapgen_id": {
+          "type": "string"
+        },
+        "object": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/CDDAMapgenObject"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "type": {
+          "type": "string"
+        }
+      }
+    },
+    "CDDAMapgenOM": {
+      "type": "object",
+      "required": [
         "om_terrain",
         "type"
       ],
       "properties": {
         "method": {
+          "default": "",
           "type": "string"
         },
         "object": {
-          "$ref": "#/definitions/CDDAMapgenObject"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/CDDAMapgenObject"
+            },
+            {
+              "type": "null"
+            }
+          ]
         },
         "om_terrain": {
           "type": "string"
@@ -55,83 +126,81 @@
         }
       }
     },
-    "CDDAMapgenFurniture": {
-      "anyOf": [
-        {
-          "type": "string"
-        },
-        {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        }
-      ]
-    },
-    "CDDAMapgenItem": {
-      "anyOf": [
-        {
-          "type": "string"
-        },
-        {
-          "$ref": "#/definitions/CDDAMapgenItemRandomListItem"
-        },
-        {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/CDDAMapgenItemRandomListItem"
-          }
-        }
-      ]
-    },
-    "CDDAMapgenItemRandomListItem": {
-      "type": "object",
-      "required": [
-        "chance",
-        "item"
-      ],
-      "properties": {
-        "chance": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "item": {
-          "type": "string"
-        },
-        "repeat": {
-          "default": [],
-          "type": "array",
-          "items": {
-            "type": "integer",
-            "format": "int64"
-          }
-        }
-      }
-    },
     "CDDAMapgenObject": {
       "type": "object",
       "required": [
         "fill_ter",
-        "rows",
-        "terrain"
+        "rows"
       ],
       "properties": {
+        "computers": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/CDDAPaletteComputersValue"
+          }
+        },
+        "fields": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/CDDAPaletteFieldsValue"
+          }
+        },
         "fill_ter": {
           "type": "string"
         },
         "furniture": {
-          "description": "@example `{ \"=\": \"f_magic_bench\", \"-\": \"f_alembic\", \"?\": \"f_rack_wood\" }`",
-          "default": {},
+          "description": "@example \"furniture\": { \"c\": \"f_exercise\", \"u\": [ \"f_ergometer\", \"f_ergometer_mechanical\" ]}",
           "type": "object",
           "additionalProperties": {
-            "$ref": "#/definitions/CDDAMapgenFurniture"
+            "$ref": "#/definitions/CDDAPaletteFurnitureValue"
+          }
+        },
+        "gaspumps": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/CDDAPaletteGaspumpsValue"
+          }
+        },
+        "graffiti": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/CDDAPaletteGraffitiValue"
+          }
+        },
+        "item": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/CDDAPaletteItemValue"
           }
         },
         "items": {
-          "default": {},
           "type": "object",
           "additionalProperties": {
-            "$ref": "#/definitions/CDDAMapgenItem"
+            "$ref": "#/definitions/CDDAPaletteItemsValue"
+          }
+        },
+        "liquids": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/CDDAPaletteLiquidsValue"
+          }
+        },
+        "monster": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/CDDAPaletteMonsterValue"
+          }
+        },
+        "monsters": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/CDDAPaletteMonstersValue"
+          }
+        },
+        "npcs": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/CDDAPaletteNpcsValue"
           }
         },
         "palettes": {
@@ -161,19 +230,65 @@
             "type": "string"
           }
         },
-        "terrain": {
-          "description": "@example `{ \"_\": \"t_open_air\", \")\": \"t_wall_glass\", \"#\": \"t_rock_wall\", \"-\": \"t_floor\", \"]\": \"t_door_glass_c\" }`",
+        "rubble": {
           "type": "object",
           "additionalProperties": {
-            "$ref": "#/definitions/CDDAMapgenTerrain"
+            "$ref": "#/definitions/CDDAPaletteRubbleValue"
+          }
+        },
+        "sealed_item": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/CDDAPaletteSealedValue"
+          }
+        },
+        "signs": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/CDDAPaletteSignsValue"
+          }
+        },
+        "ter_furn_transforms": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/CDDAPaletteTransformValue"
+          }
+        },
+        "terrain": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/CDDAPaletteTerrainValue"
+          }
+        },
+        "toilets": {
+          "description": "@example \"toilets\": { \"&\": { \"amount\": [ 0, 40 ] } }",
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/CDDAPaletteToiletsValue"
           }
         },
         "traps": {
-          "description": "@example `{ \"=\": \"tr_rollmat\" }`",
-          "default": {},
           "type": "object",
           "additionalProperties": {
-            "$ref": "#/definitions/CDDAMapgenTrap"
+            "$ref": "#/definitions/CDDAPaletteTrapsValue"
+          }
+        },
+        "vehicles": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/CDDAPaletteVehiclesValue"
+          }
+        },
+        "vendingmachines": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/CDDAPaletteVendingsValue"
+          }
+        },
+        "zones": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/CDDAPaletteZonesValue"
           }
         }
       }
@@ -238,7 +353,144 @@
         }
       }
     },
-    "CDDAMapgenTerrain": {
+    "CDDAMapgenUpdate": {
+      "type": "object",
+      "required": [
+        "type",
+        "update_mapgen_id"
+      ],
+      "properties": {
+        "method": {
+          "default": "",
+          "type": "string"
+        },
+        "object": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/CDDAMapgenObject"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "type": {
+          "type": "string"
+        },
+        "update_mapgen_id": {
+          "type": "string"
+        }
+      }
+    },
+    "CDDAPaletteComputersValue": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/CDDAPaletteComputersValueComputer"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CDDAPaletteComputersValueComputer"
+          }
+        }
+      ]
+    },
+    "CDDAPaletteComputersValueComputer": {
+      "type": "object",
+      "properties": {
+        "access_denied": {
+          "description": "@srcs mapgen.cpp   jmapgen_computer",
+          "type": "string"
+        },
+        "failures": {
+          "description": "@srcs mapgen.cpp   jmapgen_computer",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CDDAPaletteComputersValueComputerFailures"
+          }
+        },
+        "name": {
+          "description": "@srcs mapgen.cpp   jmapgen_computer",
+          "type": "string"
+        },
+        "options": {
+          "description": "@srcs mapgen.cpp   jmapgen_computer",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CDDAPaletteComputersValueComputerOptions"
+          }
+        },
+        "security": {
+          "description": "@srcs mapgen.cpp   jmapgen_computer default 0",
+          "type": "integer",
+          "format": "int64"
+        },
+        "target": {
+          "description": "@srcs mapgen.cpp   jmapgen_computer   default false       mission target maybe",
+          "type": "boolean"
+        }
+      }
+    },
+    "CDDAPaletteComputersValueComputerFailures": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/CDDAPaletteComputersValueComputerFailuresFailure"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CDDAPaletteComputersValueComputerFailuresFailure"
+          }
+        }
+      ]
+    },
+    "CDDAPaletteComputersValueComputerFailuresFailure": {
+      "type": "object",
+      "required": [
+        "action"
+      ],
+      "properties": {
+        "action": {
+          "description": "@srcs mapgen.cpp   jmapgen_computer",
+          "type": "string"
+        }
+      }
+    },
+    "CDDAPaletteComputersValueComputerOptions": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/CDDAPaletteComputersValueComputerOptionsOption"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CDDAPaletteComputersValueComputerOptionsOption"
+          }
+        }
+      ]
+    },
+    "CDDAPaletteComputersValueComputerOptionsOption": {
+      "type": "object",
+      "required": [
+        "action"
+      ],
+      "properties": {
+        "action": {
+          "description": "@srcs mapgen.cpp   jmapgen_computer",
+          "type": "string"
+        },
+        "name": {
+          "description": "@srcs mapgen.cpp   jmapgen_computer",
+          "type": "string"
+        },
+        "security": {
+          "description": "@srcs mapgen.cpp   jmapgen_computer  default 0",
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "CDDAPaletteDistribution": {
       "anyOf": [
         {
           "type": "string"
@@ -246,12 +498,32 @@
         {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/CDDAMapgenTerrainRandomListItem"
+            "type": "string"
+          }
+        },
+        {
+          "type": "array",
+          "items": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "integer",
+              "format": "int64"
+            }
+          ],
+          "maxItems": 2,
+          "minItems": 2
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CDDAPaletteDistributionMixed"
           }
         }
       ]
     },
-    "CDDAMapgenTerrainRandomListItem": {
+    "CDDAPaletteDistributionMixed": {
       "anyOf": [
         {
           "type": "string"
@@ -264,7 +536,7 @@
             },
             {
               "type": "integer",
-              "format": "int32"
+              "format": "int64"
             }
           ],
           "maxItems": 2,
@@ -272,17 +544,611 @@
         }
       ]
     },
-    "CDDAMapgenTrap": {
+    "CDDAPaletteFieldsValue": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/CDDAPaletteFieldsValueField"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CDDAPaletteFieldsValueField"
+          }
+        }
+      ]
+    },
+    "CDDAPaletteFieldsValueField": {
+      "type": "object",
+      "required": [
+        "field"
+      ],
+      "properties": {
+        "age": {
+          "description": "@docs MAPGEN.md   default 0",
+          "type": "integer",
+          "format": "int64"
+        },
+        "field": {
+          "type": "string"
+        },
+        "intensity": {
+          "description": "@docs MAPGEN.md    default 1, possible 1, 2, 3 or more        originally density in old version",
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "CDDAPaletteFurnitureValue": {
+      "description": "@docs MAPGEN.md      Terrain, furniture and traps can specified as a single string, not a json object",
       "anyOf": [
         {
           "type": "string"
         },
         {
-          "$ref": "#/definitions/CDDAMapgenTrapObject"
+          "$ref": "#/definitions/CDDAPaletteFurnitureValueFurniture"
+        },
+        {
+          "$ref": "#/definitions/CDDAPaletteDistribution"
+        },
+        {
+          "$ref": "#/definitions/CDDAPaletteParameterReference"
         }
       ]
     },
-    "CDDAMapgenTrapObject": {
+    "CDDAPaletteFurnitureValueFurniture": {
+      "type": "object",
+      "required": [
+        "furniture"
+      ],
+      "properties": {
+        "furniture": {
+          "type": "string"
+        }
+      }
+    },
+    "CDDAPaletteGaspumpsValue": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/CDDAPaletteGaspumpsValueGaspump"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CDDAPaletteGaspumpsValueGaspump"
+          }
+        }
+      ]
+    },
+    "CDDAPaletteGaspumpsValueGaspump": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "description": "@docs MAPGEN.md    default is random? or zero?",
+          "allOf": [
+            {
+              "$ref": "#/definitions/CDDAIntRange"
+            }
+          ]
+        },
+        "feul": {
+          "description": "@docs MAPGEN.md    type of fuel   default unknown   gasoline maybe?",
+          "default": "",
+          "type": "string"
+        }
+      }
+    },
+    "CDDAPaletteGraffitiValue": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/CDDAPaletteGraffitiValueGraffiti"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CDDAPaletteGraffitiValueGraffiti"
+          }
+        }
+      ]
+    },
+    "CDDAPaletteGraffitiValueGraffiti": {
+      "type": "object",
+      "properties": {
+        "signage": {
+          "description": "@docs MAPGEN.md    the massage shown",
+          "type": "string"
+        },
+        "snippet": {
+          "description": "@docs MAPGEN.md   a category of snippet?",
+          "type": "string"
+        }
+      }
+    },
+    "CDDAPaletteItemValue": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/CDDAPaletteItemValueItem"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CDDAPaletteItemValueItem"
+          }
+        }
+      ]
+    },
+    "CDDAPaletteItemValueItem": {
+      "type": "object",
+      "required": [
+        "item"
+      ],
+      "properties": {
+        "amount": {
+          "description": "@docs MAPGEN.md   int or min-max  default 1",
+          "allOf": [
+            {
+              "$ref": "#/definitions/CDDAIntRange"
+            }
+          ]
+        },
+        "chance": {
+          "description": "@docs MAPGEN.md    \"chance\": x means   one in x  int or min-max   default 1",
+          "allOf": [
+            {
+              "$ref": "#/definitions/CDDAIntRange"
+            }
+          ]
+        },
+        "item": {
+          "type": "string"
+        },
+        "repeat": {
+          "description": "@docs MAPGEN.md   int or min-max  default 1",
+          "allOf": [
+            {
+              "$ref": "#/definitions/CDDAIntRange"
+            }
+          ]
+        }
+      }
+    },
+    "CDDAPaletteItemsValue": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/CDDAPaletteItemsValueItem"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CDDAPaletteItemsValueItem"
+          }
+        }
+      ]
+    },
+    "CDDAPaletteItemsValueItem": {
+      "type": "object",
+      "required": [
+        "item"
+      ],
+      "properties": {
+        "ammo": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "chance": {
+          "description": "@docs MAPGEN.md    \"chance\": x means    x% int or min-max   default 100",
+          "allOf": [
+            {
+              "$ref": "#/definitions/CDDAIntRange"
+            }
+          ]
+        },
+        "item": {
+          "type": "string"
+        },
+        "magazine": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "repeat": {
+          "description": "@docs MAPGEN.md   int or min-max  default 1",
+          "allOf": [
+            {
+              "$ref": "#/definitions/CDDAIntRange"
+            }
+          ]
+        }
+      }
+    },
+    "CDDAPaletteLiquidsValue": {
+      "type": "object",
+      "required": [
+        "liquid"
+      ],
+      "properties": {
+        "amount": {
+          "description": "@docs MAPGEN.md    default 0 means using certain liquid defualt amount defined",
+          "allOf": [
+            {
+              "$ref": "#/definitions/CDDAIntRange"
+            }
+          ]
+        },
+        "chance": {
+          "description": "@docs MAPGEN.md    \"chance\": x means    one in x  int or min-max    default 1",
+          "allOf": [
+            {
+              "$ref": "#/definitions/CDDAIntRange"
+            }
+          ]
+        },
+        "liquid": {
+          "type": "string"
+        }
+      }
+    },
+    "CDDAPaletteMonsterValue": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/CDDAPaletteMonsterValueMonster"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CDDAPaletteMonsterValueMonster"
+          }
+        }
+      ]
+    },
+    "CDDAPaletteMonsterValueMonster": {
+      "type": "object",
+      "required": [
+        "monster"
+      ],
+      "properties": {
+        "friendly": {
+          "description": "@docs MAPGEN.md    default is false",
+          "type": "boolean"
+        },
+        "monster": {
+          "type": "string"
+        },
+        "name": {
+          "description": "@docs MAPGEN.md    special name default is nameless @srcs mapgen.cpp     jmapgen_monster   constructor  default  \"None\"?",
+          "default": "",
+          "type": "string"
+        },
+        "target": {
+          "description": "@docs MAPGEN.md    a mission target or not @srcs mapgen.cpp     jmapgen_monster   constructor  default false",
+          "type": "boolean"
+        }
+      }
+    },
+    "CDDAPaletteMonstersValue": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/CDDAPaletteMonstersValueMonster"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CDDAPaletteMonstersValueMonster"
+          }
+        }
+      ]
+    },
+    "CDDAPaletteMonstersValueMonster": {
+      "type": "object",
+      "required": [
+        "monster"
+      ],
+      "properties": {
+        "chance": {
+          "description": "@docs MAPGEN.md    \"chance\": x means    one in x   int or min-max defualt 1",
+          "allOf": [
+            {
+              "$ref": "#/definitions/CDDAIntRange"
+            }
+          ]
+        },
+        "density": {
+          "description": "@docs MAPGEN.md    if not present, use default density limited by distance between city center use -1.0 to represent default",
+          "type": "number",
+          "format": "double"
+        },
+        "monster": {
+          "type": "string"
+        }
+      }
+    },
+    "CDDAPaletteNpcsValue": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/CDDAPaletteNpcsValueNpc"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CDDAPaletteNpcsValueNpc"
+          }
+        }
+      ]
+    },
+    "CDDAPaletteNpcsValueNpc": {
+      "type": "object",
+      "required": [
+        "class"
+      ],
+      "properties": {
+        "add_trait": {
+          "description": "@docs MAPGEN.md   default 0",
+          "allOf": [
+            {
+              "$ref": "#/definitions/CDDAStringArray"
+            }
+          ]
+        },
+        "class": {
+          "type": "string"
+        },
+        "target": {
+          "description": "@docs MAPGEN.md    a mission target or not   default false @srcs mapgen.cpp     jmapgen_npc   constructor",
+          "type": "boolean"
+        }
+      }
+    },
+    "CDDAPaletteParameterReference": {
+      "type": "object",
+      "required": [
+        "param"
+      ],
+      "properties": {
+        "fallback": {
+          "type": "string"
+        },
+        "param": {
+          "type": "string"
+        }
+      }
+    },
+    "CDDAPaletteRubbleValue": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/CDDAPaletteRubbleValueRubble"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CDDAPaletteRubbleValueRubble"
+          }
+        }
+      ]
+    },
+    "CDDAPaletteRubbleValueRubble": {
+      "type": "object",
+      "properties": {
+        "floor_type": {
+          "description": "@docs MAPGEN.md    ter id     default is t_dirt",
+          "default": "",
+          "type": "string"
+        },
+        "items": {
+          "description": "@docs MAPGEN.md    bashing items will or not   default is false",
+          "type": "boolean"
+        },
+        "overwrite": {
+          "description": "@docs MAPGEN.md    if true it just writes on top of what currently exists  default false",
+          "type": "boolean"
+        },
+        "rubble_type": {
+          "description": "@docs MAPGEN.md    furniture id     default is f_rubble",
+          "default": "",
+          "type": "string"
+        }
+      }
+    },
+    "CDDAPaletteSealedValue": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/CDDAPaletteSealedValueSealed"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CDDAPaletteSealedValueSealed"
+          }
+        }
+      ]
+    },
+    "CDDAPaletteSealedValueSealed": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/CDDAPaletteSealedValueSealedItem"
+        },
+        {
+          "$ref": "#/definitions/CDDAPaletteSealedValueSealedItems"
+        }
+      ]
+    },
+    "CDDAPaletteSealedValueSealedItem": {
+      "type": "object",
+      "required": [
+        "furniture"
+      ],
+      "properties": {
+        "furniture": {
+          "type": "string"
+        },
+        "item": {
+          "description": "@docs MAPGEN.md    single item",
+          "default": null,
+          "anyOf": [
+            {
+              "$ref": "#/definitions/CDDAPaletteItemValue"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "CDDAPaletteSealedValueSealedItems": {
+      "type": "object",
+      "required": [
+        "furniture"
+      ],
+      "properties": {
+        "furniture": {
+          "type": "string"
+        },
+        "items": {
+          "description": "@docs MAPGEN.md    item group",
+          "default": null,
+          "anyOf": [
+            {
+              "$ref": "#/definitions/CDDAPaletteItemsValue"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "CDDAPaletteSignsValue": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/CDDAPaletteSignsValueSign"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CDDAPaletteSignsValueSign"
+          }
+        }
+      ]
+    },
+    "CDDAPaletteSignsValueSign": {
+      "type": "object",
+      "properties": {
+        "signage": {
+          "description": "@docs MAPGEN.md    the massage shown",
+          "type": "string"
+        },
+        "snippet": {
+          "description": "@docs MAPGEN.md   a category of snippet?",
+          "type": "string"
+        }
+      }
+    },
+    "CDDAPaletteTerrainValue": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "$ref": "#/definitions/CDDAPaletteTerrainValueTerrain"
+        },
+        {
+          "$ref": "#/definitions/CDDAPaletteDistribution"
+        },
+        {
+          "$ref": "#/definitions/CDDAPaletteParameterReference"
+        }
+      ]
+    },
+    "CDDAPaletteTerrainValueTerrain": {
+      "type": "object",
+      "required": [
+        "terrain"
+      ],
+      "properties": {
+        "terrain": {
+          "type": "string"
+        }
+      }
+    },
+    "CDDAPaletteToiletsValue": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/CDDAPaletteToiletsValueToilet"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CDDAPaletteToiletsValueToilet"
+          }
+        }
+      ]
+    },
+    "CDDAPaletteToiletsValueToilet": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "description": "@docs MAPGEN.md    default is random? or zero?",
+          "allOf": [
+            {
+              "$ref": "#/definitions/CDDAIntRange"
+            }
+          ]
+        }
+      }
+    },
+    "CDDAPaletteTransformValue": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/CDDAPaletteTransformValueTransform"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CDDAPaletteTransformValueTransform"
+          }
+        }
+      ]
+    },
+    "CDDAPaletteTransformValueTransform": {
+      "type": "object",
+      "required": [
+        "transform"
+      ],
+      "properties": {
+        "transform": {
+          "description": "@docs MAPGEN.md    the id of the `ter_furn_transform` to run",
+          "type": "string"
+        }
+      }
+    },
+    "CDDAPaletteTrapsValue": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "$ref": "#/definitions/CDDAPaletteTrapsValueObject"
+        },
+        {
+          "$ref": "#/definitions/CDDAPaletteDistribution"
+        },
+        {
+          "$ref": "#/definitions/CDDAPaletteParameterReference"
+        }
+      ]
+    },
+    "CDDAPaletteTrapsValueObject": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/CDDAPaletteTrapsValueTrap"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CDDAPaletteTrapsValueTrap"
+          }
+        }
+      ]
+    },
+    "CDDAPaletteTrapsValueTrap": {
       "type": "object",
       "required": [
         "trap"
@@ -292,6 +1158,129 @@
           "type": "string"
         }
       }
+    },
+    "CDDAPaletteVehiclesValue": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/CDDAPaletteVehiclesValueVehicle"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CDDAPaletteVehiclesValueVehicle"
+          }
+        }
+      ]
+    },
+    "CDDAPaletteVehiclesValueVehicle": {
+      "type": "object",
+      "required": [
+        "vehicle"
+      ],
+      "properties": {
+        "feul": {
+          "description": "@docs MAPGEN.md    type of fuel   default unknown   gasoline maybe?",
+          "default": "",
+          "type": "string"
+        },
+        "vehicle": {
+          "description": "@docs MAPGEN.md    if of vehicle id or vehicle group id",
+          "type": "string"
+        }
+      }
+    },
+    "CDDAPaletteVendingsValue": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/CDDAPaletteVendingsValueVending"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CDDAPaletteVendingsValueVending"
+          }
+        }
+      ]
+    },
+    "CDDAPaletteVendingsValueVending": {
+      "type": "object",
+      "properties": {
+        "chance": {
+          "description": "@docs MAPGEN.md    \"chance\": x means    x% int or min-max   default 1    1% low prob",
+          "allOf": [
+            {
+              "$ref": "#/definitions/CDDAIntRange"
+            }
+          ]
+        },
+        "feul": {
+          "description": "@docs MAPGEN.md    fuel status    default -1   -1 means 1%-7% fuel",
+          "type": "integer",
+          "format": "int64"
+        },
+        "item_group": {
+          "description": "@docs MAPGEN.md    default randomly choose one of \"vending_food\" or \"vending_drink\"",
+          "default": "",
+          "type": "string"
+        },
+        "rotation": {
+          "description": "@docs MAPGEN.md   360 degree",
+          "type": "integer",
+          "format": "int64"
+        },
+        "status": {
+          "description": "@docs MAPGEN.md    body status    default -1   -1 means light damage    0 perfect    1 heavy damage",
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "CDDAPaletteZonesValue": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/CDDAPaletteZonesValueZone"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CDDAPaletteZonesValueZone"
+          }
+        }
+      ]
+    },
+    "CDDAPaletteZonesValueZone": {
+      "type": "object",
+      "required": [
+        "faction",
+        "type"
+      ],
+      "properties": {
+        "faction": {
+          "description": "@docs MAPGEN.md    fraction id",
+          "type": "string"
+        },
+        "name": {
+          "description": "@docs MAPGEN.md    the name of the zone",
+          "type": "string"
+        },
+        "type": {
+          "description": "@docs MAPGEN.md    Values: `\"NPC_RETREAT\"`, `\"NPC_NO_INVESTIGATE\"`, or `\"NPC_INVESTIGATE_ONLY\"`",
+          "type": "string"
+        }
+      }
+    },
+    "CDDAStringArray": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      ]
     },
     "ItemIDOrItemList": {
       "description": "A char in map rows can mean multiple item, like # mean a terrain and a furniture, and some terrain can have id same as a furniture, so we have to keep id's type in a tuple",
