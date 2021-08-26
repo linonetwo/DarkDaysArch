@@ -13,7 +13,7 @@ export type CDDATileSetID = string | string[];
  */
 export interface CDDATileSetConfigWithCache {
   /**
-   * tileset in base64 format key is file name like `large.png`, value is base64 blob data string
+   * key is file name like `large.png`, value is base64 blob data string
    */
   textures: {
     [k: string]: string;
@@ -21,7 +21,7 @@ export interface CDDATileSetConfigWithCache {
   /**
    * inverse index to quick lookup tile data, key is tile name like `ranch_camp_17`, value is data I think useful for React renderer.
    */
-  tileDataIndex: {
+  tile_data_index: {
     [k: string]: CDDATileSetInverseIndexedTileData;
   };
   [k: string]: unknown;
@@ -39,7 +39,7 @@ export interface CDDATileSetInverseIndexedTileData {
    */
   tile: CDDATileSetTile;
   /**
-   * copy of tileset image data, omit the `tiles` `ascii` field.  (become empty array). required field is enforced by rust side
+   * copy of tileset image data, omit the `tiles` `ascii` field.
    */
   tileset: CDDATileSetTilesNew;
   [k: string]: unknown;
