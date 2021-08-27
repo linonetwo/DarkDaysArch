@@ -13,14 +13,15 @@ export default function Tiles(): JSX.Element {
     <>
       {openedMapMatrix.map((rows, rowIndex) =>
         rows.map((cell, columnIndex) => {
-          const cellItem = cell[0];
-          if (Array.isArray(cellItem)) {
-            const [idType, id] = cellItem;
-            if (typeof id === 'string') {
-              return <Tile x={columnIndex * 30} y={rowIndex * 30} tileName={id} />;
+          return cell.map((cellItem) => {
+            if (Array.isArray(cellItem)) {
+              const [idType, id] = cellItem;
+              if (typeof id === 'string') {
+                return <Tile x={columnIndex * 30} y={rowIndex * 30} tileName={id} />;
+              }
             }
-          }
-          return null;
+            return null;
+          });
         }),
       )}
     </>
