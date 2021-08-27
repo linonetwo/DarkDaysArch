@@ -1,6 +1,7 @@
 use super::palette::*;
 use schemars::JsonSchema;
 use serde::{self, Deserialize, Serialize};
+use crate::common::{CDDAIntRange, int64};
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDAMapgenWithCache {
@@ -81,24 +82,325 @@ pub struct CDDAMapgenObject {
   pub fill_ter: String,
   pub rows: Vec<String>,
   #[serde(default)]
+  #[serde(skip_serializing_if = "Vec::is_empty")]
   pub palettes: Vec<String>,
   #[serde(flatten)]
   pub mapping_object: CDDAMapgenMapping,
 
   #[serde(default)]
-  pub place_monsters: Vec<CDDAMapgenPlaceMonster>,
+  #[serde(skip_serializing_if = "Vec::is_empty")]
+  pub place_monsters: Vec<CDDAMapgenPlaceMonsters>,
   #[serde(default)]
+  #[serde(skip_serializing_if = "Vec::is_empty")]
+  pub place_item: Vec<CDDAMapgenPlaceItem>,
+  #[serde(default)]
+  #[serde(skip_serializing_if = "Vec::is_empty")]
+  pub place_items: Vec<CDDAMapgenPlaceItems>,
+  #[serde(default)]
+  #[serde(skip_serializing_if = "Vec::is_empty")]
+  pub place_fields: Vec<CDDAMapgenPlaceFields>,
+  #[serde(default)]
+  #[serde(skip_serializing_if = "Vec::is_empty")]
+  pub place_npcs: Vec<CDDAMapgenPlaceNpcs>,
+  #[serde(default)]
+  #[serde(skip_serializing_if = "Vec::is_empty")]
+  pub place_signs: Vec<CDDAMapgenPlaceSigns>,
+  #[serde(default)]
+  #[serde(skip_serializing_if = "Vec::is_empty")]
+  pub place_vendingmachines: Vec<CDDAMapgenPlaceVendings>,
+  #[serde(default)]
+  #[serde(skip_serializing_if = "Vec::is_empty")]
+  pub place_toilets: Vec<CDDAMapgenPlaceToilets>,
+  #[serde(default)]
+  #[serde(skip_serializing_if = "Vec::is_empty")]
+  pub place_liquids: Vec<CDDAMapgenPlaceLiquids>,
+  #[serde(default)]
+  #[serde(skip_serializing_if = "Vec::is_empty")]
+  pub place_gaspumps: Vec<CDDAMapgenPlaceGaspumps>,
+  #[serde(default)]
+  #[serde(skip_serializing_if = "Vec::is_empty")]
+  pub place_vehicles: Vec<CDDAMapgenPlaceVehicles>,
+  #[serde(default)]
+  #[serde(skip_serializing_if = "Vec::is_empty")]
+  pub place_traps: Vec<CDDAMapgenPlaceTraps>,
+  #[serde(default)]
+  #[serde(skip_serializing_if = "Vec::is_empty")]
+  pub place_furniture: Vec<CDDAMapgenPlaceFurniture>,
+  #[serde(default)]
+  #[serde(skip_serializing_if = "Vec::is_empty")]
+  pub place_terrain: Vec<CDDAMapgenPlaceTerrain>,
+  #[serde(default)]
+  #[serde(skip_serializing_if = "Vec::is_empty")]
+  pub place_monster: Vec<CDDAMapgenPlaceMonster>,
+  #[serde(default)]
+  #[serde(skip_serializing_if = "Vec::is_empty")]
+  pub place_rubble: Vec<CDDAMapgenPlaceRubble>,
+  #[serde(default)]
+  #[serde(skip_serializing_if = "Vec::is_empty")]
+  pub place_computers: Vec<CDDAMapgenPlaceComputers>,
+  #[serde(default)]
+  #[serde(skip_serializing_if = "Vec::is_empty")]
+  pub place_nested: Vec<CDDAMapgenPlaceNested>,
+  #[serde(default)]
+  #[serde(skip_serializing_if = "Vec::is_empty")]
+  pub place_graffiti: Vec<CDDAMapgenPlaceGraffiti>,
+  #[serde(default)]
+  #[serde(skip_serializing_if = "Vec::is_empty")]
+  pub translate_ter: Vec<CDDAMapgenTranslateTer>,
+  #[serde(default)]
+  #[serde(skip_serializing_if = "Vec::is_empty")]
+  pub place_zones: Vec<CDDAMapgenPlaceZones>,
+  #[serde(default)]
+  #[serde(skip_serializing_if = "Vec::is_empty")]
+  pub place_ter_furn_tranforms: Vec<CDDAMapgenPlaceTransforms>,
+  #[serde(default)]
+  #[serde(skip_serializing_if = "Vec::is_empty")]
+  pub faction_owner: Vec<CDDAMapgenFactionOwner>,
+  #[serde(default)]
+  #[serde(skip_serializing_if = "Vec::is_empty")]
   pub place_loot: Vec<CDDAMapgenPlaceLoot>,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
-pub struct CDDAMapgenPlaceMonster {
-  pub monster: String,
-  pub x: i64,
-  pub y: i64,
-  pub density: f64,
-  pub repeat: Vec<i64>,
+pub struct CDDAMapgenCoor {
+  pub x: CDDAIntRange,
+  pub y: CDDAIntRange,
 }
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+pub struct CDDAMapgenPlaceMonsters {
+  #[serde(flatten)]
+  pub arguments: CDDAPaletteMonstersValueMonster,
+  #[serde(flatten)]
+  pub coordinate: CDDAMapgenCoor,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+pub struct CDDAMapgenPlaceItems {
+  #[serde(flatten)]
+  pub arguments: CDDAPaletteItemsValueItem,
+  #[serde(flatten)]
+  pub coordinate: CDDAMapgenCoor,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+pub struct CDDAMapgenPlaceItem {
+  #[serde(flatten)]
+  pub arguments: CDDAPaletteItemValueItem,
+  #[serde(flatten)]
+  pub coordinate: CDDAMapgenCoor,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+pub struct CDDAMapgenPlaceFields {
+  #[serde(flatten)]
+  pub arguments: CDDAPaletteFieldsValueField,
+  #[serde(flatten)]
+  pub coordinate: CDDAMapgenCoor,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+pub struct CDDAMapgenPlaceNpcs {
+  #[serde(flatten)]
+  pub arguments: CDDAPaletteNpcsValueNpc,
+  #[serde(flatten)]
+  pub coordinate: CDDAMapgenCoor,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+pub struct CDDAMapgenPlaceSigns {
+  #[serde(flatten)]
+  pub arguments: CDDAPaletteSignsValueSign,
+  #[serde(flatten)]
+  pub coordinate: CDDAMapgenCoor,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+pub struct CDDAMapgenPlaceVendings {
+  #[serde(flatten)]
+  pub arguments: CDDAPaletteVendingsValueVending,
+  #[serde(flatten)]
+  pub coordinate: CDDAMapgenCoor,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+pub struct CDDAMapgenPlaceToilets {
+  #[serde(flatten)]
+  pub arguments: CDDAPaletteToiletsValueToilet,
+  #[serde(flatten)]
+  pub coordinate: CDDAMapgenCoor,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+pub struct CDDAMapgenPlaceLiquids {
+  #[serde(flatten)]
+  pub arguments: CDDAPaletteLiquidsValueLiquid,
+  #[serde(flatten)]
+  pub coordinate: CDDAMapgenCoor,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+pub struct CDDAMapgenPlaceGaspumps {
+  #[serde(flatten)]
+  pub arguments: CDDAPaletteGaspumpsValueGaspump,
+  #[serde(flatten)]
+  pub coordinate: CDDAMapgenCoor,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+pub struct CDDAMapgenPlaceVehicles {
+  #[serde(flatten)]
+  pub arguments: CDDAPaletteVehiclesValueVehicle,
+  #[serde(flatten)]
+  pub coordinate: CDDAMapgenCoor,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+pub struct CDDAMapgenPlaceMonster {
+  #[serde(flatten)]
+  pub arguments: CDDAPaletteMonsterValueMonster,
+  #[serde(flatten)]
+  pub coordinate: CDDAMapgenCoor,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+pub struct CDDAMapgenPlaceRubble {
+  #[serde(flatten)]
+  pub arguments: CDDAPaletteRubbleValueRubble,
+  #[serde(flatten)]
+  pub coordinate: CDDAMapgenCoor,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+pub struct CDDAMapgenPlaceComputers {
+  #[serde(flatten)]
+  pub arguments: CDDAPaletteComputersValueComputer,
+  #[serde(flatten)]
+  pub coordinate: CDDAMapgenCoor,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+pub struct CDDAMapgenPlaceNested {
+  #[serde(flatten)]
+  pub arguments: CDDAPaletteNestedValueNested,
+  #[serde(flatten)]
+  pub coordinate: CDDAMapgenCoor,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+pub struct CDDAMapgenPlaceGraffiti {
+  #[serde(flatten)]
+  pub arguments: CDDAPaletteGraffitiValueGraffiti,
+  #[serde(flatten)]
+  pub coordinate: CDDAMapgenCoor,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+pub struct CDDAMapgenPlaceZones {
+  #[serde(flatten)]
+  pub arguments: CDDAPaletteZonesValueZone,
+  #[serde(flatten)]
+  pub coordinate: CDDAMapgenCoor,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+pub struct CDDAMapgenPlaceTransforms {
+  #[serde(flatten)]
+  pub arguments: CDDAPaletteTransformsValueTransform,
+  #[serde(flatten)]
+  pub coordinate: CDDAMapgenCoor,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+pub struct CDDAMapgenPlaceTerrain {
+  #[serde(flatten)]
+  pub arguments: CDDAPaletteTerrainValueTerrain,
+  #[serde(flatten)]
+  pub coordinate: CDDAMapgenCoor,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+pub struct CDDAMapgenPlaceFurniture {
+  #[serde(flatten)]
+  pub arguments: CDDAPaletteFurnitureValueFurniture,
+  #[serde(flatten)]
+  pub coordinate: CDDAMapgenCoor,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+pub struct CDDAMapgenPlaceTraps {
+  #[serde(flatten)]
+  pub arguments: CDDAPaletteTrapsValueTrap,
+  #[serde(flatten)]
+  pub coordinate: CDDAMapgenCoor,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+pub struct CDDAMapgenTranslateTer {
+  #[serde(flatten)]
+  pub arguments: CDDAPaletteTranslateValueTranslate,
+  #[serde(flatten)]
+  pub coordinate: CDDAMapgenCoor,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+pub struct CDDAMapgenFactionOwner {
+  #[serde(flatten)]
+  pub arguments: CDDAPaletteFactionValueFaction,
+  #[serde(flatten)]
+  pub coordinate: CDDAMapgenCoor,
+}
+
+// #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+// pub enum CDDAMapgenPlaceLoot {
+//   Item(CDDAMapgenPlaceLootItem),
+//   Group(CDDAMapgenPlaceLootGroup)
+// }
+
+// #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+// pub struct CDDAMapgenPlaceLootCommon {
+//   /**
+//    * @srcs mapgen.cpp   jmapgen_loot    "chance": x means    x% int or min-max   default 100
+//    */
+//   #[serde(default = "CDDAIntRange::default_int_range_100")]
+//   #[serde(skip_serializing_if = "CDDAIntRange::is_default_int_range_100")]
+//   pub chance: CDDAIntRange,
+//   /**
+//    * @srcs  mapgen.cpp jmapgen_loot  int or min-max  default 1
+//    */
+//   #[serde(default = "CDDAIntRange::default_int_range_1")]
+//   #[serde(skip_serializing_if = "CDDAIntRange::is_default_int_range_1")]
+//   pub repeat: CDDAIntRange,
+
+//   #[serde(default = "int64::default_i64_0")]
+//   #[serde(skip_serializing_if = "int64::is_default_i64_0")]
+//   pub ammo: i64,
+
+//   #[serde(default = "int64::default_i64_0")]
+//   #[serde(skip_serializing_if = "int64::is_default_i64_0")]
+//   pub magazine: i64,
+// }
+
+// #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+// pub struct CDDAMapgenPlaceLootItem {
+//   pub item: String,
+//   #[serde(flatten)]
+//   pub coordinate: CDDAMapgenCoor,
+//   #[serde(flatten)]
+//   pub loot_common: CDDAMapgenPlaceLootCommon,
+//   #[serde(default)]
+//   #[serde(skip_serializing_if = "String::is_empty")]
+//   pub variant: String,
+// }
+
+// #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+// pub struct CDDAMapgenPlaceLootGroup {
+//   pub group: String,
+//   #[serde(flatten)]
+//   pub coordinate: CDDAMapgenCoor,
+//   #[serde(flatten)]
+//   pub loot_common: CDDAMapgenPlaceLootCommon,
+// }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDAMapgenPlaceLoot {

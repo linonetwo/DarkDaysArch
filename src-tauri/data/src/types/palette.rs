@@ -1,4 +1,5 @@
 use crate::common::{bool, float64, int64, string, CDDAIntRange, CDDAStringArray};
+use super::mapgen::CDDAMapgenCoor;
 use schemars::JsonSchema;
 use serde::{self, Deserialize, Serialize};
 use std::collections::BTreeMap;
@@ -110,7 +111,10 @@ pub struct CDDAMapgenMapping {
   // pub translate_ter: BTreeMap<String, CDDAPaletteTranslateValue>,
   #[serde(default)]
   #[serde(skip_serializing_if = "BTreeMap::is_empty")]
-  pub ter_furn_transforms: BTreeMap<String, CDDAPaletteTransformValue>,
+  pub ter_furn_transforms: BTreeMap<String, CDDAPaletteTransformsValue>,
+  #[serde(default)]
+  #[serde(skip_serializing_if = "BTreeMap::is_empty")]
+  pub faction_owner_character: BTreeMap<String, CDDAPaletteFactionValue>,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
@@ -120,12 +124,10 @@ pub struct CDDAPaletteParametersValue {
   pub default: CDDAPaletteParametersValueDefault,
 }
 
+// what happened exactly ???
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(untagged)]
 pub enum CDDAPaletteDistribution {
-  Id(String),
-  IdList(Vec<String>),
-  IdWithWeight(String, i64),
   RecursiveMixed(Vec<CDDAPaletteDistributionMixed>),
 }
 
@@ -223,6 +225,13 @@ pub enum CDDAPaletteVendingsValue {
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(untagged)]
+pub enum CDDAPaletteLiquidsValue {
+  Liquid(CDDAPaletteLiquidsValueLiquid),
+  LiquidList(Vec<CDDAPaletteLiquidsValueLiquid>),
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[serde(untagged)]
 pub enum CDDAPaletteToiletsValue {
   Toilet(CDDAPaletteToiletsValueToilet),
   ToiletList(Vec<CDDAPaletteToiletsValueToilet>),
@@ -255,12 +264,20 @@ pub enum CDDAPaletteMonstersValue {
   Monster(CDDAPaletteMonstersValueMonster),
   MonsterList(Vec<CDDAPaletteMonstersValueMonster>),
 }
+ // confusing change ?
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(untagged)]
 pub enum CDDAPaletteMonsterValue {
   Monster(CDDAPaletteMonsterValueMonster),
   MonsterList(Vec<CDDAPaletteMonsterValueMonster>),
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[serde(untagged)]
+pub enum CDDAPaletteMonsterValueMonster {
+  Monster(CDDAPaletteMonsterValueMonsterMonster),
+  Group(CDDAPaletteMonsterValueMonsterGroup),
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
@@ -314,9 +331,9 @@ pub enum CDDAPaletteTranslateValue {
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(untagged)]
-pub enum CDDAPaletteTransformValue {
-  Transform(CDDAPaletteTransformValueTransform),
-  TransformList(Vec<CDDAPaletteTransformValueTransform>),
+pub enum CDDAPaletteTransformsValue {
+  Transform(CDDAPaletteTransformsValueTransform),
+  TransformList(Vec<CDDAPaletteTransformsValueTransform>),
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
@@ -345,6 +362,23 @@ pub enum CDDAPaletteComputersValueComputerFailures {
 pub enum CDDAPaletteNestedValue {
   Nested(CDDAPaletteNestedValueNested),
   NestedList(Vec<CDDAPaletteNestedValueNested>),
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[serde(untagged)]
+pub enum CDDAPaletteFactionValue {
+  Faction(CDDAPaletteFactionValueFaction),
+  FactionList(Vec<CDDAPaletteFactionValueFaction>),
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+pub struct CDDAPaletteFactionValueFaction {
+  /**
+   * @srcs mapgen.cpp    jmapgen_nested
+   */
+  #[serde(default)]
+  #[serde(skip_serializing_if = "String::is_empty")]
+  pub id: String,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
@@ -459,7 +493,7 @@ pub struct CDDAPaletteComputersValueComputer {
 
 // only used in update_mapgen
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
-pub struct CDDAPaletteTransformValueTransform {
+pub struct CDDAPaletteTransformsValueTransform {
   /**
    * @docs MAPGEN.md    the id of the `ter_furn_transform` to run
    */
@@ -550,6 +584,7 @@ pub struct CDDAPaletteSealedValueSealedItem {
    * @docs MAPGEN.md    single item
    */
   #[serde(default)]
+  #[serde(skip_serializing_if = "Option::is_none")]
   pub item: Option<CDDAPaletteItemValue>,
 }
 
@@ -560,6 +595,7 @@ pub struct CDDAPaletteSealedValueSealedItems {
    * @docs MAPGEN.md    item group
    */
   #[serde(default)]
+  #[serde(skip_serializing_if = "Option::is_none")]
   pub items: Option<CDDAPaletteItemsValue>,
 }
 
@@ -579,8 +615,40 @@ pub struct CDDAPaletteFurnitureValueFurniture {
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
-pub struct CDDAPaletteMonsterValueMonster {
-  pub monster: String,
+pub struct CDDAPaletteMonsterValueMonsterSpawnDataAmmo {
+  /**
+   * @docs MAPGEN.md    default is false
+   */
+  #[serde(default)]
+  #[serde(skip_serializing_if = "String::is_empty")]
+  pub ammo_id: String,
+  /**
+   * @docs MAPGEN.md    special name default is nameless
+   * @srcs mapgen.cpp     jmapgen_monster   constructor  default  "None"?
+   */
+  #[serde(default)]
+  #[serde(skip_serializing_if = "Vec::is_empty")]
+  pub patrol: Vec<CDDAMapgenCoor>,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+pub struct CDDAPaletteMonsterValueMonsterSpawnData {
+  /**
+   * @docs MAPGEN.md    ammo carried
+   */
+  #[serde(default)]
+  #[serde(skip_serializing_if = "Vec::is_empty")]
+  pub ammo: Vec<CDDAPaletteMonsterValueMonsterSpawnDataAmmo>,
+  /**
+   * @docs MAPGEN.md    patrol ??
+   */
+  #[serde(default)]
+  #[serde(skip_serializing_if = "Vec::is_empty")]
+  pub patrol: Vec<CDDAMapgenCoor>,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+pub struct CDDAPaletteMonsterValueMonsterCommon {
   /**
    * @docs MAPGEN.md    default is false
    */
@@ -592,6 +660,7 @@ pub struct CDDAPaletteMonsterValueMonster {
    * @srcs mapgen.cpp     jmapgen_monster   constructor  default  "None"?
    */
   #[serde(default)]
+  #[serde(skip_serializing_if = "String::is_empty")]
   pub name: String,
   /**
    * @docs MAPGEN.md    a mission target or not   
@@ -600,6 +669,40 @@ pub struct CDDAPaletteMonsterValueMonster {
   #[serde(default)]
   #[serde(skip_serializing_if = "bool::is_default_bool_false")]
   pub target: bool,
+  /**
+   * @srcs mapgen.cpp     jmapgen_monster   constructor  default false
+   */
+  #[serde(default = "CDDAIntRange::default_int_range_1")]
+  #[serde(skip_serializing_if = "CDDAIntRange::is_default_int_range_1")]
+  pub pack_size: CDDAIntRange,
+  /**
+   * @srcs mapgen.cpp     jmapgen_monster   constructor  default false   if pack_size is defined  default true ????
+   */
+  #[serde(default)]
+  #[serde(skip_serializing_if = "bool::is_default_bool_false")]
+  pub one_or_none: bool,
+  /**
+   * @srcs mapgen.cpp     jmapgen_monster   constructor  default false   if pack_size is defined  default true ????
+   */
+  #[serde(default)]
+  #[serde(skip_serializing_if = "Option::is_none")]
+  pub spawn_data: Option<CDDAPaletteMonsterValueMonsterSpawnData>,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+pub struct CDDAPaletteMonsterValueMonsterMonster {
+  pub monster: CDDAPaletteDistribution,
+  
+  #[serde(flatten)]
+  pub monster_common: CDDAPaletteMonsterValueMonsterCommon,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+pub struct CDDAPaletteMonsterValueMonsterGroup {
+  pub group: String,
+
+  #[serde(flatten)]
+  pub monster_common: CDDAPaletteMonsterValueMonsterCommon,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
@@ -777,7 +880,7 @@ pub struct CDDAPaletteItemsValueItem {
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
-pub struct CDDAPaletteLiquidsValue {
+pub struct CDDAPaletteLiquidsValueLiquid {
   pub liquid: String,
   /**
    * @docs MAPGEN.md    default 0 means using certain liquid defualt amount defined
