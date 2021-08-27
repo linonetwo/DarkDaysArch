@@ -96,7 +96,7 @@ export const files = createModel<RootModel>()({
         const mapgenWithCache = await invoke<CDDAMapgenWithCache>('read_mapgen_file', {
           mapgenFilePath,
         });
-        const newFile = { path: mapgenFilePath, content: JSON.stringify(mapgenWithCache.rawMapgen, undefined, '  ') };
+        const newFile = { path: mapgenFilePath, content: JSON.stringify(mapgenWithCache.raw_mapgen, undefined, '  ') };
         dispatch.files.addNewOpenedFiles(newFile);
         // load map to display
         dispatch.maps.mapsInOpenedFileSetter(mapgenWithCache.parsed_map);

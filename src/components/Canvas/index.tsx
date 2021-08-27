@@ -1,4 +1,4 @@
-import { useState, useCallback, MouseEvent, KeyboardEvent, useMemo } from 'react';
+import { useState, useCallback, MouseEvent, KeyboardEvent, useMemo, MutableRefObject } from 'react';
 import styled, { css } from 'styled-components';
 import { Stage } from 'react-pixi-fiber';
 import { Provider, useDispatch, useSelector } from 'react-redux';
@@ -9,6 +9,7 @@ import Tiles from './sprites/tile/tiles';
 import { Direction } from 'src/store/models/cameraMouse';
 import { Dispatch, RootState, store } from 'src/store/store';
 import { RandomSpinner } from '../RandomSpinner';
+import { useKeyPress } from './hooks';
 
 const Container = styled.main<{ sidePanelWidth: number }>`
   width: 100%;
@@ -40,20 +41,27 @@ export function World(): JSX.Element {
   const [contextMenuIsOpen, contextMenuIsOpenSetter] = useState(false);
 
   const handleKeyDownEvent = useCallback(
-    (event: KeyboardEvent<HTMLCanvasElement>) => {
-      switch (event.key) {
-        case 'w':
-          dispatch.cameraMouse.cameraMove({ direction: Direction.up });
-          break;
-
-        default:
-          break;
+    (keyPressSetReference: MutableRefObject<Set<string>>) => {
+      if (keyPressSetReference.current.has('w') || keyPressSetReference.current.has('ArrowUp')) {
+        // we have an inverse y-axis
+        dispatch.cameraMouse.cameraMove({ directions: [Direction.down] });
+      }
+      if (keyPressSetReference.current.has('a') || keyPressSetReference.current.has('ArrowLeft')) {
+        dispatch.cameraMouse.cameraMove({ directions: [Direction.left] });
+      }
+      if (keyPressSetReference.current.has('s') || keyPressSetReference.current.has('ArrowDown')) {
+        dispatch.cameraMouse.cameraMove({ directions: [Direction.up] });
+      }
+      if (keyPressSetReference.current.has('d') || keyPressSetReference.current.has('ArrowRight')) {
+        dispatch.cameraMouse.cameraMove({ directions: [Direction.right] });
       }
     },
     [dispatch],
   );
+  const [downHandler, upHandler] = useKeyPress(handleKeyDownEvent);
 
   const sidePanelWidth = useSelector((state: RootState) => state.uiState.sidePanelWidth);
+  const cameraPosition = useSelector((state: RootState) => ({ x: state.cameraMouse.cameraX, y: state.cameraMouse.cameraY }));
   const loadTexturesLoading = useSelector((state: RootState) => state.loading.effects.files.loadTextures);
   const actualWidth = useMemo(() => window.innerWidth - sidePanelWidth, [sidePanelWidth]);
 
@@ -67,13 +75,10 @@ export function World(): JSX.Element {
   }
 
   return (
-    <Container id={containerID} sidePanelWidth={sidePanelWidth}>
+    <Container id={containerID} sidePanelWidth={sidePanelWidth} tabIndex={0} onKeyDown={downHandler} onKeyUp={upHandler}>
       <Stage
         // follow the camera
-        pivot={{
-          x: 0,
-          y: 0,
-        }}
+        pivot={cameraPosition}
         // center the camera
         position={{ x: actualWidth / 2, y: window.innerHeight / 2 }}
         options={{
@@ -81,7 +86,6 @@ export function World(): JSX.Element {
           height: window.innerHeight,
           width: actualWidth,
         }}
-        onKeyDown={handleKeyDownEvent}
         onMouseMove={setMousePosition}
         onContextMenu={(event: MouseEvent<HTMLCanvasElement>) => {
           event.preventDefault();

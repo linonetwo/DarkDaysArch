@@ -41,23 +41,25 @@ export const cameraMouse = createModel<RootModel>()({
       state.mouseY = newLocation.y;
       return state;
     },
-    cameraMove(state: IState, payload: { direction: Direction; distance?: number }) {
-      switch (payload.direction) {
-        case Direction.up:
-          state.cameraY += payload.distance ?? 10;
-          break;
-        case Direction.down:
-          state.cameraY -= payload.distance ?? 10;
-          break;
-        case Direction.left:
-          state.cameraX -= payload.distance ?? 10;
-          break;
-        case Direction.right:
-          state.cameraX += payload.distance ?? 10;
-          break;
+    cameraMove(state: IState, payload: { directions: Direction[]; distance?: number }) {
+      for (const direction of payload.directions) {
+        switch (direction) {
+          case Direction.up:
+            state.cameraY += payload.distance ?? 10;
+            break;
+          case Direction.down:
+            state.cameraY -= payload.distance ?? 10;
+            break;
+          case Direction.left:
+            state.cameraX -= payload.distance ?? 10;
+            break;
+          case Direction.right:
+            state.cameraX += payload.distance ?? 10;
+            break;
 
-        default:
-          break;
+          default:
+            break;
+        }
       }
       return state;
     },

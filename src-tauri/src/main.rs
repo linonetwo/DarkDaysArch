@@ -2,6 +2,8 @@
 #[allow(unused_imports)]
 
 mod commands;
+mod parsers;
+mod utils;
 
 fn main() {
   tauri::Builder::default()
