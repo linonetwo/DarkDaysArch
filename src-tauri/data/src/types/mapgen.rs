@@ -35,6 +35,8 @@ pub enum MapgenPaletteKeys {
   terrain,
   #[allow(non_camel_case_types)]
   furniture,
+  #[allow(non_camel_case_types)]
+  items,
 }
 
 pub type CDDAMapgenArray = Vec<CDDAMapgen>;

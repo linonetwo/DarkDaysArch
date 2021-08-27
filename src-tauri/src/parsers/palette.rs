@@ -2,13 +2,12 @@ use data::types::{mapgen, palette};
 
 use crate::utils;
 
-pub fn lookup_mapgen_char_in_palette(character: &char, palette: &palette::CDDAPalette) -> Vec<mapgen::ItemIDOrItemList> {
-  let char_string = character.to_string();
+pub fn lookup_mapgen_char_in_palette(char_string: &String, palette: &palette::CDDAPalette) -> Vec<mapgen::ItemIDOrItemList> {
   let mut items_this_tile: Vec<mapgen::ItemIDOrItemList> = vec![];
   // each type may have some different logic, so we cannot abstract these
 
   // terrain
-  let terrain_value_option = palette.mapping_object.terrain.get(&char_string);
+  let terrain_value_option = palette.mapping_object.terrain.get(char_string);
   match terrain_value_option {
     Some(terrain_value) => match terrain_value {
       // "a": "t_thconc_floor",
@@ -54,7 +53,7 @@ pub fn lookup_mapgen_char_in_palette(character: &char, palette: &palette::CDDAPa
     None => {}
   };
   // furniture
-  let furniture_value_option = palette.mapping_object.furniture.get(&char_string);
+  let furniture_value_option = palette.mapping_object.furniture.get(char_string);
   match furniture_value_option {
     Some(furniture_value) => match furniture_value {
       // "a": "t_thconc_floor",
@@ -92,7 +91,10 @@ pub fn lookup_mapgen_char_in_palette(character: &char, palette: &palette::CDDAPa
             };
           }
           None => {
-            items_this_tile.push(mapgen::ItemIDOrItemList::Id((mapgen::MapgenPaletteKeys::furniture, ref_object.fallback.clone())));
+            items_this_tile.push(mapgen::ItemIDOrItemList::Id((
+              mapgen::MapgenPaletteKeys::furniture,
+              ref_object.fallback.clone(),
+            )));
           }
         };
       }
@@ -135,4 +137,8 @@ pub fn pick_random_list_id_by_distribution(random_list_ids: &palette::CDDAPalett
     Some(id) => Some((*id).clone()),
     None => None,
   }
+}
+
+pub fn merge_palette_for_mapgen<'p>(palettes_to_merge: &'p Vec<palette::CDDAPalette>) -> &palette::CDDAPalette {
+  palettes_to_merge.get(0).unwrap()
 }

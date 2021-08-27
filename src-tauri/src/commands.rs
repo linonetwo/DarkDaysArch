@@ -58,26 +58,52 @@ pub fn read_mapgen_file(mapgen_file_path: &str) -> mapgen::CDDAMapgenWithCache {
   raw_palette_file.read_to_string(&mut raw_palette_string).unwrap();
   let raw_palette: palette::CDDAPaletteArray = serde_json::from_str(&raw_palette_string).unwrap();
 
-  // TODO: search for correct palette to use
   // TODO: merge mapgen palette and raw_palette
   let standard_domestic_palette = raw_palette.get(0).unwrap();
 
   let parsed_map: Vec<Vec<Vec<Vec<mapgen::ItemIDOrItemList>>>> = raw_mapgen
     .iter()
     .map(|mapgen| match mapgen {
-      mapgen::CDDAMapgen::Om(om) => {
-        let object = &om.common.object;
-        match object {
-          Some(o) => o
-            .rows
-            .iter()
-            .map(|row| {
-              row
-                .chars()
-                .map(|c| parsers::palette::lookup_mapgen_char_in_palette(&c, standard_domestic_palette))
-                .collect()
-            })
-            .collect(),
+      mapgen::CDDAMapgen::Om(overmap_terrain_mapgen) => {
+        let om_object_option = &overmap_terrain_mapgen.common.object;
+        match om_object_option {
+          Some(om_object) => {
+            let palettes_to_reuse: Vec<palette::CDDAPalette> = om_object
+              .palettes
+              .iter()
+              .map(|palette_id| {
+                // TODO: search in the knowledge graph
+                raw_palette.iter().find(|p| p.id == *palette_id)
+              })
+              .filter(|p| p.is_some())
+              .map(|p| p.unwrap().clone())
+              .collect();
+            if palettes_to_reuse.len() == 0 {
+              return vec![];
+            }
+            let merged_palette = parsers::palette::merge_palette_for_mapgen(&palettes_to_reuse);
+
+            om_object
+              .rows
+              .iter()
+              .map(|row| {
+                row
+                  .chars()
+                  .map(|c| {
+                    let char_string = c.to_string();
+                    let mut tile_ids = parsers::palette::lookup_mapgen_char_in_palette(&char_string, merged_palette);
+                    if !tile_ids.iter().any(|tile_id| match tile_id {
+                      mapgen::ItemIDOrItemList::Id((tile_id_type, _)) => *tile_id_type == mapgen::MapgenPaletteKeys::terrain,
+                      mapgen::ItemIDOrItemList::ItemList(item) => false
+                    }) {
+                      tile_ids.push(mapgen::ItemIDOrItemList::Id((mapgen::MapgenPaletteKeys::terrain, om_object.fill_ter.clone())));
+                    }
+                    tile_ids
+                  })
+                  .collect()
+              })
+              .collect()
+          }
           None => vec![],
         }
       }
