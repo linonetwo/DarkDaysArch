@@ -176,7 +176,7 @@ fn lookup_mapgen_char_in_palette(character: &char, palette: &palette::CDDAPalett
         };
       }
       palette::CDDAPaletteTerrainValue::ParamRef(ref_object) => {
-        let reference_parameter_option = &palette.parameters.get(&ref_object.param);
+        let reference_parameter_option = &palette.mapping_object.parameters.get(&ref_object.param);
         match reference_parameter_option {
           Some(palette_parameter) => {
             let random_id = pick_random_list_id_by_distribution(&palette_parameter.default.distribution);

@@ -33,7 +33,7 @@ pub struct CDDAMapgenMapping {
   #[serde(default)]
   #[serde(skip_serializing_if = "BTreeMap::is_empty")]
   pub parameters: BTreeMap<String, CDDAPaletteParametersValue>,
-  
+
   #[serde(default)]
   #[serde(skip_serializing_if = "BTreeMap::is_empty")]
   pub terrain: BTreeMap<String, CDDAPaletteTerrainValue>,
@@ -360,7 +360,7 @@ pub struct CDDAPaletteNestedValueNestedNeighbors {
   pub east: CDDAStringArray,
   #[serde(default = "CDDAStringArray::default_string_array")]
   #[serde(skip_serializing_if = "CDDAStringArray::is_default_string_array")]
-  pub north:CDDAStringArray,
+  pub north: CDDAStringArray,
   #[serde(default = "CDDAStringArray::default_string_array")]
   #[serde(skip_serializing_if = "CDDAStringArray::is_default_string_array")]
   pub south: CDDAStringArray,
@@ -386,7 +386,7 @@ pub struct CDDAPaletteNestedValueNested {
   /**
    * @srcs mapgen.cpp    jmapgen_nested
    */
-  pub neighbors: CDDAPaletteNestedValueNestedNeighbors
+  pub neighbors: CDDAPaletteNestedValueNestedNeighbors,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
