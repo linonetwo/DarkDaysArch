@@ -94,10 +94,16 @@ pub fn read_mapgen_file(mapgen_file_path: &str) -> mapgen::CDDAMapgenWithCache {
                     let mut tile_ids = parsers::palette::lookup_mapgen_char_in_palette(&char_string, merged_palette);
                     if !tile_ids.iter().any(|tile_id| match tile_id {
                       mapgen::ItemIDOrItemList::Id((tile_id_type, _)) => *tile_id_type == mapgen::MapgenPaletteKeys::terrain,
-                      mapgen::ItemIDOrItemList::ItemList(item) => false
+                      mapgen::ItemIDOrItemList::ItemList(item) => false,
                     }) {
-                      tile_ids.push(mapgen::ItemIDOrItemList::Id((mapgen::MapgenPaletteKeys::terrain, om_object.fill_ter.clone())));
+                      tile_ids.insert(
+                        0,
+                        mapgen::ItemIDOrItemList::Id((mapgen::MapgenPaletteKeys::terrain, om_object.fill_ter.clone())),
+                      );
                     }
+                    // if char_string == "H" {
+                    //   println!("{:?}", tile_ids);
+                    // }
                     tile_ids
                   })
                   .collect()
