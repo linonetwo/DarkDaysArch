@@ -72,6 +72,8 @@ export interface ICreateTileOptions {
   idStart: number;
   tileHeight: number;
   tileToRender: CDDATileSetTile | undefined;
+  tileVisualHeight: number;
+  tileVisualWidth: number;
   tileWidth: number;
   totalColumns: number;
 }
@@ -85,10 +87,12 @@ export interface ICreateTileOptions {
  */
 export function getNewTileOptions(tileSetTexture: Texture, context: ITileContext): ICreateTileOptions {
   const { tileSubSetData, tileVisualWidthHeight } = context;
-  let tileWidth = tileSubSetData.tileset.sprite_width;
-  let tileHeight = tileSubSetData.tileset.sprite_height;
-  const tileWidthRatio = tileSubSetData.tileset.sprite_width_ratio;
-  const tileHeightRatio = tileSubSetData.tileset.sprite_height_ratio;
+  const {
+    sprite_width: tileWidth,
+    sprite_height: tileHeight,
+    sprite_height_ratio: tileHeightRatio,
+    sprite_width_ratio: tileWidthRatio,
+  } = tileSubSetData.tileset;
   if (typeof tileWidth !== 'number') {
     throw new TypeError(`tileWidth is ${typeof tileWidth} in getNewTileOptions, ${JSON.stringify(context)}`);
   }
@@ -106,13 +110,12 @@ export function getNewTileOptions(tileSetTexture: Texture, context: ITileContext
   const totalColumns = tileSetTexture.orig.width / tileWidth;
   // we need to minus texture id with id start of this png, because tile-set put all ids of png in a tile_config.json, png in the later will have large id for its tiles
   const idStart = tileSubSetData.start_id;
-  // update tileWidth tileHeight to be visual widthHeight
-  tileWidth = tileWidthRatio * tileVisualWidthHeight[0];
-  tileHeight = tileHeightRatio * tileVisualWidthHeight[1];
 
   return {
     tileWidth,
     tileHeight,
+    tileVisualWidth: tileWidthRatio * tileVisualWidthHeight[0],
+    tileVisualHeight: tileHeightRatio * tileVisualWidthHeight[1],
     tileToRender,
     totalColumns,
     idStart,

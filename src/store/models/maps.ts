@@ -30,7 +30,7 @@ export interface IMapTileInfo {
  * 管理边栏UI的状态
  */
 export const maps = createModel<RootModel>()({
-  state: { mapsInOpenedFile: [], activeOpenedMapIndex: undefined, tileVisualWidthHeight: [32, 32] } as IMaps,
+  state: { mapsInOpenedFile: [], activeOpenedMapIndex: undefined, tileVisualWidthHeight: [50, 50] } as IMaps,
   reducers: {
     mapsInOpenedFileSetter(state, newMaps: CDDAMapgenWithCache['parsed_map']) {
       state.mapsInOpenedFile = newMaps;

@@ -31,7 +31,7 @@ export function useTileTexture(tileName: string, tileVisualWidthHeight: [number,
             let direction: undefined;
             // update width height with visual widthHeight
             const newTileOptions = getNewTileOptions(tileSetTexture, { tileSubSetData, direction, tileVisualWidthHeight });
-            tileWidthHeightSetter([newTileOptions.tileWidth, newTileOptions.tileHeight]);
+            tileWidthHeightSetter([newTileOptions.tileVisualWidth, newTileOptions.tileVisualHeight]);
 
             // a tile can have foreground texture and a background texture
             fgTileTextureSetter(
