@@ -161,12 +161,21 @@ pub struct CDDAMapgenObject {
   #[serde(default)]
   #[serde(skip_serializing_if = "Vec::is_empty")]
   pub place_loot: Vec<CDDAMapgenPlaceLoot>,
+  #[serde(default)]
+  #[serde(skip_serializing_if = "Vec::is_empty")]
+  pub set: Vec<CDDAMapgenSet>,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDAMapgenCoor {
   pub x: CDDAIntRange,
   pub y: CDDAIntRange,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+pub struct CDDAMapgenCoor2 {
+  pub x2: CDDAIntRange,
+  pub y2: CDDAIntRange,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
@@ -353,61 +362,224 @@ pub struct CDDAMapgenFactionOwner {
   pub coordinate: CDDAMapgenCoor,
 }
 
-// #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
-// pub enum CDDAMapgenPlaceLoot {
-//   Item(CDDAMapgenPlaceLootItem),
-//   Group(CDDAMapgenPlaceLootGroup)
-// }
-
-// #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
-// pub struct CDDAMapgenPlaceLootCommon {
-//   /**
-//    * @srcs mapgen.cpp   jmapgen_loot    "chance": x means    x% int or min-max   default 100
-//    */
-//   #[serde(default = "CDDAIntRange::default_int_range_100")]
-//   #[serde(skip_serializing_if = "CDDAIntRange::is_default_int_range_100")]
-//   pub chance: CDDAIntRange,
-//   /**
-//    * @srcs  mapgen.cpp jmapgen_loot  int or min-max  default 1
-//    */
-//   #[serde(default = "CDDAIntRange::default_int_range_1")]
-//   #[serde(skip_serializing_if = "CDDAIntRange::is_default_int_range_1")]
-//   pub repeat: CDDAIntRange,
-
-//   #[serde(default = "int64::default_i64_0")]
-//   #[serde(skip_serializing_if = "int64::is_default_i64_0")]
-//   pub ammo: i64,
-
-//   #[serde(default = "int64::default_i64_0")]
-//   #[serde(skip_serializing_if = "int64::is_default_i64_0")]
-//   pub magazine: i64,
-// }
-
-// #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
-// pub struct CDDAMapgenPlaceLootItem {
-//   pub item: String,
-//   #[serde(flatten)]
-//   pub coordinate: CDDAMapgenCoor,
-//   #[serde(flatten)]
-//   pub loot_common: CDDAMapgenPlaceLootCommon,
-//   #[serde(default)]
-//   #[serde(skip_serializing_if = "String::is_empty")]
-//   pub variant: String,
-// }
-
-// #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
-// pub struct CDDAMapgenPlaceLootGroup {
-//   pub group: String,
-//   #[serde(flatten)]
-//   pub coordinate: CDDAMapgenCoor,
-//   #[serde(flatten)]
-//   pub loot_common: CDDAMapgenPlaceLootCommon,
-// }
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[serde(untagged)]
+pub enum CDDAMapgenPlaceLoot {
+  Item(CDDAMapgenPlaceLootItem),
+  Group(CDDAMapgenPlaceLootGroup)
+}
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
-pub struct CDDAMapgenPlaceLoot {
+pub struct CDDAMapgenPlaceLootCommon {
+  /**
+   * @srcs mapgen.cpp   jmapgen_loot    "chance": x means    x% int or min-max   default 100
+   */
+  #[serde(default = "CDDAIntRange::default_int_range_100")]
+  #[serde(skip_serializing_if = "CDDAIntRange::is_default_int_range_100")]
+  pub chance: CDDAIntRange,
+  /**
+   * @srcs  mapgen.cpp jmapgen_loot  int or min-max  default 1
+   */
+  #[serde(default = "CDDAIntRange::default_int_range_1")]
+  #[serde(skip_serializing_if = "CDDAIntRange::is_default_int_range_1")]
+  pub repeat: CDDAIntRange,
+
+  #[serde(default = "int64::default_i64_0")]
+  #[serde(skip_serializing_if = "int64::is_default_i64_0")]
+  pub ammo: i64,
+
+  #[serde(default = "int64::default_i64_0")]
+  #[serde(skip_serializing_if = "int64::is_default_i64_0")]
+  pub magazine: i64,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+pub struct CDDAMapgenPlaceLootItem {
   pub item: String,
-  pub x: i64,
-  pub y: i64,
+  #[serde(flatten)]
+  pub coordinate: CDDAMapgenCoor,
+  #[serde(flatten)]
+  pub loot_common: CDDAMapgenPlaceLootCommon,
+  /**
+   * @srcs  mapgen.cpp jmapgen_loot  used for gun variant
+   */
+  #[serde(default)]
+  #[serde(skip_serializing_if = "String::is_empty")]
+  pub variant: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+pub struct CDDAMapgenPlaceLootGroup {
+  pub group: String,
+  #[serde(flatten)]
+  pub coordinate: CDDAMapgenCoor,
+  #[serde(flatten)]
+  pub loot_common: CDDAMapgenPlaceLootCommon,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+pub struct CDDAMapgenSetCommon {
+  /**
+   * @srcs  mapgen.cpp    mapgen_function_json_base::setup_setmap
+   */
+  #[serde(default = "CDDAIntRange::default_int_range_1")]
+  #[serde(skip_serializing_if = "CDDAIntRange::is_default_int_range_1")]
+  pub repeat: CDDAIntRange,
+  #[serde(default = "int64::default_i64_1")]
+  #[serde(skip_serializing_if = "int64::is_default_i64_1")]
   pub chance: i64,
+  #[serde(default = "int64::default_i64_0")]
+  #[serde(skip_serializing_if = "int64::is_default_i64_0")]
+  pub rotation: i64,
+  #[serde(default = "int64::default_i64_m1")]
+  #[serde(skip_serializing_if = "int64::is_default_i64_m1")]
+  pub fuel: i64,
+  #[serde(default = "int64::default_i64_m1")]
+  #[serde(skip_serializing_if = "int64::is_default_i64_m1")]
+  pub status: i64,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[serde(untagged)]
+pub enum CDDAMapgenSet {
+  Point(CDDAMapgenSetPoint),
+  Line(CDDAMapgenSetLine),
+  Square(CDDAMapgenSetSquare),
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[serde(tag = "point")]
+pub enum CDDAMapgenSetPoint {
+  terrain{
+    id: String,
+    #[serde(flatten)]
+    coordinate: CDDAMapgenCoor,
+    #[serde(flatten)]
+    set_common: CDDAMapgenSetCommon,
+  },
+  furniture{
+    id: String,
+    #[serde(flatten)]
+    coordinate: CDDAMapgenCoor,
+    #[serde(flatten)]
+    set_common: CDDAMapgenSetCommon,
+  },
+  trap{
+    id: String,
+    #[serde(flatten)]
+    coordinate: CDDAMapgenCoor,
+    #[serde(flatten)]
+    set_common: CDDAMapgenSetCommon,
+  },
+  radiation{
+    amount: CDDAIntRange,
+    #[serde(flatten)]
+    coordinate: CDDAMapgenCoor,
+    #[serde(flatten)]
+    set_common: CDDAMapgenSetCommon,
+  },
+  bash{
+    #[serde(flatten)]
+    coordinate: CDDAMapgenCoor,
+    #[serde(flatten)]
+    set_common: CDDAMapgenSetCommon,
+  },
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[serde(tag = "line")]
+pub enum CDDAMapgenSetPoint {
+  terrain{
+    id: String,
+    #[serde(flatten)]
+    coordinate: CDDAMapgenCoor,
+    #[serde(flatten)]
+    coordinate2: CDDAMapgenCoor2,
+    #[serde(flatten)]
+    set_common: CDDAMapgenSetCommon,
+  },
+  furniture{
+    id: String,
+    #[serde(flatten)]
+    coordinate: CDDAMapgenCoor,
+    #[serde(flatten)]
+    coordinate2: CDDAMapgenCoor2,
+    #[serde(flatten)]
+    set_common: CDDAMapgenSetCommon,
+  },
+  trap{
+    id: String,
+    #[serde(flatten)]
+    coordinate: CDDAMapgenCoor,
+    #[serde(flatten)]
+    coordinate2: CDDAMapgenCoor2,
+    #[serde(flatten)]
+    set_common: CDDAMapgenSetCommon,
+  },
+  radiation{
+    amount: CDDAIntRange,
+    #[serde(flatten)]
+    coordinate: CDDAMapgenCoor,
+    #[serde(flatten)]
+    coordinate2: CDDAMapgenCoor2,
+    #[serde(flatten)]
+    set_common: CDDAMapgenSetCommon,
+  },
+  bash{
+    #[serde(flatten)]
+    coordinate: CDDAMapgenCoor,
+    #[serde(flatten)]
+    coordinate2: CDDAMapgenCoor2,
+    #[serde(flatten)]
+    set_common: CDDAMapgenSetCommon,
+  },
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[serde(tag = "square")]
+pub enum CDDAMapgenSetPoint {
+  terrain{
+    id: String,
+    #[serde(flatten)]
+    coordinate: CDDAMapgenCoor,
+    #[serde(flatten)]
+    coordinate2: CDDAMapgenCoor2,
+    #[serde(flatten)]
+    set_common: CDDAMapgenSetCommon,
+  },
+  furniture{
+    id: String,
+    #[serde(flatten)]
+    coordinate: CDDAMapgenCoor,
+    #[serde(flatten)]
+    coordinate2: CDDAMapgenCoor2,
+    #[serde(flatten)]
+    set_common: CDDAMapgenSetCommon,
+  },
+  trap{
+    id: String,
+    #[serde(flatten)]
+    coordinate: CDDAMapgenCoor,
+    #[serde(flatten)]
+    coordinate2: CDDAMapgenCoor2,
+    #[serde(flatten)]
+    set_common: CDDAMapgenSetCommon,
+  },
+  radiation{
+    amount: CDDAIntRange,
+    #[serde(flatten)]
+    coordinate: CDDAMapgenCoor,
+    #[serde(flatten)]
+    coordinate2: CDDAMapgenCoor2,
+    #[serde(flatten)]
+    set_common: CDDAMapgenSetCommon,
+  },
+  bash{
+    #[serde(flatten)]
+    coordinate: CDDAMapgenCoor,
+    #[serde(flatten)]
+    coordinate2: CDDAMapgenCoor2,
+    #[serde(flatten)]
+    set_common: CDDAMapgenSetCommon,
+  },
 }

@@ -13,7 +13,7 @@ pub enum CDDAIntRange {
   // without unit
   Single(i64),
   // with unit
-  Range((i64, i64)),
+  Range(Vec<i64>),
 }
 impl CDDAIntRange {
   pub fn default_int_range_1() -> CDDAIntRange {

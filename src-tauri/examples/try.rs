@@ -9,9 +9,37 @@ fn main() {
   raw_map_file.read_to_string(&mut raw_map_string).unwrap();
   let raw_map: mapgen::CDDAMapgenArray = serde_json::from_str(&raw_map_string).unwrap();
 
+  // let get_set = match raw_map.get(0).unwrap() {
+  //   mapgen::CDDAMapgen::Om(om) => {
+  //     match &om.common.object {
+  //       Some(object) => {
+  //         match object.set.get(0).unwrap() {
+  //           mapgen::CDDAMapgenSet::Point(b) => {
+  //             match b {
+  //               mapgen::CDDAMapgenSetPoint::terrain{id,coordinate,set_common} => {
+  //                 set_common.chance
+  //               }
+  //             }
+  //           }
+  //         }
+  //       }
+  //       None => {
+  //         1
+  //       }
+  //     }
+  //   }
+  //   mapgen::CDDAMapgen::Update(u) => {
+  //     1
+  //   }
+  //   mapgen::CDDAMapgen::Nested(n) => {
+  //     1
+  //   }
+  // };
+
   let map_json = serde_json::to_string(&raw_map).unwrap();
 
   println!("{:?}", raw_map);
+  // println!("{:?}", get_set);
   // println!("{}",map_json);
 
   // let palette_file_path = "../public/json/house_general_palette.json";

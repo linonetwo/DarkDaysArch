@@ -124,10 +124,12 @@ pub struct CDDAPaletteParametersValue {
   pub default: CDDAPaletteParametersValueDefault,
 }
 
-// what happened exactly ???
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(untagged)]
 pub enum CDDAPaletteDistribution {
+  // Id(String),
+  // IdList(Vec<String>),
+  // IdWithWeight(String, i64),
   RecursiveMixed(Vec<CDDAPaletteDistributionMixed>),
 }
 
@@ -146,7 +148,7 @@ pub enum CDDAPaletteDistributionMixed {
 pub enum CDDAPaletteFurnitureValue {
   Id(String),
   Object(CDDAPaletteFurnitureValueFurniture),
-  RandomList(CDDAPaletteDistribution),
+  RandomList(Vec<CDDAPaletteDistributionMixed>),
   ParamRef(CDDAPaletteParameterReference),
 }
 
@@ -155,7 +157,7 @@ pub enum CDDAPaletteFurnitureValue {
 pub enum CDDAPaletteTerrainValue {
   Id(String),
   Object(CDDAPaletteTerrainValueTerrain),
-  RandomList(CDDAPaletteDistribution),
+  RandomList(Vec<CDDAPaletteDistributionMixed>),
   ParamRef(CDDAPaletteParameterReference),
 }
 
@@ -164,7 +166,7 @@ pub enum CDDAPaletteTerrainValue {
 pub enum CDDAPaletteTrapsValue {
   Id(String),
   Object(CDDAPaletteTrapsValueObject),
-  RandomList(CDDAPaletteDistribution),
+  RandomList(Vec<CDDAPaletteDistributionMixed>),
   ParamRef(CDDAPaletteParameterReference),
 }
 
@@ -264,7 +266,6 @@ pub enum CDDAPaletteMonstersValue {
   Monster(CDDAPaletteMonstersValueMonster),
   MonsterList(Vec<CDDAPaletteMonstersValueMonster>),
 }
- // confusing change ?
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(untagged)]
@@ -472,7 +473,7 @@ pub struct CDDAPaletteComputersValueComputer {
   #[serde(skip_serializing_if = "int64::is_default_i64_0")]
   pub security: i64,
   /**
-   * @srcs mapgen.cpp   jmapgen_computer   default false       mission target maybe
+   * @srcs mapgen.cpp   jmapgen_computer   default false       mission target maybe    only valid for update_mapgen
    */
   #[serde(default)]
   #[serde(skip_serializing_if = "bool::is_default_bool_false")]
@@ -623,12 +624,9 @@ pub struct CDDAPaletteMonsterValueMonsterSpawnDataAmmo {
   #[serde(skip_serializing_if = "String::is_empty")]
   pub ammo_id: String,
   /**
-   * @docs MAPGEN.md    special name default is nameless
-   * @srcs mapgen.cpp     jmapgen_monster   constructor  default  "None"?
+   * @srcs mapgen.cpp     jmapgen_monster   mandatory     number of ammos
    */
-  #[serde(default)]
-  #[serde(skip_serializing_if = "Vec::is_empty")]
-  pub patrol: Vec<CDDAMapgenCoor>,
+  pub qty: CDDAIntRange,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
@@ -663,8 +661,8 @@ pub struct CDDAPaletteMonsterValueMonsterCommon {
   #[serde(skip_serializing_if = "String::is_empty")]
   pub name: String,
   /**
-   * @docs MAPGEN.md    a mission target or not   
-   * @srcs mapgen.cpp     jmapgen_monster   constructor  default false
+   * @docs MAPGEN.md    a mission target or not    only valid for update_mapgen
+   * @srcs mapgen.cpp     jmapgen_monster   constructor  default false  
    */
   #[serde(default)]
   #[serde(skip_serializing_if = "bool::is_default_bool_false")]
@@ -823,7 +821,7 @@ pub struct CDDAPaletteNpcsValueNpc {
   // npc class id
   pub class: String,
   /**
-   * @docs MAPGEN.md    a mission target or not   default false
+   * @docs MAPGEN.md    a mission target or not   default false  only valid for update_mapgen
    * @srcs mapgen.cpp     jmapgen_npc   constructor
    */
   #[serde(default)]

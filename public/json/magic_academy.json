@@ -77,7 +77,10 @@
           { "item": "enchanted_combat_items", "chance": 1 },
           { "item": "enchanted_misc", "chance": 1 }
         ]
-      }
+      },
+      "set": [
+        { "point": "bash", "x": 0, "y": 0, "repeat": [ 50, 100 ], "fuel": 10 }
+      ]
     }
   },
   {
