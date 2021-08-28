@@ -7,6 +7,7 @@ import { CDDATileSetInverseIndexedTileData, CDDATileSetRandomSpriteDescItem, CDD
 export interface ITileContext {
   direction?: Direction;
   tileSubSetData: CDDATileSetInverseIndexedTileData;
+  tileVisualWidthHeight: [number, number];
 }
 
 /**
@@ -83,13 +84,21 @@ export interface ICreateTileOptions {
  * @returns
  */
 export function getNewTileOptions(tileSetTexture: Texture, context: ITileContext): ICreateTileOptions {
-  const { tileSubSetData } = context;
-  const tileWidth = tileSubSetData.tileset.sprite_width;
-  const tileHeight = tileSubSetData.tileset.sprite_height;
+  const { tileSubSetData, tileVisualWidthHeight } = context;
+  let tileWidth = tileSubSetData.tileset.sprite_width;
+  let tileHeight = tileSubSetData.tileset.sprite_height;
+  const tileWidthRatio = tileSubSetData.tileset.sprite_width_ratio;
+  const tileHeightRatio = tileSubSetData.tileset.sprite_height_ratio;
   if (typeof tileWidth !== 'number') {
     throw new TypeError(`tileWidth is ${typeof tileWidth} in getNewTileOptions, ${JSON.stringify(context)}`);
   }
   if (typeof tileHeight !== 'number') {
+    throw new TypeError(`tileHeight is ${typeof tileHeight} in getNewTileOptions, ${JSON.stringify(context)}`);
+  }
+  if (typeof tileWidthRatio !== 'number') {
+    throw new TypeError(`tileWidth is ${typeof tileWidth} in getNewTileOptions, ${JSON.stringify(context)}`);
+  }
+  if (typeof tileHeightRatio !== 'number') {
     throw new TypeError(`tileHeight is ${typeof tileHeight} in getNewTileOptions, ${JSON.stringify(context)}`);
   }
   // id can be string or array, array means ids in the array share the same texture
@@ -97,6 +106,9 @@ export function getNewTileOptions(tileSetTexture: Texture, context: ITileContext
   const totalColumns = tileSetTexture.orig.width / tileWidth;
   // we need to minus texture id with id start of this png, because tile-set put all ids of png in a tile_config.json, png in the later will have large id for its tiles
   const idStart = tileSubSetData.start_id;
+  // update tileWidth tileHeight to be visual widthHeight
+  tileWidth = tileWidthRatio * tileVisualWidthHeight[0];
+  tileHeight = tileHeightRatio * tileVisualWidthHeight[1];
 
   return {
     tileWidth,

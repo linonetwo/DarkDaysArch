@@ -12,7 +12,7 @@ interface IMaps {
    * Each tileset have its own sprite_width sprite_height, but we want each tile width height to be constant in our map
    * 维护一个实际想要的大小，然后在 react 组件里根据 sprite_width sprite_height 和想要的大小的比值，把地图动态缩放一下
    */
-  tileActualWidthHeight: [number, number];
+  tileVisualWidthHeight: [number, number];
 }
 
 export interface IMapTileInfo {
@@ -30,7 +30,7 @@ export interface IMapTileInfo {
  * 管理边栏UI的状态
  */
 export const maps = createModel<RootModel>()({
-  state: { mapsInOpenedFile: [], activeOpenedMapIndex: undefined, tileActualWidthHeight: [50, 50] } as IMaps,
+  state: { mapsInOpenedFile: [], activeOpenedMapIndex: undefined, tileVisualWidthHeight: [32, 32] } as IMaps,
   reducers: {
     mapsInOpenedFileSetter(state, newMaps: CDDAMapgenWithCache['parsed_map']) {
       state.mapsInOpenedFile = newMaps;
@@ -53,7 +53,7 @@ export const maps = createModel<RootModel>()({
             return cell.map((cellItem) => {
               return {
                 tiles: cellItem,
-                position: [columnIndex * state.tileActualWidthHeight[0], rowIndex * state.tileActualWidthHeight[1]],
+                position: [columnIndex * state.tileVisualWidthHeight[0], rowIndex * state.tileVisualWidthHeight[1]],
               };
             });
           }),
