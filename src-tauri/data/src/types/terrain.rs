@@ -6,17 +6,9 @@ use super::furniture::*;
 
 pub type CDDATerrainArray = Vec<CDDATerrain>;
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
-#[serde(untagged)]
-pub enum CDDATerrain {
-  //type using color
-  Color(CDDATerrainCr),
-  //type using bgcolor
-  Background(CDDATerrainBg),
-}
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
-pub struct CDDATerrainBase {
+pub struct CDDATerrain {
   #[serde(flatten)]
   pub ter_furn_common: CDDATerFurnCommon,
   //terrain unique key
@@ -88,80 +80,22 @@ pub struct CDDATerrainBase {
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
-pub struct CDDATerrainCr {
-  pub color: CDDATerFurnColor,
-
-  #[serde(flatten)]
-  pub base: CDDATerrainBase,
-}
-
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
-pub struct CDDATerrainBg {
-  pub bgcolor: CDDATerFurnColor,
-
-  #[serde(flatten)]
-  pub base: CDDATerrainBase,
-}
-
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDATerrainBash {
-  #[serde(default)]
-  pub str_min: i64,
-
-  #[serde(default)]
-  pub str_max: i64,
-
-  #[serde(default)]
-  pub str_min_blocked: i64,
-
-  #[serde(default)]
-  pub str_max_blocked: i64,
-
-  #[serde(default)]
-  pub str_min_supported: i64,
-
-  #[serde(default)]
-  pub str_max_supported: i64,
-
-  #[serde(default)]
-  pub explosive: i64,
-
-  #[serde(default)]
-  pub sound_vol: i64,
-
-  #[serde(default)]
-  pub sound_fail_vol: i64,
-
-  #[serde(default)]
-  pub destroy_only: bool,
-
-  #[serde(default)]
-  pub bash_below: bool,
-
-  #[serde(default)]
-  pub sound: String,
-
-  #[serde(default)]
-  pub sound_fail: String,
+  #[serde(flatten)]
+  pub bash_common: CDDATerFurnFieldBashCommon,
 
   #[serde(default)]
   pub ter_set: String,
 
   #[serde(default)]
-  pub items: Vec<CDDABashDeconItem>,
+  pub ter_set_bashed_from_above: String,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDATerrainDecon {
-  #[serde(default)]
-  pub deconstruct_above: bool,
-
-  #[serde(default)]
-  pub can_do: bool,
+  #[serde(flatten)]
+  pub deconstruct_common: CDDATerFurnDeconCommon,
 
   #[serde(default)]
   pub ter_set: String,
-
-  #[serde(default)]
-  pub items: Vec<CDDABashDeconItem>,
 }

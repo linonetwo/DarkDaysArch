@@ -5,14 +5,14 @@ use crate::common::*;
 
 pub type CDDAFurnArray = Vec<CDDAFurniture>;
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
-#[serde(untagged)]
-pub enum CDDAFurniture {
-  //type using color
-  Color(CDDAFurnitureCr),
-  //type using bgcolor
-  Background(CDDAFurnitureBg),
-}
+// #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+// #[serde(untagged)]
+// pub enum CDDAFurniture {
+//   //type using color
+//   Color(CDDAFurnitureCr),
+//   //type using bgcolor
+//   Background(CDDAFurnitureBg),
+// }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDATerFurnCommon {
@@ -26,13 +26,11 @@ pub struct CDDATerFurnCommon {
 
   pub description: String,
 
-  pub symbol: String,
+  #[serde(flatten)]
+  pub symbol_clutter: CDDATerFurnSymbol,
 
-  //optional
-  //furn ter common key
-  #[serde(default)]
-  #[serde(skip_serializing_if = "String::is_empty")]
-  pub looks_like: String,
+  #[serde(flatten)]
+  pub color_select: CDDATerFurnColorSelect,
 
   #[serde(default)]
   #[serde(skip_serializing_if = "String::is_empty")]
@@ -96,7 +94,8 @@ pub struct CDDATerFurnCommon {
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
-pub struct CDDAFurnitureBase {
+pub struct CDDAFurniture {
+
   #[serde(flatten)]
   pub ter_furn_common: CDDATerFurnCommon,
 
@@ -131,19 +130,47 @@ pub struct CDDAFurnitureBase {
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
-pub struct CDDAFurnitureCr {
-  pub color: CDDATerFurnColor,
-
-  #[serde(flatten)]
-  pub base: CDDAFurnitureBase,
+#[serde(untagged)]
+pub enum CDDATerFurnSymbol {
+  Independent(CDDATerFurnSymbolInd),
+  Rely(CDDATerFurnSymbolRely)
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
-pub struct CDDAFurnitureBg {
-  pub bgcolor: CDDATerFurnColor,
-
+pub struct CDDATerFurnSymbolInd {
+  pub symbol: String,
   #[serde(flatten)]
-  pub base: CDDAFurnitureBase,
+  pub color_select: CDDATerFurnColorSelect,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+pub struct CDDATerFurnSymbolRely {
+  pub looks_like: String,
+  #[serde(default)]
+  pub symbol: String,
+  #[serde(default)]
+  #[serde(flatten)]
+  #[serde(skip_serializing_if = "CDDATerFurnColorSelect::is_default")]
+  pub color_select: CDDATerFurnColorSelect,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[serde(untagged)]
+pub enum CDDATerFurnColorSelect {
+  Color{color: CDDATerFurnColor},
+  Bgcolor{bgcolor: CDDATerFurnColor},
+}
+
+impl Default for CDDATerFurnColorSelect {
+  fn default() -> CDDATerFurnColorSelect {
+    CDDATerFurnColorSelect::Color{color: CDDATerFurnColor::Single("".to_string())}
+  }
+}
+
+impl CDDATerFurnColorSelect {
+  pub fn is_default(t: &CDDATerFurnColorSelect) -> bool {
+    t == &CDDATerFurnColorSelect::default()
+  }
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
@@ -164,7 +191,7 @@ pub struct CDDAFurnPlant {
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
-pub struct CDDAFurnBash {
+pub struct CDDATerFurnFieldBashCommon {
   #[serde(default)]
   pub str_min: i64,
 
@@ -208,9 +235,6 @@ pub struct CDDAFurnBash {
   pub sound_fail: String,
 
   #[serde(default)]
-  pub furn_set: String,
-
-  #[serde(default)]
   pub tent_centers: Vec<String>,
 
   #[serde(default)]
@@ -218,7 +242,16 @@ pub struct CDDAFurnBash {
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
-pub struct CDDAFurnDecon {
+pub struct CDDAFurnBash {
+  #[serde(flatten)]
+  pub bash_common: CDDATerFurnFieldBashCommon,
+
+  #[serde(default)]
+  pub furn_set: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+pub struct CDDATerFurnDeconCommon {
   #[serde(default)]
   pub deconstruct_above: bool,
 
@@ -226,10 +259,16 @@ pub struct CDDAFurnDecon {
   pub can_do: bool,
 
   #[serde(default)]
-  pub furn_set: String,
+  pub items: Vec<CDDABashDeconItem>,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+pub struct CDDAFurnDecon {
+  #[serde(flatten)]
+  pub deconstruct_common: CDDATerFurnDeconCommon,
 
   #[serde(default)]
-  pub items: Vec<CDDABashDeconItem>,
+  pub furn_set: String,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
