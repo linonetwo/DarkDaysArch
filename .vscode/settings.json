@@ -11,5 +11,8 @@
     "tileset",
     "typesync"
   ],
-  "i18n-ally.keystyle": "nested"
+  "i18n-ally.keystyle": "nested",
+  "files.associations": {
+    "utility": "cpp"
+  }
 }

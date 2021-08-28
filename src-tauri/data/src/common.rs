@@ -63,3 +63,44 @@ impl CDDAStringArray {
 // fn is_default<T: Default + PartialEq>(t: &T) -> bool {
 //   t == &T::default()
 // }
+
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[serde(untagged)]
+pub enum CDDAName {
+  Name(String),
+  Translation(CDDATranslation),
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[serde(untagged)]
+pub enum CDDAMass {
+  // without unit
+  Wounit(i64),
+  // with unit
+  Wunit(String),
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[serde(untagged)]
+pub enum CDDAVolume {
+  // without unit
+  Wounit(i64),
+  // with unit
+  Wunit(String),
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[serde(untagged)]
+pub enum CDDATime {
+  // without unit
+  Wounit(i64),
+  // with unit
+  Wunit(String),
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+pub struct CDDATranslation {
+  // Name(String),
+  pub aaa: String,
+}
