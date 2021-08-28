@@ -449,6 +449,7 @@ pub enum CDDAMapgenSet {
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(tag = "point")]
+#[allow(non_camel_case_types)]
 pub enum CDDAMapgenSetPoint {
   terrain{
     id: String,
@@ -488,7 +489,8 @@ pub enum CDDAMapgenSetPoint {
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(tag = "line")]
-pub enum CDDAMapgenSetPoint {
+#[allow(non_camel_case_types)]
+pub enum CDDAMapgenSetLine {
   terrain{
     id: String,
     #[serde(flatten)]
@@ -537,7 +539,8 @@ pub enum CDDAMapgenSetPoint {
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(tag = "square")]
-pub enum CDDAMapgenSetPoint {
+#[allow(non_camel_case_types)]
+pub enum CDDAMapgenSetSquare {
   terrain{
     id: String,
     #[serde(flatten)]

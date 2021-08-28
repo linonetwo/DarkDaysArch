@@ -104,33 +104,43 @@ pub fn lookup_mapgen_char_in_palette(char_string: &String, palette: &palette::CD
   items_this_tile
 }
 
-pub fn pick_random_list_id_by_distribution(random_list_ids: &palette::CDDAPaletteDistribution) -> Option<String> {
+pub fn pick_random_list_id_by_distribution(random_list_ids: &Vec<palette::CDDAPaletteDistribution>) -> Option<String> {
   let mut random_list_item_picker = utils::random_id::RandomList { ..Default::default() };
-  match random_list_ids {
-    palette::CDDAPaletteDistribution::Id(id) => {
-      random_list_item_picker.add(id, 1);
-    }
-    palette::CDDAPaletteDistribution::IdList(id_list) => {
-      for id in id_list {
+  for id_or_id_with_weight in random_list_ids {
+    match id_or_id_with_weight {
+      palette::CDDAPaletteDistribution::Id(id) => {
         random_list_item_picker.add(id, 1);
       }
-    }
-    palette::CDDAPaletteDistribution::IdWithWeight(id, weight) => {
-      random_list_item_picker.add(id, *weight);
-    }
-    palette::CDDAPaletteDistribution::RecursiveMixed(id_or_id_with_weight_list) => {
-      for id_or_id_with_weight in id_or_id_with_weight_list {
-        match id_or_id_with_weight {
-          palette::CDDAPaletteDistributionMixed::Id(id) => {
-            random_list_item_picker.add(id, 1);
-          }
-          palette::CDDAPaletteDistributionMixed::IdWithWeight(id, weight) => {
-            random_list_item_picker.add(id, *weight);
-          }
-        }
+      palette::CDDAPaletteDistribution::IdWithWeight(id, weight) => {
+        random_list_item_picker.add(id, *weight);
       }
-    }
+    };
   };
+  // match random_list_ids {
+  //   palette::CDDAPaletteDistribution::Id(id) => {
+  //     random_list_item_picker.add(id, 1);
+  //   }
+  //   palette::CDDAPaletteDistribution::IdList(id_list) => {
+  //     for id in id_list {
+  //       random_list_item_picker.add(id, 1);
+  //     }
+  //   }
+  //   palette::CDDAPaletteDistribution::IdWithWeight(id, weight) => {
+  //     random_list_item_picker.add(id, *weight);
+  //   }
+  //   palette::CDDAPaletteDistribution::RecursiveMixed(id_or_id_with_weight_list) => {
+  //     for id_or_id_with_weight in id_or_id_with_weight_list {
+  //       match id_or_id_with_weight {
+  //         palette::CDDAPaletteDistributionMixed::Id(id) => {
+  //           random_list_item_picker.add(id, 1);
+  //         }
+  //         palette::CDDAPaletteDistributionMixed::IdWithWeight(id, weight) => {
+  //           random_list_item_picker.add(id, *weight);
+  //         }
+  //       }
+  //     }
+  //   }
+  // };
   // get random one from the list
   let result = random_list_item_picker.random_get();
   match result {

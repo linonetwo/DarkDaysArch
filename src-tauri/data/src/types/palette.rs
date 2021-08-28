@@ -127,15 +127,6 @@ pub struct CDDAPaletteParametersValue {
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(untagged)]
 pub enum CDDAPaletteDistribution {
-  // Id(String),
-  // IdList(Vec<String>),
-  // IdWithWeight(String, i64),
-  RecursiveMixed(Vec<CDDAPaletteDistributionMixed>),
-}
-
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
-#[serde(untagged)]
-pub enum CDDAPaletteDistributionMixed {
   Id(String),
   IdWithWeight(String, i64),
 }
@@ -148,7 +139,7 @@ pub enum CDDAPaletteDistributionMixed {
 pub enum CDDAPaletteFurnitureValue {
   Id(String),
   Object(CDDAPaletteFurnitureValueFurniture),
-  RandomList(Vec<CDDAPaletteDistributionMixed>),
+  RandomList(Vec<CDDAPaletteDistribution>),
   ParamRef(CDDAPaletteParameterReference),
 }
 
@@ -157,7 +148,7 @@ pub enum CDDAPaletteFurnitureValue {
 pub enum CDDAPaletteTerrainValue {
   Id(String),
   Object(CDDAPaletteTerrainValueTerrain),
-  RandomList(Vec<CDDAPaletteDistributionMixed>),
+  RandomList(Vec<CDDAPaletteDistribution>),
   ParamRef(CDDAPaletteParameterReference),
 }
 
@@ -166,7 +157,7 @@ pub enum CDDAPaletteTerrainValue {
 pub enum CDDAPaletteTrapsValue {
   Id(String),
   Object(CDDAPaletteTrapsValueObject),
-  RandomList(Vec<CDDAPaletteDistributionMixed>),
+  RandomList(Vec<CDDAPaletteDistribution>),
   ParamRef(CDDAPaletteParameterReference),
 }
 
@@ -187,7 +178,7 @@ pub struct CDDAPaletteParameterReference {
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDAPaletteParametersValueDefault {
-  pub distribution: CDDAPaletteDistribution,
+  pub distribution: Vec<CDDAPaletteDistribution>,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
