@@ -1,24 +1,29 @@
 /* eslint-disable unicorn/no-null */
 import { useSelector } from 'react-redux';
-import { RootState } from 'src/store/store';
+import { RootState, store } from 'src/store/store';
+import { MapgenPaletteKeys } from 'src/types/cdda/mapgen';
 
 import Tile from '.';
 
 export default function Tiles(): JSX.Element {
-  const openedMapMatrix = useSelector((state: RootState) =>
-    typeof state.maps.activeOpenedMapIndex === 'number' ? state.maps.mapsInOpenedFile[state.maps.activeOpenedMapIndex] : [],
-  );
+  const openedMapMatrix = useSelector((state: RootState) => store.select.maps.openedMapMatrix(state));
 
   return (
     <>
-      {openedMapMatrix.map((rows, rowIndex) =>
-        rows.map((cell, columnIndex) => {
+      {openedMapMatrix.map((rows) =>
+        rows.map((cell) => {
           return cell.map((cellItem) => {
-            if (Array.isArray(cellItem)) {
-              const [idType, id] = cellItem;
-              if (typeof id === 'string') {
-                return <Tile x={columnIndex * 30} y={rowIndex * 30} tileName={id} />;
-              }
+            const [x, y] = cellItem.position;
+            if (Array.isArray(cellItem.tiles[0])) {
+              /** [tileType, tileID][] */
+              const tiles = cellItem.tiles as Array<[MapgenPaletteKeys, string]>;
+              return tiles.map((tile) => {
+                return <Tile key={`${x}-${y}-${tile[1]}`} x={x} y={y} tileName={tile[1]} />;
+              });
+            } else if (typeof cellItem.tiles[0] === 'string') {
+              /** [tileType, tileID] */
+              const tile = cellItem.tiles as [MapgenPaletteKeys, string];
+              return <Tile x={x} y={y} tileName={tile[1]} />;
             }
             return null;
           });

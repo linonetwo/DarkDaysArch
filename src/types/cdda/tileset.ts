@@ -71,9 +71,17 @@ export interface CDDATileSetTilesNew {
   ascii?: CDDATileSetAscii[];
   file: string;
   sprite_height?: number | null;
+  /**
+   * Derived field, calculated in the tileset parser, this is a ratio (sprite_height / tileVisualWidthHeight[0].height)
+   */
+  sprite_height_ratio?: number | null;
   sprite_offset_x?: number | null;
   sprite_offset_y?: number | null;
   sprite_width?: number | null;
+  /**
+   * Derived field, calculated in the tileset parser, this is a ratio (sprite_width / tileVisualWidthHeight[0].width)
+   */
+  sprite_width_ratio?: number | null;
   tiles: CDDATileSetTile[];
   [k: string]: unknown;
 }

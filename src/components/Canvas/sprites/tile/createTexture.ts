@@ -7,6 +7,7 @@ import { CDDATileSetInverseIndexedTileData, CDDATileSetRandomSpriteDescItem, CDD
 export interface ITileContext {
   direction?: Direction;
   tileSubSetData: CDDATileSetInverseIndexedTileData;
+  tileVisualWidthHeight: [number, number];
 }
 
 /**
@@ -71,6 +72,8 @@ export interface ICreateTileOptions {
   idStart: number;
   tileHeight: number;
   tileToRender: CDDATileSetTile | undefined;
+  tileVisualHeight: number;
+  tileVisualWidth: number;
   tileWidth: number;
   totalColumns: number;
 }
@@ -83,13 +86,23 @@ export interface ICreateTileOptions {
  * @returns
  */
 export function getNewTileOptions(tileSetTexture: Texture, context: ITileContext): ICreateTileOptions {
-  const { tileSubSetData } = context;
-  const tileWidth = tileSubSetData.tileset.sprite_width;
-  const tileHeight = tileSubSetData.tileset.sprite_height;
+  const { tileSubSetData, tileVisualWidthHeight } = context;
+  const {
+    sprite_width: tileWidth,
+    sprite_height: tileHeight,
+    sprite_height_ratio: tileHeightRatio,
+    sprite_width_ratio: tileWidthRatio,
+  } = tileSubSetData.tileset;
   if (typeof tileWidth !== 'number') {
     throw new TypeError(`tileWidth is ${typeof tileWidth} in getNewTileOptions, ${JSON.stringify(context)}`);
   }
   if (typeof tileHeight !== 'number') {
+    throw new TypeError(`tileHeight is ${typeof tileHeight} in getNewTileOptions, ${JSON.stringify(context)}`);
+  }
+  if (typeof tileWidthRatio !== 'number') {
+    throw new TypeError(`tileWidth is ${typeof tileWidth} in getNewTileOptions, ${JSON.stringify(context)}`);
+  }
+  if (typeof tileHeightRatio !== 'number') {
     throw new TypeError(`tileHeight is ${typeof tileHeight} in getNewTileOptions, ${JSON.stringify(context)}`);
   }
   // id can be string or array, array means ids in the array share the same texture
@@ -101,6 +114,8 @@ export function getNewTileOptions(tileSetTexture: Texture, context: ITileContext
   return {
     tileWidth,
     tileHeight,
+    tileVisualWidth: tileWidthRatio * tileVisualWidthHeight[0],
+    tileVisualHeight: tileHeightRatio * tileVisualWidthHeight[1],
     tileToRender,
     totalColumns,
     idStart,

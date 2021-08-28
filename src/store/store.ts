@@ -2,6 +2,7 @@ import { init, RematchDispatch, RematchRootState } from '@rematch/core';
 import loadingPlugin, { ExtraModelsFromLoading } from '@rematch/loading';
 import immerPlugin from '@rematch/immer';
 import persistPlugin from '@rematch/persist';
+import selectPlugin from '@rematch/select';
 import storage from 'redux-persist/lib/storage';
 import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 
@@ -19,6 +20,7 @@ export const store = init<RootModel, FullModel>({
       stateReconciler: autoMergeLevel2,
       whitelist: ['uiState'],
     }),
+    selectPlugin(),
   ],
 });
 

@@ -250,6 +250,14 @@
           ],
           "format": "int64"
         },
+        "sprite_height_ratio": {
+          "description": "Derived field, calculated in the tileset parser, this is a ratio (sprite_height / tileVisualWidthHeight[0].height)",
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "int64"
+        },
         "sprite_offset_x": {
           "type": [
             "integer",
@@ -265,6 +273,14 @@
           "format": "int64"
         },
         "sprite_width": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "int64"
+        },
+        "sprite_width_ratio": {
+          "description": "Derived field, calculated in the tileset parser, this is a ratio (sprite_width / tileVisualWidthHeight[0].width)",
           "type": [
             "integer",
             "null"

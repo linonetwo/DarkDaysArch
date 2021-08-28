@@ -14,20 +14,27 @@
         },
         {
           "type": "array",
-          "items": [
-            {
-              "type": "integer",
-              "format": "int64"
-            },
-            {
-              "type": "integer",
-              "format": "int64"
-            }
-          ],
-          "maxItems": 2,
-          "minItems": 2
+          "items": {
+            "type": "integer",
+            "format": "int64"
+          }
         }
       ]
+    },
+    "CDDAMapgenCoor": {
+      "type": "object",
+      "required": [
+        "x",
+        "y"
+      ],
+      "properties": {
+        "x": {
+          "$ref": "#/definitions/CDDAIntRange"
+        },
+        "y": {
+          "$ref": "#/definitions/CDDAIntRange"
+        }
+      }
     },
     "CDDAMapgenMapping": {
       "type": "object",
@@ -36,6 +43,12 @@
           "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/CDDAPaletteComputersValue"
+          }
+        },
+        "faction_owner_character": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/CDDAPaletteFactionValue"
           }
         },
         "fields": {
@@ -93,10 +106,22 @@
             "$ref": "#/definitions/CDDAPaletteMonstersValue"
           }
         },
+        "nested": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/CDDAPaletteNestedValue"
+          }
+        },
         "npcs": {
           "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/CDDAPaletteNpcsValue"
+          }
+        },
+        "parameters": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/CDDAPaletteParametersValue"
           }
         },
         "rubble": {
@@ -120,7 +145,7 @@
         "ter_furn_transforms": {
           "type": "object",
           "additionalProperties": {
-            "$ref": "#/definitions/CDDAPaletteTransformValue"
+            "$ref": "#/definitions/CDDAPaletteTransformsValue"
           }
         },
         "terrain": {
@@ -176,6 +201,12 @@
           "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/CDDAPaletteComputersValue"
+          }
+        },
+        "faction_owner_character": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/CDDAPaletteFactionValue"
           }
         },
         "fields": {
@@ -243,6 +274,12 @@
             "$ref": "#/definitions/CDDAPaletteMonstersValue"
           }
         },
+        "nested": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/CDDAPaletteNestedValue"
+          }
+        },
         "npcs": {
           "type": "object",
           "additionalProperties": {
@@ -276,7 +313,7 @@
         "ter_furn_transforms": {
           "type": "object",
           "additionalProperties": {
-            "$ref": "#/definitions/CDDAPaletteTransformValue"
+            "$ref": "#/definitions/CDDAPaletteTransformsValue"
           }
         },
         "terrain": {
@@ -365,7 +402,7 @@
           "format": "int64"
         },
         "target": {
-          "description": "@srcs mapgen.cpp   jmapgen_computer   default false       mission target maybe",
+          "description": "@srcs mapgen.cpp   jmapgen_computer   default false       mission target maybe    only valid for update_mapgen",
           "type": "boolean"
         }
       }
@@ -436,12 +473,6 @@
         },
         {
           "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        {
-          "type": "array",
           "items": [
             {
               "type": "string"
@@ -453,35 +484,30 @@
           ],
           "maxItems": 2,
           "minItems": 2
+        }
+      ]
+    },
+    "CDDAPaletteFactionValue": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/CDDAPaletteFactionValueFaction"
         },
         {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/CDDAPaletteDistributionMixed"
+            "$ref": "#/definitions/CDDAPaletteFactionValueFaction"
           }
         }
       ]
     },
-    "CDDAPaletteDistributionMixed": {
-      "anyOf": [
-        {
+    "CDDAPaletteFactionValueFaction": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "@srcs mapgen.cpp    jmapgen_nested",
           "type": "string"
-        },
-        {
-          "type": "array",
-          "items": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "integer",
-              "format": "int64"
-            }
-          ],
-          "maxItems": 2,
-          "minItems": 2
         }
-      ]
+      }
     },
     "CDDAPaletteFieldsValue": {
       "anyOf": [
@@ -527,7 +553,10 @@
           "$ref": "#/definitions/CDDAPaletteFurnitureValueFurniture"
         },
         {
-          "$ref": "#/definitions/CDDAPaletteDistribution"
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CDDAPaletteDistribution"
+          }
         },
         {
           "$ref": "#/definitions/CDDAPaletteParameterReference"
@@ -699,6 +728,19 @@
       }
     },
     "CDDAPaletteLiquidsValue": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/CDDAPaletteLiquidsValueLiquid"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CDDAPaletteLiquidsValueLiquid"
+          }
+        }
+      ]
+    },
+    "CDDAPaletteLiquidsValueLiquid": {
       "type": "object",
       "required": [
         "liquid"
@@ -739,6 +781,62 @@
       ]
     },
     "CDDAPaletteMonsterValueMonster": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/CDDAPaletteMonsterValueMonsterMonster"
+        },
+        {
+          "$ref": "#/definitions/CDDAPaletteMonsterValueMonsterGroup"
+        }
+      ]
+    },
+    "CDDAPaletteMonsterValueMonsterGroup": {
+      "type": "object",
+      "required": [
+        "group"
+      ],
+      "properties": {
+        "friendly": {
+          "description": "@docs MAPGEN.md    default is false",
+          "type": "boolean"
+        },
+        "group": {
+          "type": "string"
+        },
+        "name": {
+          "description": "@docs MAPGEN.md    special name default is nameless @srcs mapgen.cpp     jmapgen_monster   constructor  default  \"None\"?",
+          "type": "string"
+        },
+        "one_or_none": {
+          "description": "@srcs mapgen.cpp     jmapgen_monster   constructor  default false   if pack_size is defined  default true ????",
+          "type": "boolean"
+        },
+        "pack_size": {
+          "description": "@srcs mapgen.cpp     jmapgen_monster   constructor  default false",
+          "allOf": [
+            {
+              "$ref": "#/definitions/CDDAIntRange"
+            }
+          ]
+        },
+        "spawn_data": {
+          "description": "@srcs mapgen.cpp     jmapgen_monster   constructor  default false   if pack_size is defined  default true ????",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/CDDAPaletteMonsterValueMonsterSpawnData"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "target": {
+          "description": "@docs MAPGEN.md    a mission target or not    only valid for update_mapgen @srcs mapgen.cpp     jmapgen_monster   constructor  default false",
+          "type": "boolean"
+        }
+      }
+    },
+    "CDDAPaletteMonsterValueMonsterMonster": {
       "type": "object",
       "required": [
         "monster"
@@ -749,16 +847,77 @@
           "type": "boolean"
         },
         "monster": {
-          "type": "string"
+          "$ref": "#/definitions/CDDAPaletteDistribution"
         },
         "name": {
           "description": "@docs MAPGEN.md    special name default is nameless @srcs mapgen.cpp     jmapgen_monster   constructor  default  \"None\"?",
-          "default": "",
           "type": "string"
         },
-        "target": {
-          "description": "@docs MAPGEN.md    a mission target or not @srcs mapgen.cpp     jmapgen_monster   constructor  default false",
+        "one_or_none": {
+          "description": "@srcs mapgen.cpp     jmapgen_monster   constructor  default false   if pack_size is defined  default true ????",
           "type": "boolean"
+        },
+        "pack_size": {
+          "description": "@srcs mapgen.cpp     jmapgen_monster   constructor  default false",
+          "allOf": [
+            {
+              "$ref": "#/definitions/CDDAIntRange"
+            }
+          ]
+        },
+        "spawn_data": {
+          "description": "@srcs mapgen.cpp     jmapgen_monster   constructor  default false   if pack_size is defined  default true ????",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/CDDAPaletteMonsterValueMonsterSpawnData"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "target": {
+          "description": "@docs MAPGEN.md    a mission target or not    only valid for update_mapgen @srcs mapgen.cpp     jmapgen_monster   constructor  default false",
+          "type": "boolean"
+        }
+      }
+    },
+    "CDDAPaletteMonsterValueMonsterSpawnData": {
+      "type": "object",
+      "properties": {
+        "ammo": {
+          "description": "@docs MAPGEN.md    ammo carried",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CDDAPaletteMonsterValueMonsterSpawnDataAmmo"
+          }
+        },
+        "patrol": {
+          "description": "@docs MAPGEN.md    patrol ??",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CDDAMapgenCoor"
+          }
+        }
+      }
+    },
+    "CDDAPaletteMonsterValueMonsterSpawnDataAmmo": {
+      "type": "object",
+      "required": [
+        "qty"
+      ],
+      "properties": {
+        "ammo_id": {
+          "description": "@docs MAPGEN.md    default is false",
+          "type": "string"
+        },
+        "qty": {
+          "description": "@srcs mapgen.cpp     jmapgen_monster   mandatory     number of ammos",
+          "allOf": [
+            {
+              "$ref": "#/definitions/CDDAIntRange"
+            }
+          ]
         }
       }
     },
@@ -799,6 +958,84 @@
         }
       }
     },
+    "CDDAPaletteNestedValue": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/CDDAPaletteNestedValueNested"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CDDAPaletteNestedValueNested"
+          }
+        }
+      ]
+    },
+    "CDDAPaletteNestedValueNested": {
+      "type": "object",
+      "required": [
+        "neighbors"
+      ],
+      "properties": {
+        "chunks": {
+          "description": "@srcs mapgen.cpp    jmapgen_nested",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CDDAPaletteNestedValueNestedChuncks"
+          }
+        },
+        "else_chunks": {
+          "description": "@srcs mapgen.cpp    jmapgen_nested",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CDDAPaletteNestedValueNestedChuncks"
+          }
+        },
+        "neighbors": {
+          "description": "@srcs mapgen.cpp    jmapgen_nested",
+          "allOf": [
+            {
+              "$ref": "#/definitions/CDDAPaletteNestedValueNestedNeighbors"
+            }
+          ]
+        }
+      }
+    },
+    "CDDAPaletteNestedValueNestedChuncks": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "$ref": "#/definitions/CDDAPaletteDistribution"
+        }
+      ]
+    },
+    "CDDAPaletteNestedValueNestedNeighbors": {
+      "type": "object",
+      "properties": {
+        "above": {
+          "$ref": "#/definitions/CDDAStringArray"
+        },
+        "east": {
+          "$ref": "#/definitions/CDDAStringArray"
+        },
+        "north": {
+          "$ref": "#/definitions/CDDAStringArray"
+        },
+        "south": {
+          "$ref": "#/definitions/CDDAStringArray"
+        },
+        "west": {
+          "description": "@srcs mapgen.cpp    jmapgen_nested",
+          "allOf": [
+            {
+              "$ref": "#/definitions/CDDAStringArray"
+            }
+          ]
+        }
+      }
+    },
     "CDDAPaletteNpcsValue": {
       "anyOf": [
         {
@@ -830,7 +1067,7 @@
           "type": "string"
         },
         "target": {
-          "description": "@docs MAPGEN.md    a mission target or not   default false @srcs mapgen.cpp     jmapgen_npc   constructor",
+          "description": "@docs MAPGEN.md    a mission target or not   default false  only valid for update_mapgen @srcs mapgen.cpp     jmapgen_npc   constructor",
           "type": "boolean"
         }
       }
@@ -871,7 +1108,10 @@
       ],
       "properties": {
         "distribution": {
-          "$ref": "#/definitions/CDDAPaletteDistribution"
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CDDAPaletteDistribution"
+          }
         }
       }
     },
@@ -945,7 +1185,6 @@
         },
         "item": {
           "description": "@docs MAPGEN.md    single item",
-          "default": null,
           "anyOf": [
             {
               "$ref": "#/definitions/CDDAPaletteItemValue"
@@ -968,7 +1207,6 @@
         },
         "items": {
           "description": "@docs MAPGEN.md    item group",
-          "default": null,
           "anyOf": [
             {
               "$ref": "#/definitions/CDDAPaletteItemsValue"
@@ -1015,7 +1253,10 @@
           "$ref": "#/definitions/CDDAPaletteTerrainValueTerrain"
         },
         {
-          "$ref": "#/definitions/CDDAPaletteDistribution"
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CDDAPaletteDistribution"
+          }
         },
         {
           "$ref": "#/definitions/CDDAPaletteParameterReference"
@@ -1059,20 +1300,20 @@
         }
       }
     },
-    "CDDAPaletteTransformValue": {
+    "CDDAPaletteTransformsValue": {
       "anyOf": [
         {
-          "$ref": "#/definitions/CDDAPaletteTransformValueTransform"
+          "$ref": "#/definitions/CDDAPaletteTransformsValueTransform"
         },
         {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/CDDAPaletteTransformValueTransform"
+            "$ref": "#/definitions/CDDAPaletteTransformsValueTransform"
           }
         }
       ]
     },
-    "CDDAPaletteTransformValueTransform": {
+    "CDDAPaletteTransformsValueTransform": {
       "type": "object",
       "required": [
         "transform"
@@ -1093,7 +1334,10 @@
           "$ref": "#/definitions/CDDAPaletteTrapsValueObject"
         },
         {
-          "$ref": "#/definitions/CDDAPaletteDistribution"
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CDDAPaletteDistribution"
+          }
         },
         {
           "$ref": "#/definitions/CDDAPaletteParameterReference"

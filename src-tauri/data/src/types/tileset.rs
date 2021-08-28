@@ -58,17 +58,21 @@ pub struct CDDATileSetTilesNew {
   pub file: String,
   #[serde(rename = "//")]
   pub comment: Option<String>,
-
   pub sprite_width: Option<i64>,
-
   pub sprite_height: Option<i64>,
-
   pub sprite_offset_x: Option<i64>,
-
   pub sprite_offset_y: Option<i64>,
   pub tiles: Vec<CDDATileSetTile>,
   #[serde(default)]
   pub ascii: Vec<CDDATileSetAscii>,
+  /**
+   * Derived field, calculated in the tileset parser, this is a ratio (sprite_width / tileVisualWidthHeight[0].width)
+   */
+  pub sprite_width_ratio: Option<i64>,
+  /**
+   * Derived field, calculated in the tileset parser, this is a ratio (sprite_height / tileVisualWidthHeight[0].height)
+   */
+  pub sprite_height_ratio: Option<i64>,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]

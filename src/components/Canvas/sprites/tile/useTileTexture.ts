@@ -12,10 +12,11 @@ import { getNewTileOptions, createTileTextures } from './createTexture';
  * @param tileName 地块的ID
  * @returns [fgTileTexture, bgTileTexture, tileWidthHeight]
  */
-export function useTileTexture(tileName: string): [Texture | undefined, Texture | undefined, [number, number]] {
+export function useTileTexture(tileName: string, tileVisualWidthHeight: [number, number]): [Texture | undefined, Texture | undefined, [number, number]] {
   const [fgTileTexture, fgTileTextureSetter] = useState<Texture | undefined>();
   const [bgTileTexture, bgTileTextureSetter] = useState<Texture | undefined>();
-  const [tileWidthHeight, tileWidthHeightSetter] = useState<[number, number]>([100, 100]);
+  // by default, this ratio (sprite_width / tileVisualWidthHeight[0].width) is 1, and we multiply it with visual width to get real width
+  const [tileWidthHeight, tileWidthHeightSetter] = useState<[number, number]>([1 * tileVisualWidthHeight[0], 1 * tileVisualWidthHeight[1]]);
 
   useLayoutEffect(() => {
     // wait for texture to be generated from png image by PIXI loader
@@ -28,9 +29,9 @@ export function useTileTexture(tileName: string): [Texture | undefined, Texture 
           if (tileSetTexture !== undefined) {
             // TODO: calculate direction in rust
             let direction: undefined;
-
-            const newTileOptions = getNewTileOptions(tileSetTexture, { tileSubSetData, direction });
-            tileWidthHeightSetter([newTileOptions.tileWidth, newTileOptions.tileHeight]);
+            // update width height with visual widthHeight
+            const newTileOptions = getNewTileOptions(tileSetTexture, { tileSubSetData, direction, tileVisualWidthHeight });
+            tileWidthHeightSetter([newTileOptions.tileVisualWidth, newTileOptions.tileVisualHeight]);
 
             // a tile can have foreground texture and a background texture
             fgTileTextureSetter(
