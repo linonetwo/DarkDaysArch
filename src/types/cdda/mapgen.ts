@@ -9,7 +9,7 @@
  * A char in map rows can mean multiple item, like # mean a terrain and a furniture, and some terrain can have id same as a furniture, so we have to keep id's type in a tuple
  */
 export type ItemIDOrItemList = [MapgenPaletteKeys, string] | [MapgenPaletteKeys, string][];
-export type MapgenPaletteKeys = "terrain" | "furniture";
+export type MapgenPaletteKeys = "terrain" | "furniture" | "items";
 export type CDDAMapgen = CDDAMapgenOM | CDDAMapgenUpdate | CDDAMapgenNested;
 export type CDDAPaletteComputersValue = CDDAPaletteComputersValueComputer | CDDAPaletteComputersValueComputer[];
 export type CDDAPaletteComputersValueComputerFailures =
@@ -18,6 +18,8 @@ export type CDDAPaletteComputersValueComputerFailures =
 export type CDDAPaletteComputersValueComputerOptions =
   | CDDAPaletteComputersValueComputerOptionsOption
   | CDDAPaletteComputersValueComputerOptionsOption[];
+export type CDDAIntRange = number | number[];
+export type CDDAPaletteFactionValue = CDDAPaletteFactionValueFaction | CDDAPaletteFactionValueFaction[];
 export type CDDAPaletteFieldsValue = CDDAPaletteFieldsValueField | CDDAPaletteFieldsValueField[];
 /**
  * @docs MAPGEN.md      Terrain, furniture and traps can specified as a single string, not a json object
@@ -25,34 +27,286 @@ export type CDDAPaletteFieldsValue = CDDAPaletteFieldsValueField | CDDAPaletteFi
 export type CDDAPaletteFurnitureValue =
   | string
   | CDDAPaletteFurnitureValueFurniture
-  | CDDAPaletteDistribution
+  | CDDAPaletteDistribution[]
   | CDDAPaletteParameterReference;
-export type CDDAPaletteDistribution = string | string[] | [string, number] | CDDAPaletteDistributionMixed[];
-export type CDDAPaletteDistributionMixed = string | [string, number];
+export type CDDAPaletteDistribution = string | [string, number];
 export type CDDAPaletteGaspumpsValue = CDDAPaletteGaspumpsValueGaspump | CDDAPaletteGaspumpsValueGaspump[];
-export type CDDAIntRange = number | [number, number];
 export type CDDAPaletteGraffitiValue = CDDAPaletteGraffitiValueGraffiti | CDDAPaletteGraffitiValueGraffiti[];
 export type CDDAPaletteItemValue = CDDAPaletteItemValueItem | CDDAPaletteItemValueItem[];
 export type CDDAPaletteItemsValue = CDDAPaletteItemsValueItem | CDDAPaletteItemsValueItem[];
+export type CDDAPaletteLiquidsValue = CDDAPaletteLiquidsValueLiquid | CDDAPaletteLiquidsValueLiquid[];
 export type CDDAPaletteMonsterValue = CDDAPaletteMonsterValueMonster | CDDAPaletteMonsterValueMonster[];
+export type CDDAPaletteMonsterValueMonster =
+  | CDDAPaletteMonsterValueMonsterMonster
+  | CDDAPaletteMonsterValueMonsterGroup;
 export type CDDAPaletteMonstersValue = CDDAPaletteMonstersValueMonster | CDDAPaletteMonstersValueMonster[];
-export type CDDAPaletteNpcsValue = CDDAPaletteNpcsValueNpc | CDDAPaletteNpcsValueNpc[];
+export type CDDAPaletteNestedValue = CDDAPaletteNestedValueNested | CDDAPaletteNestedValueNested[];
+export type CDDAPaletteNestedValueNestedChuncks = string | CDDAPaletteDistribution;
 export type CDDAStringArray = string | string[];
+export type CDDAPaletteNpcsValue = CDDAPaletteNpcsValueNpc | CDDAPaletteNpcsValueNpc[];
+export type CDDAMapgenPlaceLoot = CDDAMapgenPlaceLootItem | CDDAMapgenPlaceLootGroup;
+export type CDDAMapgenPlaceMonster = CDDAPaletteMonsterValueMonsterMonster | CDDAPaletteMonsterValueMonsterGroup;
 export type CDDAPaletteRubbleValue = CDDAPaletteRubbleValueRubble | CDDAPaletteRubbleValueRubble[];
 export type CDDAPaletteSealedValue = CDDAPaletteSealedValueSealed | CDDAPaletteSealedValueSealed[];
 export type CDDAPaletteSealedValueSealed = CDDAPaletteSealedValueSealedItem | CDDAPaletteSealedValueSealedItems;
+export type CDDAMapgenSet = CDDAMapgenSetPoint | CDDAMapgenSetLine | CDDAMapgenSetSquare;
+export type CDDAMapgenSetPoint =
+  | {
+      chance?: number;
+      fuel?: number;
+      id: string;
+      point: "terrain";
+      /**
+       * @srcs  mapgen.cpp    mapgen_function_json_base::setup_setmap
+       */
+      repeat?: CDDAIntRange;
+      rotation?: number;
+      status?: number;
+      x: CDDAIntRange;
+      y: CDDAIntRange;
+      [k: string]: unknown;
+    }
+  | {
+      chance?: number;
+      fuel?: number;
+      id: string;
+      point: "furniture";
+      /**
+       * @srcs  mapgen.cpp    mapgen_function_json_base::setup_setmap
+       */
+      repeat?: CDDAIntRange;
+      rotation?: number;
+      status?: number;
+      x: CDDAIntRange;
+      y: CDDAIntRange;
+      [k: string]: unknown;
+    }
+  | {
+      chance?: number;
+      fuel?: number;
+      id: string;
+      point: "trap";
+      /**
+       * @srcs  mapgen.cpp    mapgen_function_json_base::setup_setmap
+       */
+      repeat?: CDDAIntRange;
+      rotation?: number;
+      status?: number;
+      x: CDDAIntRange;
+      y: CDDAIntRange;
+      [k: string]: unknown;
+    }
+  | {
+      amount: CDDAIntRange;
+      chance?: number;
+      fuel?: number;
+      point: "radiation";
+      /**
+       * @srcs  mapgen.cpp    mapgen_function_json_base::setup_setmap
+       */
+      repeat?: CDDAIntRange;
+      rotation?: number;
+      status?: number;
+      x: CDDAIntRange;
+      y: CDDAIntRange;
+      [k: string]: unknown;
+    }
+  | {
+      chance?: number;
+      fuel?: number;
+      point: "bash";
+      /**
+       * @srcs  mapgen.cpp    mapgen_function_json_base::setup_setmap
+       */
+      repeat?: CDDAIntRange;
+      rotation?: number;
+      status?: number;
+      x: CDDAIntRange;
+      y: CDDAIntRange;
+      [k: string]: unknown;
+    };
+export type CDDAMapgenSetLine =
+  | {
+      chance?: number;
+      fuel?: number;
+      id: string;
+      line: "terrain";
+      /**
+       * @srcs  mapgen.cpp    mapgen_function_json_base::setup_setmap
+       */
+      repeat?: CDDAIntRange;
+      rotation?: number;
+      status?: number;
+      x: CDDAIntRange;
+      x2: CDDAIntRange;
+      y: CDDAIntRange;
+      y2: CDDAIntRange;
+      [k: string]: unknown;
+    }
+  | {
+      chance?: number;
+      fuel?: number;
+      id: string;
+      line: "furniture";
+      /**
+       * @srcs  mapgen.cpp    mapgen_function_json_base::setup_setmap
+       */
+      repeat?: CDDAIntRange;
+      rotation?: number;
+      status?: number;
+      x: CDDAIntRange;
+      x2: CDDAIntRange;
+      y: CDDAIntRange;
+      y2: CDDAIntRange;
+      [k: string]: unknown;
+    }
+  | {
+      chance?: number;
+      fuel?: number;
+      id: string;
+      line: "trap";
+      /**
+       * @srcs  mapgen.cpp    mapgen_function_json_base::setup_setmap
+       */
+      repeat?: CDDAIntRange;
+      rotation?: number;
+      status?: number;
+      x: CDDAIntRange;
+      x2: CDDAIntRange;
+      y: CDDAIntRange;
+      y2: CDDAIntRange;
+      [k: string]: unknown;
+    }
+  | {
+      amount: CDDAIntRange;
+      chance?: number;
+      fuel?: number;
+      line: "radiation";
+      /**
+       * @srcs  mapgen.cpp    mapgen_function_json_base::setup_setmap
+       */
+      repeat?: CDDAIntRange;
+      rotation?: number;
+      status?: number;
+      x: CDDAIntRange;
+      x2: CDDAIntRange;
+      y: CDDAIntRange;
+      y2: CDDAIntRange;
+      [k: string]: unknown;
+    }
+  | {
+      chance?: number;
+      fuel?: number;
+      line: "bash";
+      /**
+       * @srcs  mapgen.cpp    mapgen_function_json_base::setup_setmap
+       */
+      repeat?: CDDAIntRange;
+      rotation?: number;
+      status?: number;
+      x: CDDAIntRange;
+      x2: CDDAIntRange;
+      y: CDDAIntRange;
+      y2: CDDAIntRange;
+      [k: string]: unknown;
+    };
+export type CDDAMapgenSetSquare =
+  | {
+      chance?: number;
+      fuel?: number;
+      id: string;
+      /**
+       * @srcs  mapgen.cpp    mapgen_function_json_base::setup_setmap
+       */
+      repeat?: CDDAIntRange;
+      rotation?: number;
+      square: "terrain";
+      status?: number;
+      x: CDDAIntRange;
+      x2: CDDAIntRange;
+      y: CDDAIntRange;
+      y2: CDDAIntRange;
+      [k: string]: unknown;
+    }
+  | {
+      chance?: number;
+      fuel?: number;
+      id: string;
+      /**
+       * @srcs  mapgen.cpp    mapgen_function_json_base::setup_setmap
+       */
+      repeat?: CDDAIntRange;
+      rotation?: number;
+      square: "furniture";
+      status?: number;
+      x: CDDAIntRange;
+      x2: CDDAIntRange;
+      y: CDDAIntRange;
+      y2: CDDAIntRange;
+      [k: string]: unknown;
+    }
+  | {
+      chance?: number;
+      fuel?: number;
+      id: string;
+      /**
+       * @srcs  mapgen.cpp    mapgen_function_json_base::setup_setmap
+       */
+      repeat?: CDDAIntRange;
+      rotation?: number;
+      square: "trap";
+      status?: number;
+      x: CDDAIntRange;
+      x2: CDDAIntRange;
+      y: CDDAIntRange;
+      y2: CDDAIntRange;
+      [k: string]: unknown;
+    }
+  | {
+      amount: CDDAIntRange;
+      chance?: number;
+      fuel?: number;
+      /**
+       * @srcs  mapgen.cpp    mapgen_function_json_base::setup_setmap
+       */
+      repeat?: CDDAIntRange;
+      rotation?: number;
+      square: "radiation";
+      status?: number;
+      x: CDDAIntRange;
+      x2: CDDAIntRange;
+      y: CDDAIntRange;
+      y2: CDDAIntRange;
+      [k: string]: unknown;
+    }
+  | {
+      chance?: number;
+      fuel?: number;
+      /**
+       * @srcs  mapgen.cpp    mapgen_function_json_base::setup_setmap
+       */
+      repeat?: CDDAIntRange;
+      rotation?: number;
+      square: "bash";
+      status?: number;
+      x: CDDAIntRange;
+      x2: CDDAIntRange;
+      y: CDDAIntRange;
+      y2: CDDAIntRange;
+      [k: string]: unknown;
+    };
 export type CDDAPaletteSignsValue = CDDAPaletteSignsValueSign | CDDAPaletteSignsValueSign[];
-export type CDDAPaletteTransformValue = CDDAPaletteTransformValueTransform | CDDAPaletteTransformValueTransform[];
+export type CDDAPaletteTransformsValue = CDDAPaletteTransformsValueTransform | CDDAPaletteTransformsValueTransform[];
 export type CDDAPaletteTerrainValue =
   | string
   | CDDAPaletteTerrainValueTerrain
-  | CDDAPaletteDistribution
+  | CDDAPaletteDistribution[]
   | CDDAPaletteParameterReference;
 export type CDDAPaletteToiletsValue = CDDAPaletteToiletsValueToilet | CDDAPaletteToiletsValueToilet[];
 export type CDDAPaletteTrapsValue =
   | string
   | CDDAPaletteTrapsValueObject
-  | CDDAPaletteDistribution
+  | CDDAPaletteDistribution[]
   | CDDAPaletteParameterReference;
 export type CDDAPaletteTrapsValueObject = CDDAPaletteTrapsValueTrap | CDDAPaletteTrapsValueTrap[];
 export type CDDAPaletteVehiclesValue = CDDAPaletteVehiclesValueVehicle | CDDAPaletteVehiclesValueVehicle[];
@@ -80,6 +334,10 @@ export interface CDDAMapgenOM {
 export interface CDDAMapgenObject {
   computers?: {
     [k: string]: CDDAPaletteComputersValue;
+  };
+  faction_owner?: CDDAMapgenFactionOwner[];
+  faction_owner_character?: {
+    [k: string]: CDDAPaletteFactionValue;
   };
   fields?: {
     [k: string]: CDDAPaletteFieldsValue;
@@ -112,12 +370,38 @@ export interface CDDAMapgenObject {
   monsters?: {
     [k: string]: CDDAPaletteMonstersValue;
   };
+  nested?: {
+    [k: string]: CDDAPaletteNestedValue;
+  };
   npcs?: {
     [k: string]: CDDAPaletteNpcsValue;
   };
   palettes?: string[];
+  parameters?: {
+    [k: string]: CDDAPaletteParametersValue;
+  };
+  place_computers?: CDDAMapgenPlaceComputers[];
+  place_fields?: CDDAMapgenPlaceFields[];
+  place_furniture?: CDDAMapgenPlaceFurniture[];
+  place_gaspumps?: CDDAMapgenPlaceGaspumps[];
+  place_graffiti?: CDDAMapgenPlaceGraffiti[];
+  place_item?: CDDAMapgenPlaceItem[];
+  place_items?: CDDAMapgenPlaceItems[];
+  place_liquids?: CDDAMapgenPlaceLiquids[];
   place_loot?: CDDAMapgenPlaceLoot[];
-  place_monsters?: CDDAMapgenPlaceMonster[];
+  place_monster?: CDDAMapgenPlaceMonster[];
+  place_monsters?: CDDAMapgenPlaceMonsters[];
+  place_nested?: CDDAMapgenPlaceNested[];
+  place_npcs?: CDDAMapgenPlaceNpcs[];
+  place_rubble?: CDDAMapgenPlaceRubble[];
+  place_signs?: CDDAMapgenPlaceSigns[];
+  place_ter_furn_tranforms?: CDDAMapgenPlaceTransforms[];
+  place_terrain?: CDDAMapgenPlaceTerrain[];
+  place_toilets?: CDDAMapgenPlaceToilets[];
+  place_traps?: CDDAMapgenPlaceTraps[];
+  place_vehicles?: CDDAMapgenPlaceVehicles[];
+  place_vendingmachines?: CDDAMapgenPlaceVendings[];
+  place_zones?: CDDAMapgenPlaceZones[];
   rows: string[];
   rubble?: {
     [k: string]: CDDAPaletteRubbleValue;
@@ -125,11 +409,12 @@ export interface CDDAMapgenObject {
   sealed_item?: {
     [k: string]: CDDAPaletteSealedValue;
   };
+  set?: CDDAMapgenSet[];
   signs?: {
     [k: string]: CDDAPaletteSignsValue;
   };
   ter_furn_transforms?: {
-    [k: string]: CDDAPaletteTransformValue;
+    [k: string]: CDDAPaletteTransformsValue;
   };
   terrain?: {
     [k: string]: CDDAPaletteTerrainValue;
@@ -140,6 +425,7 @@ export interface CDDAMapgenObject {
   toilets?: {
     [k: string]: CDDAPaletteToiletsValue;
   };
+  translate_ter?: CDDAMapgenTranslateTer[];
   traps?: {
     [k: string]: CDDAPaletteTrapsValue;
   };
@@ -176,7 +462,7 @@ export interface CDDAPaletteComputersValueComputer {
    */
   security?: number;
   /**
-   * @srcs mapgen.cpp   jmapgen_computer   default false       mission target maybe
+   * @srcs mapgen.cpp   jmapgen_computer   default false       mission target maybe    only valid for update_mapgen
    */
   target?: boolean;
   [k: string]: unknown;
@@ -201,6 +487,22 @@ export interface CDDAPaletteComputersValueComputerOptionsOption {
    * @srcs mapgen.cpp   jmapgen_computer  default 0
    */
   security?: number;
+  [k: string]: unknown;
+}
+export interface CDDAMapgenFactionOwner {
+  /**
+   * @srcs mapgen.cpp    jmapgen_nested
+   */
+  id?: string;
+  x: CDDAIntRange;
+  y: CDDAIntRange;
+  [k: string]: unknown;
+}
+export interface CDDAPaletteFactionValueFaction {
+  /**
+   * @srcs mapgen.cpp    jmapgen_nested
+   */
+  id?: string;
   [k: string]: unknown;
 }
 export interface CDDAPaletteFieldsValueField {
@@ -276,7 +578,7 @@ export interface CDDAPaletteItemsValueItem {
   repeat?: CDDAIntRange;
   [k: string]: unknown;
 }
-export interface CDDAPaletteLiquidsValue {
+export interface CDDAPaletteLiquidsValueLiquid {
   /**
    * @docs MAPGEN.md    default 0 means using certain liquid defualt amount defined
    */
@@ -288,18 +590,85 @@ export interface CDDAPaletteLiquidsValue {
   liquid: string;
   [k: string]: unknown;
 }
-export interface CDDAPaletteMonsterValueMonster {
+export interface CDDAPaletteMonsterValueMonsterMonster {
   /**
    * @docs MAPGEN.md    default is false
    */
   friendly?: boolean;
-  monster: string;
+  monster: CDDAPaletteDistribution;
   /**
    * @docs MAPGEN.md    special name default is nameless @srcs mapgen.cpp     jmapgen_monster   constructor  default  "None"?
    */
   name?: string;
   /**
-   * @docs MAPGEN.md    a mission target or not @srcs mapgen.cpp     jmapgen_monster   constructor  default false
+   * @srcs mapgen.cpp     jmapgen_monster   constructor  default false   if pack_size is defined  default true ????
+   */
+  one_or_none?: boolean;
+  /**
+   * @srcs mapgen.cpp     jmapgen_monster   constructor  default false
+   */
+  pack_size?: CDDAIntRange;
+  /**
+   * @srcs mapgen.cpp     jmapgen_monster   constructor  default false   if pack_size is defined  default true ????
+   */
+  spawn_data?: CDDAPaletteMonsterValueMonsterSpawnData | null;
+  /**
+   * @docs MAPGEN.md    a mission target or not    only valid for update_mapgen @srcs mapgen.cpp     jmapgen_monster   constructor  default false
+   */
+  target?: boolean;
+  [k: string]: unknown;
+}
+export interface CDDAPaletteMonsterValueMonsterSpawnData {
+  /**
+   * @docs MAPGEN.md    ammo carried
+   */
+  ammo?: CDDAPaletteMonsterValueMonsterSpawnDataAmmo[];
+  /**
+   * @docs MAPGEN.md    patrol ??
+   */
+  patrol?: CDDAMapgenCoor[];
+  [k: string]: unknown;
+}
+export interface CDDAPaletteMonsterValueMonsterSpawnDataAmmo {
+  /**
+   * @docs MAPGEN.md    default is false
+   */
+  ammo_id?: string;
+  /**
+   * @srcs mapgen.cpp     jmapgen_monster   mandatory     number of ammos
+   */
+  qty: CDDAIntRange;
+  [k: string]: unknown;
+}
+export interface CDDAMapgenCoor {
+  x: CDDAIntRange;
+  y: CDDAIntRange;
+  [k: string]: unknown;
+}
+export interface CDDAPaletteMonsterValueMonsterGroup {
+  /**
+   * @docs MAPGEN.md    default is false
+   */
+  friendly?: boolean;
+  group: string;
+  /**
+   * @docs MAPGEN.md    special name default is nameless @srcs mapgen.cpp     jmapgen_monster   constructor  default  "None"?
+   */
+  name?: string;
+  /**
+   * @srcs mapgen.cpp     jmapgen_monster   constructor  default false   if pack_size is defined  default true ????
+   */
+  one_or_none?: boolean;
+  /**
+   * @srcs mapgen.cpp     jmapgen_monster   constructor  default false
+   */
+  pack_size?: CDDAIntRange;
+  /**
+   * @srcs mapgen.cpp     jmapgen_monster   constructor  default false   if pack_size is defined  default true ????
+   */
+  spawn_data?: CDDAPaletteMonsterValueMonsterSpawnData | null;
+  /**
+   * @docs MAPGEN.md    a mission target or not    only valid for update_mapgen @srcs mapgen.cpp     jmapgen_monster   constructor  default false
    */
   target?: boolean;
   [k: string]: unknown;
@@ -316,6 +685,32 @@ export interface CDDAPaletteMonstersValueMonster {
   monster: string;
   [k: string]: unknown;
 }
+export interface CDDAPaletteNestedValueNested {
+  /**
+   * @srcs mapgen.cpp    jmapgen_nested
+   */
+  chunks?: CDDAPaletteNestedValueNestedChuncks[];
+  /**
+   * @srcs mapgen.cpp    jmapgen_nested
+   */
+  else_chunks?: CDDAPaletteNestedValueNestedChuncks[];
+  /**
+   * @srcs mapgen.cpp    jmapgen_nested
+   */
+  neighbors: CDDAPaletteNestedValueNestedNeighbors;
+  [k: string]: unknown;
+}
+export interface CDDAPaletteNestedValueNestedNeighbors {
+  above?: CDDAStringArray;
+  east?: CDDAStringArray;
+  north?: CDDAStringArray;
+  south?: CDDAStringArray;
+  /**
+   * @srcs mapgen.cpp    jmapgen_nested
+   */
+  west?: CDDAStringArray;
+  [k: string]: unknown;
+}
 export interface CDDAPaletteNpcsValueNpc {
   /**
    * @docs MAPGEN.md   default 0
@@ -323,24 +718,341 @@ export interface CDDAPaletteNpcsValueNpc {
   add_trait?: CDDAStringArray;
   class: string;
   /**
-   * @docs MAPGEN.md    a mission target or not   default false @srcs mapgen.cpp     jmapgen_npc   constructor
+   * @docs MAPGEN.md    a mission target or not   default false  only valid for update_mapgen @srcs mapgen.cpp     jmapgen_npc   constructor
    */
   target?: boolean;
   [k: string]: unknown;
 }
-export interface CDDAMapgenPlaceLoot {
-  chance: number;
-  item: string;
-  x: number;
-  y: number;
+export interface CDDAPaletteParametersValue {
+  default: CDDAPaletteParametersValueDefault;
+  type: string;
   [k: string]: unknown;
 }
-export interface CDDAMapgenPlaceMonster {
-  density: number;
+export interface CDDAPaletteParametersValueDefault {
+  distribution: CDDAPaletteDistribution[];
+  [k: string]: unknown;
+}
+export interface CDDAMapgenPlaceComputers {
+  /**
+   * @srcs mapgen.cpp   jmapgen_computer
+   */
+  access_denied?: string;
+  /**
+   * @srcs mapgen.cpp   jmapgen_computer
+   */
+  failures?: CDDAPaletteComputersValueComputerFailures[];
+  /**
+   * @srcs mapgen.cpp   jmapgen_computer
+   */
+  name?: string;
+  /**
+   * @srcs mapgen.cpp   jmapgen_computer
+   */
+  options?: CDDAPaletteComputersValueComputerOptions[];
+  /**
+   * @srcs mapgen.cpp   jmapgen_computer default 0
+   */
+  security?: number;
+  /**
+   * @srcs mapgen.cpp   jmapgen_computer   default false       mission target maybe    only valid for update_mapgen
+   */
+  target?: boolean;
+  x: CDDAIntRange;
+  y: CDDAIntRange;
+  [k: string]: unknown;
+}
+export interface CDDAMapgenPlaceFields {
+  /**
+   * @docs MAPGEN.md   default 0
+   */
+  age?: number;
+  field: string;
+  /**
+   * @docs MAPGEN.md    default 1, possible 1, 2, 3 or more        originally density in old version
+   */
+  intensity?: number;
+  x: CDDAIntRange;
+  y: CDDAIntRange;
+  [k: string]: unknown;
+}
+export interface CDDAMapgenPlaceFurniture {
+  furniture: string;
+  x: CDDAIntRange;
+  y: CDDAIntRange;
+  [k: string]: unknown;
+}
+export interface CDDAMapgenPlaceGaspumps {
+  /**
+   * @docs MAPGEN.md    default is random? or zero?
+   */
+  amount?: CDDAIntRange;
+  /**
+   * @docs MAPGEN.md    type of fuel   default unknown   gasoline maybe?
+   */
+  feul?: string;
+  x: CDDAIntRange;
+  y: CDDAIntRange;
+  [k: string]: unknown;
+}
+export interface CDDAMapgenPlaceGraffiti {
+  /**
+   * @docs MAPGEN.md    the massage shown
+   */
+  signage?: string;
+  /**
+   * @docs MAPGEN.md   a category of snippet?
+   */
+  snippet?: string;
+  x: CDDAIntRange;
+  y: CDDAIntRange;
+  [k: string]: unknown;
+}
+export interface CDDAMapgenPlaceItem {
+  /**
+   * @docs MAPGEN.md   int or min-max  default 1
+   */
+  amount?: CDDAIntRange;
+  /**
+   * @docs MAPGEN.md    "chance": x means   one in x  int or min-max   default 1
+   */
+  chance?: CDDAIntRange;
+  item: string;
+  /**
+   * @docs MAPGEN.md   int or min-max  default 1
+   */
+  repeat?: CDDAIntRange;
+  x: CDDAIntRange;
+  y: CDDAIntRange;
+  [k: string]: unknown;
+}
+export interface CDDAMapgenPlaceItems {
+  ammo?: number;
+  /**
+   * @docs MAPGEN.md    "chance": x means    x% int or min-max   default 100
+   */
+  chance?: CDDAIntRange;
+  item: string;
+  magazine?: number;
+  /**
+   * @docs MAPGEN.md   int or min-max  default 1
+   */
+  repeat?: CDDAIntRange;
+  x: CDDAIntRange;
+  y: CDDAIntRange;
+  [k: string]: unknown;
+}
+export interface CDDAMapgenPlaceLiquids {
+  /**
+   * @docs MAPGEN.md    default 0 means using certain liquid defualt amount defined
+   */
+  amount?: CDDAIntRange;
+  /**
+   * @docs MAPGEN.md    "chance": x means    one in x  int or min-max    default 1
+   */
+  chance?: CDDAIntRange;
+  liquid: string;
+  x: CDDAIntRange;
+  y: CDDAIntRange;
+  [k: string]: unknown;
+}
+export interface CDDAMapgenPlaceLootItem {
+  ammo?: number;
+  /**
+   * @srcs mapgen.cpp   jmapgen_loot    "chance": x means    x% int or min-max   default 100
+   */
+  chance?: CDDAIntRange;
+  item: string;
+  magazine?: number;
+  /**
+   * @srcs  mapgen.cpp jmapgen_loot  int or min-max  default 1
+   */
+  repeat?: CDDAIntRange;
+  /**
+   * @srcs  mapgen.cpp jmapgen_loot  used for gun variant
+   */
+  variant?: string;
+  x: CDDAIntRange;
+  y: CDDAIntRange;
+  [k: string]: unknown;
+}
+export interface CDDAMapgenPlaceLootGroup {
+  ammo?: number;
+  /**
+   * @srcs mapgen.cpp   jmapgen_loot    "chance": x means    x% int or min-max   default 100
+   */
+  chance?: CDDAIntRange;
+  group: string;
+  magazine?: number;
+  /**
+   * @srcs  mapgen.cpp jmapgen_loot  int or min-max  default 1
+   */
+  repeat?: CDDAIntRange;
+  x: CDDAIntRange;
+  y: CDDAIntRange;
+  [k: string]: unknown;
+}
+export interface CDDAMapgenPlaceMonsters {
+  /**
+   * @docs MAPGEN.md    "chance": x means    one in x   int or min-max defualt 1
+   */
+  chance?: CDDAIntRange;
+  /**
+   * @docs MAPGEN.md    if not present, use default density limited by distance between city center use -1.0 to represent default
+   */
+  density?: number;
   monster: string;
-  repeat: number[];
-  x: number;
-  y: number;
+  x: CDDAIntRange;
+  y: CDDAIntRange;
+  [k: string]: unknown;
+}
+export interface CDDAMapgenPlaceNested {
+  /**
+   * @srcs mapgen.cpp    jmapgen_nested
+   */
+  chunks?: CDDAPaletteNestedValueNestedChuncks[];
+  /**
+   * @srcs mapgen.cpp    jmapgen_nested
+   */
+  else_chunks?: CDDAPaletteNestedValueNestedChuncks[];
+  /**
+   * @srcs mapgen.cpp    jmapgen_nested
+   */
+  neighbors: CDDAPaletteNestedValueNestedNeighbors;
+  x: CDDAIntRange;
+  y: CDDAIntRange;
+  [k: string]: unknown;
+}
+export interface CDDAMapgenPlaceNpcs {
+  /**
+   * @docs MAPGEN.md   default 0
+   */
+  add_trait?: CDDAStringArray;
+  class: string;
+  /**
+   * @docs MAPGEN.md    a mission target or not   default false  only valid for update_mapgen @srcs mapgen.cpp     jmapgen_npc   constructor
+   */
+  target?: boolean;
+  x: CDDAIntRange;
+  y: CDDAIntRange;
+  [k: string]: unknown;
+}
+export interface CDDAMapgenPlaceRubble {
+  /**
+   * @docs MAPGEN.md    ter id     default is t_dirt
+   */
+  floor_type?: string;
+  /**
+   * @docs MAPGEN.md    bashing items will or not   default is false
+   */
+  items?: boolean;
+  /**
+   * @docs MAPGEN.md    if true it just writes on top of what currently exists  default false
+   */
+  overwrite?: boolean;
+  /**
+   * @docs MAPGEN.md    furniture id     default is f_rubble
+   */
+  rubble_type?: string;
+  x: CDDAIntRange;
+  y: CDDAIntRange;
+  [k: string]: unknown;
+}
+export interface CDDAMapgenPlaceSigns {
+  /**
+   * @docs MAPGEN.md    the massage shown
+   */
+  signage?: string;
+  /**
+   * @docs MAPGEN.md   a category of snippet?
+   */
+  snippet?: string;
+  x: CDDAIntRange;
+  y: CDDAIntRange;
+  [k: string]: unknown;
+}
+export interface CDDAMapgenPlaceTransforms {
+  /**
+   * @docs MAPGEN.md    the id of the `ter_furn_transform` to run
+   */
+  transform: string;
+  x: CDDAIntRange;
+  y: CDDAIntRange;
+  [k: string]: unknown;
+}
+export interface CDDAMapgenPlaceTerrain {
+  terrain: string;
+  x: CDDAIntRange;
+  y: CDDAIntRange;
+  [k: string]: unknown;
+}
+export interface CDDAMapgenPlaceToilets {
+  /**
+   * @docs MAPGEN.md    default is random? or zero?
+   */
+  amount?: CDDAIntRange;
+  x: CDDAIntRange;
+  y: CDDAIntRange;
+  [k: string]: unknown;
+}
+export interface CDDAMapgenPlaceTraps {
+  trap: string;
+  x: CDDAIntRange;
+  y: CDDAIntRange;
+  [k: string]: unknown;
+}
+export interface CDDAMapgenPlaceVehicles {
+  /**
+   * @docs MAPGEN.md    type of fuel   default unknown   gasoline maybe?
+   */
+  feul?: string;
+  /**
+   * @docs MAPGEN.md    if of vehicle id or vehicle group id
+   */
+  vehicle: string;
+  x: CDDAIntRange;
+  y: CDDAIntRange;
+  [k: string]: unknown;
+}
+export interface CDDAMapgenPlaceVendings {
+  /**
+   * @docs MAPGEN.md    "chance": x means    x% int or min-max   default 1    1% low prob
+   */
+  chance?: CDDAIntRange;
+  /**
+   * @docs MAPGEN.md    fuel status    default -1   -1 means 1%-7% fuel
+   */
+  feul?: number;
+  /**
+   * @docs MAPGEN.md    default randomly choose one of "vending_food" or "vending_drink"
+   */
+  item_group?: string;
+  /**
+   * @docs MAPGEN.md   360 degree
+   */
+  rotation?: number;
+  /**
+   * @docs MAPGEN.md    body status    default -1   -1 means light damage    0 perfect    1 heavy damage
+   */
+  status?: number;
+  x: CDDAIntRange;
+  y: CDDAIntRange;
+  [k: string]: unknown;
+}
+export interface CDDAMapgenPlaceZones {
+  /**
+   * @docs MAPGEN.md    fraction id
+   */
+  faction: string;
+  /**
+   * @docs MAPGEN.md    the name of the zone
+   */
+  name?: string;
+  /**
+   * @docs MAPGEN.md    Values: `"NPC_RETREAT"`, `"NPC_NO_INVESTIGATE"`, or `"NPC_INVESTIGATE_ONLY"`
+   */
+  type: string;
+  x: CDDAIntRange;
+  y: CDDAIntRange;
   [k: string]: unknown;
 }
 export interface CDDAPaletteRubbleValueRubble {
@@ -389,7 +1101,7 @@ export interface CDDAPaletteSignsValueSign {
   snippet?: string;
   [k: string]: unknown;
 }
-export interface CDDAPaletteTransformValueTransform {
+export interface CDDAPaletteTransformsValueTransform {
   /**
    * @docs MAPGEN.md    the id of the `ter_furn_transform` to run
    */
@@ -405,6 +1117,19 @@ export interface CDDAPaletteToiletsValueToilet {
    * @docs MAPGEN.md    default is random? or zero?
    */
   amount?: CDDAIntRange;
+  [k: string]: unknown;
+}
+export interface CDDAMapgenTranslateTer {
+  /**
+   * @docs MAPGEN.md    the terrain id of the terrain to be transformed
+   */
+  from: string;
+  /**
+   * @docs MAPGEN.md    the terrain id that the from terrain will transformed into
+   */
+  to: string;
+  x: CDDAIntRange;
+  y: CDDAIntRange;
   [k: string]: unknown;
 }
 export interface CDDAPaletteTrapsValueTrap {

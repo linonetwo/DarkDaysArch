@@ -12,6 +12,7 @@ export type CDDAPaletteComputersValueComputerFailures =
 export type CDDAPaletteComputersValueComputerOptions =
   | CDDAPaletteComputersValueComputerOptionsOption
   | CDDAPaletteComputersValueComputerOptionsOption[];
+export type CDDAPaletteFactionValue = CDDAPaletteFactionValueFaction | CDDAPaletteFactionValueFaction[];
 export type CDDAPaletteFieldsValue = CDDAPaletteFieldsValueField | CDDAPaletteFieldsValueField[];
 /**
  * @docs MAPGEN.md      Terrain, furniture and traps can specified as a single string, not a json object
@@ -19,34 +20,39 @@ export type CDDAPaletteFieldsValue = CDDAPaletteFieldsValueField | CDDAPaletteFi
 export type CDDAPaletteFurnitureValue =
   | string
   | CDDAPaletteFurnitureValueFurniture
-  | CDDAPaletteDistribution
+  | CDDAPaletteDistribution[]
   | CDDAPaletteParameterReference;
-export type CDDAPaletteDistribution = string | string[] | [string, number] | CDDAPaletteDistributionMixed[];
-export type CDDAPaletteDistributionMixed = string | [string, number];
+export type CDDAPaletteDistribution = string | [string, number];
 export type CDDAPaletteGaspumpsValue = CDDAPaletteGaspumpsValueGaspump | CDDAPaletteGaspumpsValueGaspump[];
-export type CDDAIntRange = number | [number, number];
+export type CDDAIntRange = number | number[];
 export type CDDAPaletteGraffitiValue = CDDAPaletteGraffitiValueGraffiti | CDDAPaletteGraffitiValueGraffiti[];
 export type CDDAPaletteItemValue = CDDAPaletteItemValueItem | CDDAPaletteItemValueItem[];
 export type CDDAPaletteItemsValue = CDDAPaletteItemsValueItem | CDDAPaletteItemsValueItem[];
+export type CDDAPaletteLiquidsValue = CDDAPaletteLiquidsValueLiquid | CDDAPaletteLiquidsValueLiquid[];
 export type CDDAPaletteMonsterValue = CDDAPaletteMonsterValueMonster | CDDAPaletteMonsterValueMonster[];
+export type CDDAPaletteMonsterValueMonster =
+  | CDDAPaletteMonsterValueMonsterMonster
+  | CDDAPaletteMonsterValueMonsterGroup;
 export type CDDAPaletteMonstersValue = CDDAPaletteMonstersValueMonster | CDDAPaletteMonstersValueMonster[];
-export type CDDAPaletteNpcsValue = CDDAPaletteNpcsValueNpc | CDDAPaletteNpcsValueNpc[];
+export type CDDAPaletteNestedValue = CDDAPaletteNestedValueNested | CDDAPaletteNestedValueNested[];
+export type CDDAPaletteNestedValueNestedChuncks = string | CDDAPaletteDistribution;
 export type CDDAStringArray = string | string[];
+export type CDDAPaletteNpcsValue = CDDAPaletteNpcsValueNpc | CDDAPaletteNpcsValueNpc[];
 export type CDDAPaletteRubbleValue = CDDAPaletteRubbleValueRubble | CDDAPaletteRubbleValueRubble[];
 export type CDDAPaletteSealedValue = CDDAPaletteSealedValueSealed | CDDAPaletteSealedValueSealed[];
 export type CDDAPaletteSealedValueSealed = CDDAPaletteSealedValueSealedItem | CDDAPaletteSealedValueSealedItems;
 export type CDDAPaletteSignsValue = CDDAPaletteSignsValueSign | CDDAPaletteSignsValueSign[];
-export type CDDAPaletteTransformValue = CDDAPaletteTransformValueTransform | CDDAPaletteTransformValueTransform[];
+export type CDDAPaletteTransformsValue = CDDAPaletteTransformsValueTransform | CDDAPaletteTransformsValueTransform[];
 export type CDDAPaletteTerrainValue =
   | string
   | CDDAPaletteTerrainValueTerrain
-  | CDDAPaletteDistribution
+  | CDDAPaletteDistribution[]
   | CDDAPaletteParameterReference;
 export type CDDAPaletteToiletsValue = CDDAPaletteToiletsValueToilet | CDDAPaletteToiletsValueToilet[];
 export type CDDAPaletteTrapsValue =
   | string
   | CDDAPaletteTrapsValueObject
-  | CDDAPaletteDistribution
+  | CDDAPaletteDistribution[]
   | CDDAPaletteParameterReference;
 export type CDDAPaletteTrapsValueObject = CDDAPaletteTrapsValueTrap | CDDAPaletteTrapsValueTrap[];
 export type CDDAPaletteVehiclesValue = CDDAPaletteVehiclesValueVehicle | CDDAPaletteVehiclesValueVehicle[];
@@ -58,6 +64,9 @@ export interface CDDAPalette {
   "//"?: string;
   computers?: {
     [k: string]: CDDAPaletteComputersValue;
+  };
+  faction_owner_character?: {
+    [k: string]: CDDAPaletteFactionValue;
   };
   fields?: {
     [k: string]: CDDAPaletteFieldsValue;
@@ -96,6 +105,9 @@ export interface CDDAPalette {
   monsters?: {
     [k: string]: CDDAPaletteMonstersValue;
   };
+  nested?: {
+    [k: string]: CDDAPaletteNestedValue;
+  };
   npcs?: {
     [k: string]: CDDAPaletteNpcsValue;
   };
@@ -112,7 +124,7 @@ export interface CDDAPalette {
     [k: string]: CDDAPaletteSignsValue;
   };
   ter_furn_transforms?: {
-    [k: string]: CDDAPaletteTransformValue;
+    [k: string]: CDDAPaletteTransformsValue;
   };
   terrain?: {
     [k: string]: CDDAPaletteTerrainValue;
@@ -160,7 +172,7 @@ export interface CDDAPaletteComputersValueComputer {
    */
   security?: number;
   /**
-   * @srcs mapgen.cpp   jmapgen_computer   default false       mission target maybe
+   * @srcs mapgen.cpp   jmapgen_computer   default false       mission target maybe    only valid for update_mapgen
    */
   target?: boolean;
   [k: string]: unknown;
@@ -185,6 +197,13 @@ export interface CDDAPaletteComputersValueComputerOptionsOption {
    * @srcs mapgen.cpp   jmapgen_computer  default 0
    */
   security?: number;
+  [k: string]: unknown;
+}
+export interface CDDAPaletteFactionValueFaction {
+  /**
+   * @srcs mapgen.cpp    jmapgen_nested
+   */
+  id?: string;
   [k: string]: unknown;
 }
 export interface CDDAPaletteFieldsValueField {
@@ -260,7 +279,7 @@ export interface CDDAPaletteItemsValueItem {
   repeat?: CDDAIntRange;
   [k: string]: unknown;
 }
-export interface CDDAPaletteLiquidsValue {
+export interface CDDAPaletteLiquidsValueLiquid {
   /**
    * @docs MAPGEN.md    default 0 means using certain liquid defualt amount defined
    */
@@ -275,6 +294,9 @@ export interface CDDAPaletteLiquidsValue {
 export interface CDDAMapgenMapping {
   computers?: {
     [k: string]: CDDAPaletteComputersValue;
+  };
+  faction_owner_character?: {
+    [k: string]: CDDAPaletteFactionValue;
   };
   fields?: {
     [k: string]: CDDAPaletteFieldsValue;
@@ -306,8 +328,14 @@ export interface CDDAMapgenMapping {
   monsters?: {
     [k: string]: CDDAPaletteMonstersValue;
   };
+  nested?: {
+    [k: string]: CDDAPaletteNestedValue;
+  };
   npcs?: {
     [k: string]: CDDAPaletteNpcsValue;
+  };
+  parameters?: {
+    [k: string]: CDDAPaletteParametersValue;
   };
   rubble?: {
     [k: string]: CDDAPaletteRubbleValue;
@@ -319,7 +347,7 @@ export interface CDDAMapgenMapping {
     [k: string]: CDDAPaletteSignsValue;
   };
   ter_furn_transforms?: {
-    [k: string]: CDDAPaletteTransformValue;
+    [k: string]: CDDAPaletteTransformsValue;
   };
   terrain?: {
     [k: string]: CDDAPaletteTerrainValue;
@@ -344,18 +372,85 @@ export interface CDDAMapgenMapping {
   };
   [k: string]: unknown;
 }
-export interface CDDAPaletteMonsterValueMonster {
+export interface CDDAPaletteMonsterValueMonsterMonster {
   /**
    * @docs MAPGEN.md    default is false
    */
   friendly?: boolean;
-  monster: string;
+  monster: CDDAPaletteDistribution;
   /**
    * @docs MAPGEN.md    special name default is nameless @srcs mapgen.cpp     jmapgen_monster   constructor  default  "None"?
    */
   name?: string;
   /**
-   * @docs MAPGEN.md    a mission target or not @srcs mapgen.cpp     jmapgen_monster   constructor  default false
+   * @srcs mapgen.cpp     jmapgen_monster   constructor  default false   if pack_size is defined  default true ????
+   */
+  one_or_none?: boolean;
+  /**
+   * @srcs mapgen.cpp     jmapgen_monster   constructor  default false
+   */
+  pack_size?: CDDAIntRange;
+  /**
+   * @srcs mapgen.cpp     jmapgen_monster   constructor  default false   if pack_size is defined  default true ????
+   */
+  spawn_data?: CDDAPaletteMonsterValueMonsterSpawnData | null;
+  /**
+   * @docs MAPGEN.md    a mission target or not    only valid for update_mapgen @srcs mapgen.cpp     jmapgen_monster   constructor  default false
+   */
+  target?: boolean;
+  [k: string]: unknown;
+}
+export interface CDDAPaletteMonsterValueMonsterSpawnData {
+  /**
+   * @docs MAPGEN.md    ammo carried
+   */
+  ammo?: CDDAPaletteMonsterValueMonsterSpawnDataAmmo[];
+  /**
+   * @docs MAPGEN.md    patrol ??
+   */
+  patrol?: CDDAMapgenCoor[];
+  [k: string]: unknown;
+}
+export interface CDDAPaletteMonsterValueMonsterSpawnDataAmmo {
+  /**
+   * @docs MAPGEN.md    default is false
+   */
+  ammo_id?: string;
+  /**
+   * @srcs mapgen.cpp     jmapgen_monster   mandatory     number of ammos
+   */
+  qty: CDDAIntRange;
+  [k: string]: unknown;
+}
+export interface CDDAMapgenCoor {
+  x: CDDAIntRange;
+  y: CDDAIntRange;
+  [k: string]: unknown;
+}
+export interface CDDAPaletteMonsterValueMonsterGroup {
+  /**
+   * @docs MAPGEN.md    default is false
+   */
+  friendly?: boolean;
+  group: string;
+  /**
+   * @docs MAPGEN.md    special name default is nameless @srcs mapgen.cpp     jmapgen_monster   constructor  default  "None"?
+   */
+  name?: string;
+  /**
+   * @srcs mapgen.cpp     jmapgen_monster   constructor  default false   if pack_size is defined  default true ????
+   */
+  one_or_none?: boolean;
+  /**
+   * @srcs mapgen.cpp     jmapgen_monster   constructor  default false
+   */
+  pack_size?: CDDAIntRange;
+  /**
+   * @srcs mapgen.cpp     jmapgen_monster   constructor  default false   if pack_size is defined  default true ????
+   */
+  spawn_data?: CDDAPaletteMonsterValueMonsterSpawnData | null;
+  /**
+   * @docs MAPGEN.md    a mission target or not    only valid for update_mapgen @srcs mapgen.cpp     jmapgen_monster   constructor  default false
    */
   target?: boolean;
   [k: string]: unknown;
@@ -372,6 +467,32 @@ export interface CDDAPaletteMonstersValueMonster {
   monster: string;
   [k: string]: unknown;
 }
+export interface CDDAPaletteNestedValueNested {
+  /**
+   * @srcs mapgen.cpp    jmapgen_nested
+   */
+  chunks?: CDDAPaletteNestedValueNestedChuncks[];
+  /**
+   * @srcs mapgen.cpp    jmapgen_nested
+   */
+  else_chunks?: CDDAPaletteNestedValueNestedChuncks[];
+  /**
+   * @srcs mapgen.cpp    jmapgen_nested
+   */
+  neighbors: CDDAPaletteNestedValueNestedNeighbors;
+  [k: string]: unknown;
+}
+export interface CDDAPaletteNestedValueNestedNeighbors {
+  above?: CDDAStringArray;
+  east?: CDDAStringArray;
+  north?: CDDAStringArray;
+  south?: CDDAStringArray;
+  /**
+   * @srcs mapgen.cpp    jmapgen_nested
+   */
+  west?: CDDAStringArray;
+  [k: string]: unknown;
+}
 export interface CDDAPaletteNpcsValueNpc {
   /**
    * @docs MAPGEN.md   default 0
@@ -379,9 +500,18 @@ export interface CDDAPaletteNpcsValueNpc {
   add_trait?: CDDAStringArray;
   class: string;
   /**
-   * @docs MAPGEN.md    a mission target or not   default false @srcs mapgen.cpp     jmapgen_npc   constructor
+   * @docs MAPGEN.md    a mission target or not   default false  only valid for update_mapgen @srcs mapgen.cpp     jmapgen_npc   constructor
    */
   target?: boolean;
+  [k: string]: unknown;
+}
+export interface CDDAPaletteParametersValue {
+  default: CDDAPaletteParametersValueDefault;
+  type: string;
+  [k: string]: unknown;
+}
+export interface CDDAPaletteParametersValueDefault {
+  distribution: CDDAPaletteDistribution[];
   [k: string]: unknown;
 }
 export interface CDDAPaletteRubbleValueRubble {
@@ -430,7 +560,7 @@ export interface CDDAPaletteSignsValueSign {
   snippet?: string;
   [k: string]: unknown;
 }
-export interface CDDAPaletteTransformValueTransform {
+export interface CDDAPaletteTransformsValueTransform {
   /**
    * @docs MAPGEN.md    the id of the `ter_furn_transform` to run
    */
@@ -499,14 +629,5 @@ export interface CDDAPaletteZonesValueZone {
    * @docs MAPGEN.md    Values: `"NPC_RETREAT"`, `"NPC_NO_INVESTIGATE"`, or `"NPC_INVESTIGATE_ONLY"`
    */
   type: string;
-  [k: string]: unknown;
-}
-export interface CDDAPaletteParametersValue {
-  default: CDDAPaletteParametersValueDefault;
-  type: string;
-  [k: string]: unknown;
-}
-export interface CDDAPaletteParametersValueDefault {
-  distribution: CDDAPaletteDistribution;
   [k: string]: unknown;
 }
