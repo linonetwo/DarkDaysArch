@@ -148,7 +148,7 @@ class ContextMenu extends Component<IProps, IState> {
           : this.state.items;
       return ReactDOM.createPortal(
         <MenuContainer
-          data-usage="hover-menu"
+          data-usage="context-menu"
           opacity={opacity}
           top={top}
           left={left}

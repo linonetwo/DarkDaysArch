@@ -1,4 +1,4 @@
-import { useState, useCallback, MouseEvent, KeyboardEvent, useMemo, MutableRefObject } from 'react';
+import { useState, useCallback, MouseEvent, useMemo, MutableRefObject } from 'react';
 import styled, { css } from 'styled-components';
 import { Stage } from 'react-pixi-fiber';
 import { Provider, useDispatch, useSelector } from 'react-redux';
@@ -10,6 +10,7 @@ import { Direction } from 'src/store/models/cameraMouse';
 import { Dispatch, RootState, store } from 'src/store/store';
 import { RandomSpinner } from '../RandomSpinner';
 import { useKeyPress } from './hooks';
+import { HoverMenu } from '../HoverMenu';
 
 const Container = styled.main<{ sidePanelWidth: number }>`
   width: 100%;
@@ -80,7 +81,7 @@ export function World(): JSX.Element {
         // follow the camera
         pivot={cameraPosition}
         // center the camera
-        position={{ x: actualWidth / 2, y: window.innerHeight / 2 }}
+        position={{ x: 0, y: 0 }}
         options={{
           backgroundColor: 0x10_bb_99,
           height: window.innerHeight,
@@ -114,6 +115,7 @@ export function World(): JSX.Element {
         open={contextMenuIsOpen}
         mountPoint={containerID}
       />
+      <HoverMenu />
     </Container>
   );
 }
