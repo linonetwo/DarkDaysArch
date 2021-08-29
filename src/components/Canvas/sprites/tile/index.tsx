@@ -36,7 +36,17 @@ export default memo(function Tile(props: ITileProps): JSX.Element {
   const [fgTileTexture, bgTileTexture, [width, height]] = useTileTexture(tileID, tileVisualWidthHeight);
 
   if (fgTileTexture === undefined && bgTileTexture === undefined)
-    return <Text text={`No Tile Texture "${tileID}" of "${tileType}"`} x={x} y={y} anchor={centerAnchor} style={defaultTextStyle} />;
+    return (
+      <Text
+        text={`No Tile Texture "${tileID}" of "${tileType}"`}
+        x={x}
+        y={y}
+        anchor={centerAnchor}
+        style={defaultTextStyle}
+        mouseover={onHoverTile}
+        interactive
+      />
+    );
 
   return (
     <Container interactive cursor="pointer" mouseover={onHoverTile}>
