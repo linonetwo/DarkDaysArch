@@ -5,9 +5,9 @@
  * and run json-schema-to-typescript to regenerate this file.
  */
 
-export type CDDAFurniture = CDDATerFurnCommonOptional | CDDATerFurnCommonMandatory;
+export type CDDATerrain = CDDATerFurnCommonOptional | CDDATerFurnCommonMandatory;
 export type CDDAName = string | CDDATranslation;
-export type ArrayOf_CDDAFurniture = CDDAFurniture[];
+export type ArrayOf_CDDATerrain = CDDATerrain[];
 
 export interface CDDATerFurnCommonOptional {
   "copy-from": string;
