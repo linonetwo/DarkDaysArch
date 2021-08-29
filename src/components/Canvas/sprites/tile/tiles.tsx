@@ -15,6 +15,13 @@ export default function Tiles(): JSX.Element {
       {openedMapMatrix.map((rows) =>
         rows.map((cell) => {
           return cell.map((cellItem) => {
+            const tilesInCell: Array<[MapgenPaletteKeys, string]> = cell.flatMap((cellItem) => {
+              if (Array.isArray(cellItem.tiles[0])) {
+                return cellItem.tiles as Array<[MapgenPaletteKeys, string]>;
+              } else {
+                return [cellItem.tiles as [MapgenPaletteKeys, string]];
+              }
+            });
             const [x, y] = cellItem.position;
             if (Array.isArray(cellItem.tiles[0])) {
               /** [tileType, tileID][] */
@@ -27,7 +34,7 @@ export default function Tiles(): JSX.Element {
                     y={y}
                     tile={tile}
                     onHoverTile={(event: InteractionEvent) => {
-                      dispatch.cameraMouse.hoverMouseOnTile({ tiles, x, y });
+                      dispatch.cameraMouse.hoverMouseOnTile({ tiles: tilesInCell, x, y });
                     }}
                   />
                 );
@@ -41,7 +48,7 @@ export default function Tiles(): JSX.Element {
                   y={y}
                   tile={tile}
                   onHoverTile={(event: InteractionEvent) => {
-                    dispatch.cameraMouse.hoverMouseOnTile({ tile, x, y });
+                    dispatch.cameraMouse.hoverMouseOnTile({ tiles: tilesInCell, x, y });
                   }}
                 />
               );

@@ -69,19 +69,10 @@ export const cameraMouse = createModel<RootModel>()({
       }
       return state;
     },
-    hoverMouseOnTile(
-      state: IState,
-      payload: { tile: [MapgenPaletteKeys, string]; x: number; y: number } | { tiles: Array<[MapgenPaletteKeys, string]>; x: number; y: number },
-    ) {
+    hoverMouseOnTile(state: IState, payload: { tiles: Array<[MapgenPaletteKeys, string]>; x: number; y: number }) {
       const { x, y } = payload;
       // only change when we move to a new tile
       if (x !== state.mouseOnTileX || y !== state.mouseOnTileY) {
-        // in src/components/Canvas/sprites/tile/tiles.tsx we handle two case, one is that location only have one tile
-        if ('tile' in payload) {
-          const { tile } = payload;
-          state.hoveredTiles = [tile];
-        }
-      } else if ('tiles' in payload) {
         // in src/components/Canvas/sprites/tile/tiles.tsx we handle two case, the other is that location have multiple overlapped tile, and only the one on the top can fire event to update this tiles
         const { tiles } = payload;
         state.hoveredTiles = tiles;
