@@ -76,6 +76,8 @@ export const cameraMouse = createModel<RootModel>()({
         // in src/components/Canvas/sprites/tile/tiles.tsx we handle two case, the other is that location have multiple overlapped tile, and only the one on the top can fire event to update this tiles
         const { tiles } = payload;
         state.hoveredTiles = tiles;
+        state.mouseOnTileX = x;
+        state.mouseOnTileY = y;
       }
       return state;
     },
