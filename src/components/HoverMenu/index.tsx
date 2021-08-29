@@ -2,9 +2,7 @@
 import styled from 'styled-components';
 import { Menu, MenuItem, IconName } from '@blueprintjs/core';
 import { useSelector } from 'react-redux';
-import { RootState, store } from 'src/store/store';
-import { IMapTileInfo } from 'src/store/models/maps';
-import { MapgenPaletteKeys } from 'src/types/cdda/mapgen';
+import { RootState } from 'src/store/store';
 
 export interface IMenuItem {
   icon?: IconName;
@@ -14,14 +12,11 @@ export interface IMenuItem {
 
 const menuHeight = 200;
 const menuWidth = 200;
-interface MenuContainerProps {
-  left?: number;
-  top?: number;
-}
-const MenuContainer = styled.div<MenuContainerProps>`
+
+const MenuContainer = styled.div`
   position: absolute;
-  top: ${({ top }) => (top ?? -10_000) + 20}px;
-  left: calc(${({ left }) => left ?? '-10000'}px - ${menuWidth / 2}px);
+  bottom: 0;
+  right: 0;
   z-index: 100;
   max-width: ${menuWidth}px;
 
@@ -34,39 +29,16 @@ const MenuContainer = styled.div<MenuContainerProps>`
 `;
 
 export function HoverMenu(): JSX.Element | null {
-  const sidePanelWidth = useSelector((state: RootState) => state.uiState.sidePanelWidth);
-  const openedMapMatrix = useSelector((state: RootState) => store.select.maps.openedMapMatrix(state));
-  const mousePosition = useSelector((state: RootState) => ({ x: state.cameraMouse.mouseX - sidePanelWidth, y: state.cameraMouse.mouseY }));
-  const hoveredTiles: IMapTileInfo[] = [];
-  // TODO: use cached faster search algorithm
-  openedMapMatrix.forEach((rows) =>
-    rows.forEach((cell) => {
-      return cell.forEach((cellItem) => {
-        const [x, y] = cellItem.position;
-        // TODO: consider state.cameraMouse.cameraX and state.cameraMouse.cameraY
-        if (mousePosition.x > x && mousePosition.x < x + 50 && mousePosition.y > y && mousePosition.y < y + 50) {
-          hoveredTiles.push(cellItem);
-        }
-      });
-    }),
-  );
+  const [x, y] = useSelector((state: RootState) => [state.cameraMouse.mouseOnTileX, state.cameraMouse.mouseOnTileY]);
+  const hoveredTiles = useSelector((state: RootState) => state.cameraMouse.hoveredTiles);
   if (hoveredTiles.length > 0) {
     return (
-      <MenuContainer data-usage="hover-menu" top={mousePosition.y} left={mousePosition.x}>
+      <MenuContainer data-usage="hover-menu">
         <Menu>
-          {hoveredTiles.map((cellItem) => {
-            if (Array.isArray(cellItem.tiles[0])) {
-              /** [tileType, tileID][] */
-              const tiles = cellItem.tiles as Array<[MapgenPaletteKeys, string]>;
-              return tiles.map((tile) => {
-                return <MenuItem key={tile[1]} text={tile[1]} />;
-              });
-            } else if (typeof cellItem.tiles[0] === 'string') {
-              /** [tileType, tileID] */
-              const tile = cellItem.tiles as [MapgenPaletteKeys, string];
-              return <MenuItem key={tile[1]} text={tile[1]} />;
-            }
-            return null;
+          <MenuItem key="position" text={`(${x}, ${y})`} />
+          {hoveredTiles.map((tileInfo) => {
+            /** [tileType, tileID] */
+            return <MenuItem key={tileInfo[1]} text={tileInfo[1]} />;
           })}
         </Menu>
       </MenuContainer>
