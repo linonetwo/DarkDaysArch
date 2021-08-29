@@ -5,14 +5,33 @@ use crate::common::*;
 
 pub type CDDAFurnArray = Vec<CDDAFurniture>;
 
-// #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
-// #[serde(untagged)]
-// pub enum CDDAFurniture {
-//   //type using color
-//   Color(CDDAFurnitureCr),
-//   //type using bgcolor
-//   Background(CDDAFurnitureBg),
-// }
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[serde(untagged)]
+pub enum CDDATerFurnCommonOmittable {
+  Optional(CDDATerFurnCommonOptional),
+  Mandatory(CDDATerFurnCommonMandatory),
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+pub struct CDDATerFurnCommonMandatory {
+  pub name: CDDAName,
+
+  pub description: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+pub struct CDDATerFurnCommonOptional {
+  #[serde(rename = "copy-from")]
+  pub copy_from: String,
+
+  #[serde(default)]
+  #[serde(skip_serializing_if = "CDDAName::is_default")]
+  pub name: CDDAName,
+
+  #[serde(default)]
+  #[serde(skip_serializing_if = "String::is_empty")]
+  pub description: String,
+}
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDATerFurnCommon {
@@ -22,15 +41,11 @@ pub struct CDDATerFurnCommon {
 
   pub id: String,
 
-  pub name: CDDAName,
-
-  pub description: String,
+  #[serde(flatten)]
+  pub omittable: CDDATerFurnCommonOmittable,
 
   #[serde(flatten)]
   pub symbol_clutter: CDDATerFurnSymbol,
-
-  #[serde(flatten)]
-  pub color_select: CDDATerFurnColorSelect,
 
   #[serde(default)]
   #[serde(skip_serializing_if = "String::is_empty")]
@@ -93,19 +108,38 @@ pub struct CDDATerFurnCommon {
   pub boltcut: Option<CDDATerFurnBoltcut>,
 }
 
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[serde(untagged)]
+pub enum CDDAFurnitureOmittable {
+  Mandatory(CDDAFurnitureMandatory),
+  Optional(CDDAFurnitureOptional)
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+pub struct CDDAFurnitureMandatory {
+  pub move_cost_mod: i64,
+
+  pub required_str: i64,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+pub struct CDDAFurnitureOptional {
+  #[serde(default)]
+  pub move_cost_mod: i64,
+
+  #[serde(default)]
+  pub required_str: i64,
+}
+
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDAFurniture {
 
   #[serde(flatten)]
   pub ter_furn_common: CDDATerFurnCommon,
 
-  pub move_cost_mod: i64,
-
-  pub required_str: i64,
-
-  //optional
-
-  //furniture unique key
+  #[serde(flatten)]
+  pub furn_omittable: CDDAFurnitureOmittable,
 
   #[serde(default)]
   #[serde(skip_serializing_if = "String::is_empty")]

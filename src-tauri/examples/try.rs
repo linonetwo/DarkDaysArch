@@ -53,7 +53,7 @@ fn main() {
   // println!("{:?}", raw_palette);
   // // println!("{}", palette_json);
 
-  let furn_file_path = "../public/json/furniture-medical.json";
+  let furn_file_path = "../public/json/furniture.json";
   let mut raw_furn_file = File::open(furn_file_path).unwrap();
   let mut raw_furn_string = String::new();
   raw_furn_file.read_to_string(&mut raw_furn_string).unwrap();
@@ -62,16 +62,16 @@ fn main() {
   let furn_json = serde_json::to_string(&raw_furn).unwrap();
 
   println!("{:?}", raw_furn);
-  println!("{}",furn_json);
+  // println!("{}",furn_json);
 
-  let ter_file_path = "../public/json/terrain-manufactured.json";
-  let mut raw_ter_file = File::open(ter_file_path).unwrap();
-  let mut raw_ter_string = String::new();
-  raw_ter_file.read_to_string(&mut raw_ter_string).unwrap();
-  let raw_ter: terrain::CDDATerrainArray = serde_json::from_str(&raw_ter_string).unwrap();
+  // let ter_file_path = "../public/json/terrain-floors-indoor.json";
+  // let mut raw_ter_file = File::open(ter_file_path).unwrap();
+  // let mut raw_ter_string = String::new();
+  // raw_ter_file.read_to_string(&mut raw_ter_string).unwrap();
+  // let raw_ter: terrain::CDDATerrainArray = serde_json::from_str(&raw_ter_string).unwrap();
 
-  let ter_json = serde_json::to_string(&raw_ter).unwrap();
+  // let ter_json = serde_json::to_string(&raw_ter).unwrap();
 
-  println!("{:?}", raw_ter);
-  // println!("{}",ter_json);
+  // println!("{:?}", raw_ter);
+  // // println!("{}",ter_json);
 }

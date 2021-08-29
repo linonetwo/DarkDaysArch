@@ -72,6 +72,19 @@ pub enum CDDAName {
   Translation(CDDATranslation),
 }
 
+// used only for copy-from
+impl Default for CDDAName {
+  fn default() -> CDDAName {
+    CDDAName::Name("copy".to_string())
+  }
+}
+
+impl CDDAName {
+  pub fn is_default(t: &CDDAName) -> bool {
+    t == &CDDAName::default()
+  }
+}
+
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(untagged)]
 pub enum CDDAMass {

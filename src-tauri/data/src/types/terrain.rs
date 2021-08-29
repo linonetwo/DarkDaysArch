@@ -6,17 +6,37 @@ use super::furniture::*;
 
 pub type CDDATerrainArray = Vec<CDDATerrain>;
 
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[serde(untagged)]
+pub enum CDDATerrainOmittable {
+  Mandatory(CDDATerrainMandatory),
+  Optional(CDDATerrainOptional)
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+pub struct CDDATerrainMandatory {
+  /**
+   * @docs JSON_INFO.md   actual move cost is carreied by multiplying it by 50
+   */
+  pub move_cost: i64,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+pub struct CDDATerrainOptional {
+  /**
+   * @docs JSON_INFO.md   actual move cost is carreied by multiplying it by 50
+   */
+  #[serde(default)]
+  pub move_cost: i64,
+}
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDATerrain {
   #[serde(flatten)]
   pub ter_furn_common: CDDATerFurnCommon,
   //terrain unique key
-
-  /**
-   * @docs JSON_INFO.md   actual move cost is carreied by multiplying it by 50
-   */
-  pub move_cost: i64,
+  #[serde(flatten)]
+  pub furn_omittable: CDDAFurnitureOmittable,
 
   #[serde(skip_serializing_if = "Option::is_none")]
   pub bash: Option<CDDATerrainBash>,
