@@ -38,10 +38,12 @@ export function HoverMenu(): JSX.Element | null {
   const openedMapMatrix = useSelector((state: RootState) => store.select.maps.openedMapMatrix(state));
   const mousePosition = useSelector((state: RootState) => ({ x: state.cameraMouse.mouseX - sidePanelWidth, y: state.cameraMouse.mouseY }));
   const hoveredTiles: IMapTileInfo[] = [];
+  // TODO: use cached faster search algorithm
   openedMapMatrix.forEach((rows) =>
     rows.forEach((cell) => {
       return cell.forEach((cellItem) => {
         const [x, y] = cellItem.position;
+        // TODO: consider state.cameraMouse.cameraX and state.cameraMouse.cameraY
         if (mousePosition.x > x && mousePosition.x < x + 50 && mousePosition.y > y && mousePosition.y < y + 50) {
           hoveredTiles.push(cellItem);
         }
