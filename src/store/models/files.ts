@@ -6,6 +6,7 @@ import { invoke } from '@tauri-apps/api';
 import type { RootModel } from './index';
 import { CDDATileSetConfigWithCache } from 'src/types/cdda/tileset';
 import { CDDAMapgenWithCache } from 'src/types/cdda/mapgen';
+import { ArrayOf_CDDATerrain } from 'src/types/cdda/terrain';
 
 export const TILE_SET_CONFIG_FILE_NAME = 'tile_config.json';
 
@@ -101,6 +102,18 @@ export const files = createModel<RootModel>()({
         // load map to display
         dispatch.maps.mapsInOpenedFileSetter(mapgenWithCache.parsed_map);
         dispatch.maps.activeOpenedMapIndexSetter(0);
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async loadDemoTerrains(terrainFilePath: string) {
+      // TODO: make this a general kg loader
+      try {
+        // eslint-disable-next-line @typescript-eslint/await-thenable
+        const terrain = await invoke<ArrayOf_CDDATerrain>('read_terrain_file', {
+          terrainFilePath,
+        });
+        dispatch.knowledgeGraph.update({ terrain });
       } catch (error) {
         console.error(error);
       }

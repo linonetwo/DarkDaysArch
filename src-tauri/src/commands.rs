@@ -1,4 +1,4 @@
-use data::types::{furniture, mapgen, palette, tileset};
+use data::types::{furniture, mapgen, palette, terrain, tileset};
 use glob::glob;
 use image_base64::to_base64;
 use project_root::get_project_root;
@@ -8,7 +8,7 @@ use std::{collections::BTreeMap, fs::File, io::Read};
 use crate::parsers;
 
 pub fn invoke_handler() -> impl Fn(tauri::Invoke) + Send + Sync + 'static {
-  tauri::generate_handler![read_tileset_folder, read_mapgen_file]
+  tauri::generate_handler![read_tileset_folder, read_mapgen_file, read_terrain_file]
 }
 
 #[tauri::command]
@@ -121,4 +121,15 @@ pub fn read_mapgen_file(mapgen_file_path: &str) -> mapgen::CDDAMapgenWithCache {
     .collect();
   let mapgen_with_cache = mapgen::CDDAMapgenWithCache { raw_mapgen, parsed_map };
   mapgen_with_cache
+}
+
+#[tauri::command]
+pub fn read_terrain_file(terrain_file_path: &str) -> terrain::CDDATerrainArray {
+  let terrain_absolute_file_path = Path::join(&Path::join(&get_project_root().unwrap(), "../public"), terrain_file_path);
+  // read terrain
+  let mut raw_terrain_file = File::open(terrain_absolute_file_path).unwrap();
+  let mut raw_terrain_string = String::new();
+  raw_terrain_file.read_to_string(&mut raw_terrain_string).unwrap();
+  let raw_terrain: terrain::CDDATerrainArray = serde_json::from_str(&raw_terrain_string).unwrap();
+  raw_terrain
 }

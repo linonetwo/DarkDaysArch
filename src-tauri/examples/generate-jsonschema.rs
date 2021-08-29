@@ -1,17 +1,16 @@
 use project_root::get_project_root;
+use schemars::{schema_for, JsonSchema};
 use std::{
   fs::write,
   path::{Path, PathBuf},
 };
-use schemars::{schema_for, JsonSchema};
 
 /**
  * convert serde to jsonschema: https://imfeld.dev/writing/generating_typescript_types_from_rust
  *  with way to optimize
  * convert jsonschema to ts: https://github.com/bcherny/json-schema-to-typescript
 */
-
-use data::types::{palette,furniture,mapgen,tileset};
+use data::types::{furniture, mapgen, palette, terrain, tileset};
 
 fn generate<T>(path: PathBuf)
 where
@@ -28,4 +27,5 @@ fn main() {
   generate::<mapgen::CDDAMapgenWithCache>(Path::join(project_root, "../src/types/cdda/mapgen.json"));
   generate::<palette::CDDAPaletteArray>(Path::join(project_root, "../src/types/cdda/palette.json"));
   generate::<furniture::CDDAFurnArray>(Path::join(project_root, "../src/types/cdda/furniture.json"));
+  generate::<terrain::CDDATerrainArray>(Path::join(project_root, "../src/types/cdda/terrain.json"));
 }

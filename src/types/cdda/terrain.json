@@ -1,0 +1,694 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Array_of_CDDATerrain",
+  "type": "array",
+  "items": {
+    "$ref": "#/definitions/CDDATerrain"
+  },
+  "definitions": {
+    "CDDABashDeconItem": {
+      "type": "object",
+      "required": [
+        "item"
+      ],
+      "properties": {
+        "charges": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/CDDAIntRange"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "count": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/CDDAIntRange"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "item": {
+          "type": "string"
+        },
+        "prob": {
+          "default": 0,
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "CDDAByproduct": {
+      "type": "object",
+      "required": [
+        "count",
+        "item"
+      ],
+      "properties": {
+        "count": {
+          "$ref": "#/definitions/CDDAIntRange"
+        },
+        "item": {
+          "description": "@srcs mapdata.cpp    activity_byproduct",
+          "type": "string"
+        }
+      }
+    },
+    "CDDAFurnitureMandatory": {
+      "type": "object",
+      "required": [
+        "move_cost_mod",
+        "required_str"
+      ],
+      "properties": {
+        "move_cost_mod": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "required_str": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "CDDAFurnitureOptional": {
+      "type": "object",
+      "properties": {
+        "move_cost_mod": {
+          "default": 0,
+          "type": "integer",
+          "format": "int64"
+        },
+        "required_str": {
+          "default": 0,
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "CDDAIntRange": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "format": "int64"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      ]
+    },
+    "CDDAName": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "$ref": "#/definitions/CDDATranslation"
+        }
+      ]
+    },
+    "CDDATerFurnBoltcut": {
+      "type": "object",
+      "properties": {
+        "byproducts": {
+          "description": "@srcs mapdata.cpp    activity_data_common",
+          "default": [],
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CDDAByproduct"
+          }
+        },
+        "duration": {
+          "description": "@srcs mapdata.cpp    activity_data_common",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/CDDATime"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "message": {
+          "description": "@srcs mapdata.cpp    activity_data_common",
+          "default": "",
+          "type": "string"
+        },
+        "result": {
+          "description": "@srcs mapdata.cpp    activity_data_ter   ter or furn id    limited by original ter or furn",
+          "default": "",
+          "type": "string"
+        },
+        "sound": {
+          "description": "@srcs mapdata.cpp    activity_data_common",
+          "default": "",
+          "type": "string"
+        },
+        "valid": {
+          "description": "@srcs mapdata.cpp    activity_data_common",
+          "default": false,
+          "type": "boolean"
+        }
+      }
+    },
+    "CDDATerFurnColor": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "CDDATerFurnCommonMandatory": {
+      "type": "object",
+      "required": [
+        "description",
+        "name"
+      ],
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "name": {
+          "$ref": "#/definitions/CDDAName"
+        }
+      }
+    },
+    "CDDATerFurnCommonOptional": {
+      "type": "object",
+      "required": [
+        "copy-from"
+      ],
+      "properties": {
+        "copy-from": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "name": {
+          "$ref": "#/definitions/CDDAName"
+        }
+      }
+    },
+    "CDDATerFurnHarvest": {
+      "type": "object",
+      "required": [
+        "id",
+        "seasons"
+      ],
+      "properties": {
+        "id": {
+          "description": "@docs JSON_INFO.md    item group",
+          "type": "string"
+        },
+        "seasons": {
+          "description": "@docs JSON_INFO.md    in this seasons, item group with id can be got",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "CDDATerFurnShoot": {
+      "type": "object",
+      "required": [
+        "destroy_damage",
+        "reduce_damage",
+        "reduce_damage_laser"
+      ],
+      "properties": {
+        "chance_to_hit": {
+          "description": "@srcs mapdata.cpp  map_shoot_info   default 100",
+          "default": 0,
+          "type": "integer",
+          "format": "int64"
+        },
+        "destroy_damage": {
+          "description": "@srcs mapdata.cpp  map_shoot_info",
+          "type": "array",
+          "items": [
+            {
+              "type": "integer",
+              "format": "int64"
+            },
+            {
+              "type": "integer",
+              "format": "int64"
+            }
+          ],
+          "maxItems": 2,
+          "minItems": 2
+        },
+        "no_laser_destroy": {
+          "description": "@srcs mapdata.cpp  map_shoot_info   default false",
+          "default": false,
+          "type": "boolean"
+        },
+        "reduce_damage": {
+          "description": "@srcs mapdata.cpp  map_shoot_info",
+          "type": "array",
+          "items": [
+            {
+              "type": "integer",
+              "format": "int64"
+            },
+            {
+              "type": "integer",
+              "format": "int64"
+            }
+          ],
+          "maxItems": 2,
+          "minItems": 2
+        },
+        "reduce_damage_laser": {
+          "description": "@srcs mapdata.cpp  map_shoot_info",
+          "type": "array",
+          "items": [
+            {
+              "type": "integer",
+              "format": "int64"
+            },
+            {
+              "type": "integer",
+              "format": "int64"
+            }
+          ],
+          "maxItems": 2,
+          "minItems": 2
+        }
+      }
+    },
+    "CDDATerFurnSymbolInd": {
+      "type": "object",
+      "anyOf": [
+        {
+          "type": "object",
+          "required": [
+            "color"
+          ],
+          "properties": {
+            "color": {
+              "$ref": "#/definitions/CDDATerFurnColor"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "bgcolor"
+          ],
+          "properties": {
+            "bgcolor": {
+              "$ref": "#/definitions/CDDATerFurnColor"
+            }
+          }
+        }
+      ],
+      "required": [
+        "symbol"
+      ],
+      "properties": {
+        "symbol": {
+          "type": "string"
+        }
+      }
+    },
+    "CDDATerFurnSymbolRely": {
+      "type": "object",
+      "anyOf": [
+        {
+          "type": "object",
+          "required": [
+            "color"
+          ],
+          "properties": {
+            "color": {
+              "$ref": "#/definitions/CDDATerFurnColor"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "bgcolor"
+          ],
+          "properties": {
+            "bgcolor": {
+              "$ref": "#/definitions/CDDATerFurnColor"
+            }
+          }
+        }
+      ],
+      "required": [
+        "looks_like"
+      ],
+      "properties": {
+        "looks_like": {
+          "type": "string"
+        },
+        "symbol": {
+          "default": "",
+          "type": "string"
+        }
+      }
+    },
+    "CDDATerrain": {
+      "type": "object",
+      "anyOf": [
+        {
+          "$ref": "#/definitions/CDDATerFurnCommonOptional"
+        },
+        {
+          "$ref": "#/definitions/CDDATerFurnCommonMandatory"
+        }
+      ],
+      "required": [
+        "id",
+        "type"
+      ],
+      "properties": {
+        "allowed_template_ids": {
+          "description": "@docs mapdata.cpp    ter_t    ???",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "bash": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/CDDATerrainBash"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "boltcut": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/CDDATerFurnBoltcut"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "bonus_fire_warmth_feet": {
+          "default": 0,
+          "type": "integer",
+          "format": "int64"
+        },
+        "close": {
+          "type": "string"
+        },
+        "comfort": {
+          "default": 0,
+          "type": "integer",
+          "format": "int64"
+        },
+        "connects_to": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "coverage": {
+          "default": 0,
+          "type": "integer",
+          "format": "int64"
+        },
+        "curtain_transform": {
+          "description": "@srcs mapdata.cpp    furn to furn   ter to ter",
+          "type": "string"
+        },
+        "deconstruct": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/CDDATerrainDecon"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "emissions": {
+          "description": "@docs JSON_INFO.md    listing the `emit_id` of the fields the terrain/furniture will produce every 10 seconds",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "examine_action": {
+          "type": "string"
+        },
+        "flags": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "floor_bedding_warmth": {
+          "default": 0,
+          "type": "integer",
+          "format": "int64"
+        },
+        "harvest_by_season": {
+          "description": "@docs JSON_INFO.md    build-in trap",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CDDATerFurnHarvest"
+          }
+        },
+        "heat_radiation": {
+          "description": "@docs JSON_INFO.md   0 means no heat, 1 is equal to fire of intensity 1",
+          "default": 0,
+          "type": "integer",
+          "format": "int64"
+        },
+        "id": {
+          "type": "string"
+        },
+        "lockpick_message": {
+          "description": "@docs JSON_INFO.md",
+          "type": "string"
+        },
+        "lockpick_result": {
+          "description": "@docs JSON_INFO.md",
+          "type": "string"
+        },
+        "map_bash_info": {
+          "type": "string"
+        },
+        "map_deconstrunct_info": {
+          "type": "string"
+        },
+        "max_volume": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/CDDAVolume"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "open": {
+          "type": "string"
+        },
+        "roof": {
+          "description": "@docs JSON_INFO.md    default roof",
+          "type": "string"
+        },
+        "shoot": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/CDDATerFurnShoot"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "transforms_into": {
+          "description": "@docs JSON_INFO.md    used for havest",
+          "type": "string"
+        },
+        "trap": {
+          "description": "@docs JSON_INFO.md    build-in trap",
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        }
+      }
+    },
+    "CDDATerrainBash": {
+      "type": "object",
+      "properties": {
+        "bash_below": {
+          "default": false,
+          "type": "boolean"
+        },
+        "collapse_radius": {
+          "default": 0,
+          "type": "integer",
+          "format": "int64"
+        },
+        "destroy_only": {
+          "default": false,
+          "type": "boolean"
+        },
+        "explosive": {
+          "default": 0,
+          "type": "integer",
+          "format": "int64"
+        },
+        "items": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CDDABashDeconItem"
+          }
+        },
+        "sound": {
+          "default": "",
+          "type": "string"
+        },
+        "sound_fail": {
+          "default": "",
+          "type": "string"
+        },
+        "sound_fail_vol": {
+          "default": 0,
+          "type": "integer",
+          "format": "int64"
+        },
+        "sound_vol": {
+          "default": 0,
+          "type": "integer",
+          "format": "int64"
+        },
+        "str_max": {
+          "default": 0,
+          "type": "integer",
+          "format": "int64"
+        },
+        "str_max_blocked": {
+          "default": 0,
+          "type": "integer",
+          "format": "int64"
+        },
+        "str_max_supported": {
+          "default": 0,
+          "type": "integer",
+          "format": "int64"
+        },
+        "str_min": {
+          "default": 0,
+          "type": "integer",
+          "format": "int64"
+        },
+        "str_min_blocked": {
+          "default": 0,
+          "type": "integer",
+          "format": "int64"
+        },
+        "str_min_supported": {
+          "default": 0,
+          "type": "integer",
+          "format": "int64"
+        },
+        "tent_centers": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "ter_set": {
+          "default": "",
+          "type": "string"
+        },
+        "ter_set_bashed_from_above": {
+          "default": "",
+          "type": "string"
+        }
+      }
+    },
+    "CDDATerrainDecon": {
+      "type": "object",
+      "properties": {
+        "can_do": {
+          "default": false,
+          "type": "boolean"
+        },
+        "deconstruct_above": {
+          "default": false,
+          "type": "boolean"
+        },
+        "items": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CDDABashDeconItem"
+          }
+        },
+        "ter_set": {
+          "default": "",
+          "type": "string"
+        }
+      }
+    },
+    "CDDATime": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "format": "int64"
+        },
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "CDDATranslation": {
+      "type": "object",
+      "required": [
+        "aaa"
+      ],
+      "properties": {
+        "aaa": {
+          "type": "string"
+        }
+      }
+    },
+    "CDDAVolume": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "format": "int64"
+        },
+        {
+          "type": "string"
+        }
+      ]
+    }
+  }
+}

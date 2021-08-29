@@ -42,18 +42,21 @@
         }
       }
     },
-    "CDDAColor": {
-      "anyOf": [
-        {
-          "type": "string"
+    "CDDAByproduct": {
+      "type": "object",
+      "required": [
+        "count",
+        "item"
+      ],
+      "properties": {
+        "count": {
+          "$ref": "#/definitions/CDDAIntRange"
         },
-        {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
+        "item": {
+          "description": "@srcs mapdata.cpp    activity_byproduct",
+          "type": "string"
         }
-      ]
+      }
     },
     "CDDAFurnBash": {
       "type": "object",
@@ -214,25 +217,17 @@
       }
     },
     "CDDAFurniture": {
+      "type": "object",
       "anyOf": [
         {
-          "$ref": "#/definitions/CDDAFurnitureCr"
+          "$ref": "#/definitions/CDDATerFurnCommonOptional"
         },
         {
-          "$ref": "#/definitions/CDDAFurnitureBg"
+          "$ref": "#/definitions/CDDATerFurnCommonMandatory"
         }
-      ]
-    },
-    "CDDAFurnitureBg": {
-      "type": "object",
+      ],
       "required": [
-        "bgcolor",
-        "description",
         "id",
-        "move_cost_mod",
-        "name",
-        "required_str",
-        "symbol",
         "type"
       ],
       "properties": {
@@ -246,8 +241,15 @@
             }
           ]
         },
-        "bgcolor": {
-          "$ref": "#/definitions/CDDAColor"
+        "boltcut": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/CDDATerFurnBoltcut"
+            },
+            {
+              "type": "null"
+            }
+          ]
         },
         "bonus_fire_warmth_feet": {
           "default": 0,
@@ -277,6 +279,10 @@
         "crafting_pseudo_item": {
           "type": "string"
         },
+        "curtain_transform": {
+          "description": "@srcs mapdata.cpp    furn to furn   ter to ter",
+          "type": "string"
+        },
         "deconstruct": {
           "anyOf": [
             {
@@ -287,8 +293,12 @@
             }
           ]
         },
-        "description": {
-          "type": "string"
+        "emissions": {
+          "description": "@docs JSON_INFO.md    listing the `emit_id` of the fields the terrain/furniture will produce every 10 seconds",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         },
         "examine_action": {
           "type": "string"
@@ -308,15 +318,10 @@
         "id": {
           "type": "string"
         },
-        "light_emitted": {
-          "default": 0,
-          "type": "integer",
-          "format": "int64"
-        },
-        "looks_like": {
+        "map_bash_info": {
           "type": "string"
         },
-        "map_bash_info": {
+        "map_deconstrunct_info": {
           "type": "string"
         },
         "max_volume": {
@@ -328,13 +333,6 @@
               "type": "null"
             }
           ]
-        },
-        "move_cost_mod": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "name": {
-          "$ref": "#/definitions/CDDAName"
         },
         "open": {
           "type": "string"
@@ -349,17 +347,20 @@
             }
           ]
         },
-        "required_str": {
-          "type": "integer",
-          "format": "int64"
+        "shoot": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/CDDATerFurnShoot"
+            },
+            {
+              "type": "null"
+            }
+          ]
         },
         "surgery_skill_multiplier": {
           "default": 0.0,
           "type": "number",
           "format": "double"
-        },
-        "symbol": {
-          "type": "string"
         },
         "type": {
           "type": "string"
@@ -376,156 +377,35 @@
         }
       }
     },
-    "CDDAFurnitureCr": {
+    "CDDAFurnitureMandatory": {
       "type": "object",
       "required": [
-        "color",
-        "description",
-        "id",
         "move_cost_mod",
-        "name",
-        "required_str",
-        "symbol",
-        "type"
+        "required_str"
       ],
       "properties": {
-        "bash": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/CDDAFurnBash"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "bonus_fire_warmth_feet": {
-          "default": 0,
-          "type": "integer",
-          "format": "int64"
-        },
-        "close": {
-          "type": "string"
-        },
-        "color": {
-          "$ref": "#/definitions/CDDAColor"
-        },
-        "comfort": {
-          "default": 0,
-          "type": "integer",
-          "format": "int64"
-        },
-        "connects_to": {
-          "default": [],
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "coverage": {
-          "default": 0,
-          "type": "integer",
-          "format": "int64"
-        },
-        "crafting_pseudo_item": {
-          "type": "string"
-        },
-        "deconstruct": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/CDDAFurnDecon"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "description": {
-          "type": "string"
-        },
-        "examine_action": {
-          "type": "string"
-        },
-        "flags": {
-          "default": [],
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "floor_bedding_warmth": {
-          "default": 0,
-          "type": "integer",
-          "format": "int64"
-        },
-        "id": {
-          "type": "string"
-        },
-        "light_emitted": {
-          "default": 0,
-          "type": "integer",
-          "format": "int64"
-        },
-        "looks_like": {
-          "type": "string"
-        },
-        "map_bash_info": {
-          "type": "string"
-        },
-        "max_volume": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/CDDAVolume"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
         "move_cost_mod": {
           "type": "integer",
           "format": "int64"
         },
-        "name": {
-          "$ref": "#/definitions/CDDAName"
-        },
-        "open": {
-          "type": "string"
-        },
-        "plant_data": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/CDDAFurnPlant"
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
         "required_str": {
           "type": "integer",
           "format": "int64"
+        }
+      }
+    },
+    "CDDAFurnitureOptional": {
+      "type": "object",
+      "properties": {
+        "move_cost_mod": {
+          "default": 0,
+          "type": "integer",
+          "format": "int64"
         },
-        "surgery_skill_multiplier": {
-          "default": 0.0,
-          "type": "number",
-          "format": "double"
-        },
-        "symbol": {
-          "type": "string"
-        },
-        "type": {
-          "type": "string"
-        },
-        "workbench": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/CDDAFurnWorkbench"
-            },
-            {
-              "type": "null"
-            }
-          ]
+        "required_str": {
+          "default": 0,
+          "type": "integer",
+          "format": "int64"
         }
       }
     },
@@ -537,18 +417,10 @@
         },
         {
           "type": "array",
-          "items": [
-            {
-              "type": "integer",
-              "format": "int64"
-            },
-            {
-              "type": "integer",
-              "format": "int64"
-            }
-          ],
-          "maxItems": 2,
-          "minItems": 2
+          "items": {
+            "type": "integer",
+            "format": "int64"
+          }
         }
       ]
     },
@@ -573,8 +445,259 @@
         }
       ]
     },
+    "CDDATerFurnBoltcut": {
+      "type": "object",
+      "properties": {
+        "byproducts": {
+          "description": "@srcs mapdata.cpp    activity_data_common",
+          "default": [],
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CDDAByproduct"
+          }
+        },
+        "duration": {
+          "description": "@srcs mapdata.cpp    activity_data_common",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/CDDATime"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "message": {
+          "description": "@srcs mapdata.cpp    activity_data_common",
+          "default": "",
+          "type": "string"
+        },
+        "result": {
+          "description": "@srcs mapdata.cpp    activity_data_ter   ter or furn id    limited by original ter or furn",
+          "default": "",
+          "type": "string"
+        },
+        "sound": {
+          "description": "@srcs mapdata.cpp    activity_data_common",
+          "default": "",
+          "type": "string"
+        },
+        "valid": {
+          "description": "@srcs mapdata.cpp    activity_data_common",
+          "default": false,
+          "type": "boolean"
+        }
+      }
+    },
+    "CDDATerFurnColor": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "CDDATerFurnCommonMandatory": {
+      "type": "object",
+      "required": [
+        "description",
+        "name"
+      ],
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "name": {
+          "$ref": "#/definitions/CDDAName"
+        }
+      }
+    },
+    "CDDATerFurnCommonOptional": {
+      "type": "object",
+      "required": [
+        "copy-from"
+      ],
+      "properties": {
+        "copy-from": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "name": {
+          "$ref": "#/definitions/CDDAName"
+        }
+      }
+    },
+    "CDDATerFurnShoot": {
+      "type": "object",
+      "required": [
+        "destroy_damage",
+        "reduce_damage",
+        "reduce_damage_laser"
+      ],
+      "properties": {
+        "chance_to_hit": {
+          "description": "@srcs mapdata.cpp  map_shoot_info   default 100",
+          "default": 0,
+          "type": "integer",
+          "format": "int64"
+        },
+        "destroy_damage": {
+          "description": "@srcs mapdata.cpp  map_shoot_info",
+          "type": "array",
+          "items": [
+            {
+              "type": "integer",
+              "format": "int64"
+            },
+            {
+              "type": "integer",
+              "format": "int64"
+            }
+          ],
+          "maxItems": 2,
+          "minItems": 2
+        },
+        "no_laser_destroy": {
+          "description": "@srcs mapdata.cpp  map_shoot_info   default false",
+          "default": false,
+          "type": "boolean"
+        },
+        "reduce_damage": {
+          "description": "@srcs mapdata.cpp  map_shoot_info",
+          "type": "array",
+          "items": [
+            {
+              "type": "integer",
+              "format": "int64"
+            },
+            {
+              "type": "integer",
+              "format": "int64"
+            }
+          ],
+          "maxItems": 2,
+          "minItems": 2
+        },
+        "reduce_damage_laser": {
+          "description": "@srcs mapdata.cpp  map_shoot_info",
+          "type": "array",
+          "items": [
+            {
+              "type": "integer",
+              "format": "int64"
+            },
+            {
+              "type": "integer",
+              "format": "int64"
+            }
+          ],
+          "maxItems": 2,
+          "minItems": 2
+        }
+      }
+    },
+    "CDDATerFurnSymbolInd": {
+      "type": "object",
+      "anyOf": [
+        {
+          "type": "object",
+          "required": [
+            "color"
+          ],
+          "properties": {
+            "color": {
+              "$ref": "#/definitions/CDDATerFurnColor"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "bgcolor"
+          ],
+          "properties": {
+            "bgcolor": {
+              "$ref": "#/definitions/CDDATerFurnColor"
+            }
+          }
+        }
+      ],
+      "required": [
+        "symbol"
+      ],
+      "properties": {
+        "symbol": {
+          "type": "string"
+        }
+      }
+    },
+    "CDDATerFurnSymbolRely": {
+      "type": "object",
+      "anyOf": [
+        {
+          "type": "object",
+          "required": [
+            "color"
+          ],
+          "properties": {
+            "color": {
+              "$ref": "#/definitions/CDDATerFurnColor"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "bgcolor"
+          ],
+          "properties": {
+            "bgcolor": {
+              "$ref": "#/definitions/CDDATerFurnColor"
+            }
+          }
+        }
+      ],
+      "required": [
+        "looks_like"
+      ],
+      "properties": {
+        "looks_like": {
+          "type": "string"
+        },
+        "symbol": {
+          "default": "",
+          "type": "string"
+        }
+      }
+    },
+    "CDDATime": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "format": "int64"
+        },
+        {
+          "type": "string"
+        }
+      ]
+    },
     "CDDATranslation": {
-      "type": "object"
+      "type": "object",
+      "required": [
+        "aaa"
+      ],
+      "properties": {
+        "aaa": {
+          "type": "string"
+        }
+      }
     },
     "CDDAVolume": {
       "anyOf": [
