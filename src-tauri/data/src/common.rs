@@ -16,28 +16,28 @@ pub enum CDDAIntRange {
   Range(Vec<i64>),
 }
 impl CDDAIntRange {
-  pub fn default_int_range_1() -> CDDAIntRange {
+  pub fn default_1() -> CDDAIntRange {
     CDDAIntRange::Single(1)
   }
 
-  pub fn is_default_int_range_1(t: &CDDAIntRange) -> bool {
-    t == &CDDAIntRange::default_int_range_1()
+  pub fn is_default_1(t: &CDDAIntRange) -> bool {
+    t == &CDDAIntRange::default_1()
   }
 
-  pub fn default_int_range_100() -> CDDAIntRange {
+  pub fn default_100() -> CDDAIntRange {
     CDDAIntRange::Single(100)
   }
 
-  pub fn is_default_int_range_100(t: &CDDAIntRange) -> bool {
-    t == &CDDAIntRange::default_int_range_100()
+  pub fn is_default_100(t: &CDDAIntRange) -> bool {
+    t == &CDDAIntRange::default_100()
   }
 
-  pub fn default_int_range_0() -> CDDAIntRange {
+  pub fn default_0() -> CDDAIntRange {
     CDDAIntRange::Single(0)
   }
 
-  pub fn is_default_int_range_0(t: &CDDAIntRange) -> bool {
-    t == &CDDAIntRange::default_int_range_0()
+  pub fn is_default_0(t: &CDDAIntRange) -> bool {
+    t == &CDDAIntRange::default_0()
   }
 }
 
@@ -51,12 +51,12 @@ pub enum CDDAStringArray {
 }
 
 impl CDDAStringArray {
-  pub fn default_string_array() -> CDDAStringArray {
+  pub fn default() -> CDDAStringArray {
     CDDAStringArray::Multiple(Vec::<String>::new())
   }
 
-  pub fn is_default_string_array(t: &CDDAStringArray) -> bool {
-    t == &CDDAStringArray::default_string_array()
+  pub fn is_default(t: &CDDAStringArray) -> bool {
+    t == &CDDAStringArray::default()
   }
 }
 
@@ -75,7 +75,7 @@ pub enum CDDAName {
 // used only for copy-from
 impl Default for CDDAName {
   fn default() -> CDDAName {
-    CDDAName::Name("copy".to_string())
+    CDDAName::Name("".to_string())
   }
 }
 
@@ -103,6 +103,16 @@ pub enum CDDAVolume {
   Wunit(String),
 }
 
+impl CDDAVolume {
+  pub fn default_1000l() -> CDDAVolume {
+    CDDAVolume::Wounit(1000000)
+  }
+
+  pub fn is_default_1000l(t: &CDDAVolume) -> bool {
+    t == &CDDAVolume::default_1000l()
+  }
+}
+
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(untagged)]
 pub enum CDDATime {
@@ -110,6 +120,16 @@ pub enum CDDATime {
   Wounit(i64),
   // with unit
   Wunit(String),
+}
+
+impl CDDATime {
+  pub fn default_1s() -> CDDATime {
+    CDDATime::Wounit(1)
+  }
+
+  pub fn is_default_1s(t: &CDDATime) -> bool {
+    t == &CDDATime::default_1s()
+  }
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]

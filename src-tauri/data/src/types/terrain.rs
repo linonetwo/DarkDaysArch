@@ -7,36 +7,12 @@ use super::furniture::*;
 pub type CDDATerrainArray = Vec<CDDATerrain>;
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
-#[serde(untagged)]
-pub enum CDDATerrainOmittable {
-  Mandatory(CDDATerrainMandatory),
-  Optional(CDDATerrainOptional)
-}
-
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
-pub struct CDDATerrainMandatory {
-  /**
-   * @docs JSON_INFO.md   actual move cost is carreied by multiplying it by 50
-   */
-  pub move_cost: i64,
-}
-
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
-pub struct CDDATerrainOptional {
-  /**
-   * @docs JSON_INFO.md   actual move cost is carreied by multiplying it by 50
-   */
-  #[serde(default)]
-  pub move_cost: i64,
-}
-
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDATerrain {
   #[serde(flatten)]
   pub ter_furn_common: CDDATerFurnCommon,
   //terrain unique key
   #[serde(flatten)]
-  pub furn_omittable: CDDAFurnitureOmittable,
+  pub ter_omittable: CDDATerrainOmittable,
 
   #[serde(skip_serializing_if = "Option::is_none")]
   pub bash: Option<CDDATerrainBash>,
@@ -97,6 +73,43 @@ pub struct CDDATerrain {
   #[serde(default)]
   #[serde(skip_serializing_if = "Vec::is_empty")]
   pub allowed_template_ids: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[serde(untagged)]
+pub enum CDDATerrainOmittable {
+  Optional(CDDATerrainOptional),
+  Mandatory(CDDATerrainMandatory),
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+pub struct CDDATerrainMandatory {
+  pub name: CDDAName,
+
+  pub description: String,
+
+  pub move_cost: i64,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+pub struct CDDATerrainOptional {
+  #[serde(rename = "copy-from")]
+  pub copy_from: String,
+   /**
+  * this field have a default value CDDAName::Name(""), which need to be replaced with copied one 
+  */
+  #[serde(default)]
+  #[serde(skip_serializing_if = "CDDAName::is_default")]
+  pub name: CDDAName,
+  /**
+  * this field have a default value "", which need to be replaced with copied one 
+  */
+  #[serde(default)]
+  #[serde(skip_serializing_if = "String::is_empty")]
+  pub description: String,
+
+  #[serde(default)]
+  pub move_cost: i64,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]

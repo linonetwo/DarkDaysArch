@@ -378,20 +378,20 @@ pub struct CDDAPaletteNestedValueNestedNeighbors {
   /**
    * @srcs mapgen.cpp    jmapgen_nested
    */
-  #[serde(default = "CDDAStringArray::default_string_array")]
-  #[serde(skip_serializing_if = "CDDAStringArray::is_default_string_array")]
+  #[serde(default = "CDDAStringArray::default")]
+  #[serde(skip_serializing_if = "CDDAStringArray::is_default")]
   pub west: CDDAStringArray,
-  #[serde(default = "CDDAStringArray::default_string_array")]
-  #[serde(skip_serializing_if = "CDDAStringArray::is_default_string_array")]
+  #[serde(default = "CDDAStringArray::default")]
+  #[serde(skip_serializing_if = "CDDAStringArray::is_default")]
   pub east: CDDAStringArray,
-  #[serde(default = "CDDAStringArray::default_string_array")]
-  #[serde(skip_serializing_if = "CDDAStringArray::is_default_string_array")]
+  #[serde(default = "CDDAStringArray::default")]
+  #[serde(skip_serializing_if = "CDDAStringArray::is_default")]
   pub north: CDDAStringArray,
-  #[serde(default = "CDDAStringArray::default_string_array")]
-  #[serde(skip_serializing_if = "CDDAStringArray::is_default_string_array")]
+  #[serde(default = "CDDAStringArray::default")]
+  #[serde(skip_serializing_if = "CDDAStringArray::is_default")]
   pub south: CDDAStringArray,
-  #[serde(default = "CDDAStringArray::default_string_array")]
-  #[serde(skip_serializing_if = "CDDAStringArray::is_default_string_array")]
+  #[serde(default = "CDDAStringArray::default")]
+  #[serde(skip_serializing_if = "CDDAStringArray::is_default")]
   pub above: CDDAStringArray,
 }
 
@@ -439,7 +439,7 @@ pub struct CDDAPaletteComputersValueComputerOptionsOption {
    * @srcs mapgen.cpp   jmapgen_computer  default 0
    */
   #[serde(default)]
-  #[serde(skip_serializing_if = "int64::is_default_i64_0")]
+  #[serde(skip_serializing_if = "int64::is_default_0")]
   pub security: i64,
 }
 
@@ -461,13 +461,13 @@ pub struct CDDAPaletteComputersValueComputer {
    * @srcs mapgen.cpp   jmapgen_computer default 0
    */
   #[serde(default)]
-  #[serde(skip_serializing_if = "int64::is_default_i64_0")]
+  #[serde(skip_serializing_if = "int64::is_default_0")]
   pub security: i64,
   /**
    * @srcs mapgen.cpp   jmapgen_computer   default false       mission target maybe    only valid for update_mapgen
    */
   #[serde(default)]
-  #[serde(skip_serializing_if = "bool::is_default_bool_false")]
+  #[serde(skip_serializing_if = "bool::is_default_false")]
   pub target: bool,
   /**
    * @srcs mapgen.cpp   jmapgen_computer
@@ -517,7 +517,7 @@ pub struct CDDAPaletteRubbleValueRubble {
    * @docs MAPGEN.md    bashing items will or not   default is false
    */
   #[serde(default)]
-  #[serde(skip_serializing_if = "bool::is_default_bool_false")]
+  #[serde(skip_serializing_if = "bool::is_default_false")]
   pub items: bool,
   /**
    * @docs MAPGEN.md    ter id     default is t_dirt
@@ -529,7 +529,7 @@ pub struct CDDAPaletteRubbleValueRubble {
    * @docs MAPGEN.md    if true it just writes on top of what currently exists  default false
    */
   #[serde(default)]
-  #[serde(skip_serializing_if = "bool::is_default_bool_false")]
+  #[serde(skip_serializing_if = "bool::is_default_false")]
   pub overwrite: bool,
 }
 
@@ -642,7 +642,7 @@ pub struct CDDAPaletteMonsterValueMonsterCommon {
    * @docs MAPGEN.md    default is false
    */
   #[serde(default)]
-  #[serde(skip_serializing_if = "bool::is_default_bool_false")]
+  #[serde(skip_serializing_if = "bool::is_default_false")]
   pub friendly: bool,
   /**
    * @docs MAPGEN.md    special name default is nameless
@@ -656,19 +656,19 @@ pub struct CDDAPaletteMonsterValueMonsterCommon {
    * @srcs mapgen.cpp     jmapgen_monster   constructor  default false  
    */
   #[serde(default)]
-  #[serde(skip_serializing_if = "bool::is_default_bool_false")]
+  #[serde(skip_serializing_if = "bool::is_default_false")]
   pub target: bool,
   /**
    * @srcs mapgen.cpp     jmapgen_monster   constructor  default false
    */
-  #[serde(default = "CDDAIntRange::default_int_range_1")]
-  #[serde(skip_serializing_if = "CDDAIntRange::is_default_int_range_1")]
+  #[serde(default = "CDDAIntRange::default_1")]
+  #[serde(skip_serializing_if = "CDDAIntRange::is_default_1")]
   pub pack_size: CDDAIntRange,
   /**
    * @srcs mapgen.cpp     jmapgen_monster   constructor  default false   if pack_size is defined  default true ????
    */
   #[serde(default)]
-  #[serde(skip_serializing_if = "bool::is_default_bool_false")]
+  #[serde(skip_serializing_if = "bool::is_default_false")]
   pub one_or_none: bool,
   /**
    * @srcs mapgen.cpp     jmapgen_monster   constructor  default false   if pack_size is defined  default true ????
@@ -700,20 +700,20 @@ pub struct CDDAPaletteItemValueItem {
   /**
    * @docs MAPGEN.md    "chance": x means   one in x  int or min-max   default 1
    */
-  #[serde(default = "CDDAIntRange::default_int_range_1")]
-  #[serde(skip_serializing_if = "CDDAIntRange::is_default_int_range_1")]
+  #[serde(default = "CDDAIntRange::default_1")]
+  #[serde(skip_serializing_if = "CDDAIntRange::is_default_1")]
   pub chance: CDDAIntRange,
   /**
    * @docs MAPGEN.md   int or min-max  default 1
    */
-  #[serde(default = "CDDAIntRange::default_int_range_1")]
-  #[serde(skip_serializing_if = "CDDAIntRange::is_default_int_range_1")]
+  #[serde(default = "CDDAIntRange::default_1")]
+  #[serde(skip_serializing_if = "CDDAIntRange::is_default_1")]
   pub amount: CDDAIntRange,
   /**
    * @docs MAPGEN.md   int or min-max  default 1
    */
-  #[serde(default = "CDDAIntRange::default_int_range_1")]
-  #[serde(skip_serializing_if = "CDDAIntRange::is_default_int_range_1")]
+  #[serde(default = "CDDAIntRange::default_1")]
+  #[serde(skip_serializing_if = "CDDAIntRange::is_default_1")]
   pub repeat: CDDAIntRange,
   // TODO: variant and custom_flags    same for items
 }
@@ -736,8 +736,8 @@ pub struct CDDAPaletteGaspumpsValueGaspump {
   /**
    * @docs MAPGEN.md    default is random? or zero?
    */
-  #[serde(default = "CDDAIntRange::default_int_range_0")]
-  #[serde(skip_serializing_if = "CDDAIntRange::is_default_int_range_0")]
+  #[serde(default = "CDDAIntRange::default_0")]
+  #[serde(skip_serializing_if = "CDDAIntRange::is_default_0")]
   pub amount: CDDAIntRange,
   /**
    * @docs MAPGEN.md    type of fuel   default unknown   gasoline maybe?
@@ -751,8 +751,8 @@ pub struct CDDAPaletteToiletsValueToilet {
   /**
    * @docs MAPGEN.md    default is random? or zero?
    */
-  #[serde(default = "CDDAIntRange::default_int_range_0")]
-  #[serde(skip_serializing_if = "CDDAIntRange::is_default_int_range_0")]
+  #[serde(default = "CDDAIntRange::default_0")]
+  #[serde(skip_serializing_if = "CDDAIntRange::is_default_0")]
   pub amount: CDDAIntRange,
 }
 
@@ -767,26 +767,26 @@ pub struct CDDAPaletteVendingsValueVending {
   /**
    * @docs MAPGEN.md    "chance": x means    x% int or min-max   default 1    1% low prob
    */
-  #[serde(default = "CDDAIntRange::default_int_range_1")]
-  #[serde(skip_serializing_if = "CDDAIntRange::is_default_int_range_1")]
+  #[serde(default = "CDDAIntRange::default_1")]
+  #[serde(skip_serializing_if = "CDDAIntRange::is_default_1")]
   pub chance: CDDAIntRange,
   /**
    * @docs MAPGEN.md   360 degree
    */
-  #[serde(default = "int64::default_i64_0")]
-  #[serde(skip_serializing_if = "int64::is_default_i64_0")]
+  #[serde(default = "int64::default_0")]
+  #[serde(skip_serializing_if = "int64::is_default_0")]
   pub rotation: i64,
   /**
    * @docs MAPGEN.md    fuel status    default -1   -1 means 1%-7% fuel
    */
-  #[serde(default = "int64::default_i64_m1")]
-  #[serde(skip_serializing_if = "int64::is_default_i64_m1")]
+  #[serde(default = "int64::default_m1")]
+  #[serde(skip_serializing_if = "int64::is_default_m1")]
   pub feul: i64,
   /**
    * @docs MAPGEN.md    body status    default -1   -1 means light damage    0 perfect    1 heavy damage
    */
-  #[serde(default = "int64::default_i64_m1")]
-  #[serde(skip_serializing_if = "int64::is_default_i64_m1")]
+  #[serde(default = "int64::default_m1")]
+  #[serde(skip_serializing_if = "int64::is_default_m1")]
   pub status: i64,
 }
 
@@ -816,13 +816,13 @@ pub struct CDDAPaletteNpcsValueNpc {
    * @srcs mapgen.cpp     jmapgen_npc   constructor
    */
   #[serde(default)]
-  #[serde(skip_serializing_if = "bool::is_default_bool_false")]
+  #[serde(skip_serializing_if = "bool::is_default_false")]
   pub target: bool,
   /**
    * @docs MAPGEN.md   default 0
    */
-  #[serde(default = "CDDAStringArray::default_string_array")]
-  #[serde(skip_serializing_if = "CDDAStringArray::is_default_string_array")]
+  #[serde(default = "CDDAStringArray::default")]
+  #[serde(skip_serializing_if = "CDDAStringArray::is_default")]
   pub add_trait: CDDAStringArray,
 }
 
@@ -832,14 +832,14 @@ pub struct CDDAPaletteFieldsValueField {
   /**
    * @docs MAPGEN.md    default 1, possible 1, 2, 3 or more        originally density in old version
    */
-  #[serde(default = "int64::default_i64_1")]
-  #[serde(skip_serializing_if = "int64::is_default_i64_1")]
+  #[serde(default = "int64::default_1")]
+  #[serde(skip_serializing_if = "int64::is_default_1")]
   pub intensity: i64,
   /**
    * @docs MAPGEN.md   default 0
    */
-  #[serde(default = "int64::default_i64_0")]
-  #[serde(skip_serializing_if = "int64::is_default_i64_0")]
+  #[serde(default = "int64::default_0")]
+  #[serde(skip_serializing_if = "int64::is_default_0")]
   pub age: i64,
 }
 
@@ -849,22 +849,22 @@ pub struct CDDAPaletteItemsValueItem {
   /**
    * @docs MAPGEN.md    "chance": x means    x% int or min-max   default 100
    */
-  #[serde(default = "CDDAIntRange::default_int_range_100")]
-  #[serde(skip_serializing_if = "CDDAIntRange::is_default_int_range_100")]
+  #[serde(default = "CDDAIntRange::default_100")]
+  #[serde(skip_serializing_if = "CDDAIntRange::is_default_100")]
   pub chance: CDDAIntRange,
   /**
    * @docs MAPGEN.md   int or min-max  default 1
    */
-  #[serde(default = "CDDAIntRange::default_int_range_1")]
-  #[serde(skip_serializing_if = "CDDAIntRange::is_default_int_range_1")]
+  #[serde(default = "CDDAIntRange::default_1")]
+  #[serde(skip_serializing_if = "CDDAIntRange::is_default_1")]
   pub repeat: CDDAIntRange,
 
-  #[serde(default = "int64::default_i64_0")]
-  #[serde(skip_serializing_if = "int64::is_default_i64_0")]
+  #[serde(default = "int64::default_0")]
+  #[serde(skip_serializing_if = "int64::is_default_0")]
   pub ammo: i64,
 
-  #[serde(default = "int64::default_i64_0")]
-  #[serde(skip_serializing_if = "int64::is_default_i64_0")]
+  #[serde(default = "int64::default_0")]
+  #[serde(skip_serializing_if = "int64::is_default_0")]
   pub magazine: i64,
 }
 
@@ -874,14 +874,14 @@ pub struct CDDAPaletteLiquidsValueLiquid {
   /**
    * @docs MAPGEN.md    default 0 means using certain liquid defualt amount defined
    */
-  #[serde(default = "CDDAIntRange::default_int_range_0")]
-  #[serde(skip_serializing_if = "CDDAIntRange::is_default_int_range_0")]
+  #[serde(default = "CDDAIntRange::default_0")]
+  #[serde(skip_serializing_if = "CDDAIntRange::is_default_0")]
   pub amount: CDDAIntRange,
   /**
    * @docs MAPGEN.md    "chance": x means    one in x  int or min-max    default 1
    */
-  #[serde(default = "CDDAIntRange::default_int_range_1")]
-  #[serde(skip_serializing_if = "CDDAIntRange::is_default_int_range_1")]
+  #[serde(default = "CDDAIntRange::default_1")]
+  #[serde(skip_serializing_if = "CDDAIntRange::is_default_1")]
   pub chance: CDDAIntRange,
 }
 
@@ -891,14 +891,14 @@ pub struct CDDAPaletteMonstersValueMonster {
   /**
    * @docs MAPGEN.md    "chance": x means    one in x   int or min-max defualt 1
    */
-  #[serde(default = "CDDAIntRange::default_int_range_1")]
-  #[serde(skip_serializing_if = "CDDAIntRange::is_default_int_range_1")]
+  #[serde(default = "CDDAIntRange::default_1")]
+  #[serde(skip_serializing_if = "CDDAIntRange::is_default_1")]
   pub chance: CDDAIntRange,
   /**
    * @docs MAPGEN.md    if not present, use default density limited by distance between city center
    * use -1.0 to represent default
    */
-  #[serde(default = "float64::default_f64_m1")]
-  #[serde(skip_serializing_if = "float64::is_default_f64_m1")]
+  #[serde(default = "float64::default_m1")]
+  #[serde(skip_serializing_if = "float64::is_default_m1")]
   pub density: f64,
 }

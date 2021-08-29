@@ -374,22 +374,22 @@ pub struct CDDAMapgenPlaceLootCommon {
   /**
    * @srcs mapgen.cpp   jmapgen_loot    "chance": x means    x% int or min-max   default 100
    */
-  #[serde(default = "CDDAIntRange::default_int_range_100")]
-  #[serde(skip_serializing_if = "CDDAIntRange::is_default_int_range_100")]
+  #[serde(default = "CDDAIntRange::default_100")]
+  #[serde(skip_serializing_if = "CDDAIntRange::is_default_100")]
   pub chance: CDDAIntRange,
   /**
    * @srcs  mapgen.cpp jmapgen_loot  int or min-max  default 1
    */
-  #[serde(default = "CDDAIntRange::default_int_range_1")]
-  #[serde(skip_serializing_if = "CDDAIntRange::is_default_int_range_1")]
+  #[serde(default = "CDDAIntRange::default_1")]
+  #[serde(skip_serializing_if = "CDDAIntRange::is_default_1")]
   pub repeat: CDDAIntRange,
 
-  #[serde(default = "int64::default_i64_0")]
-  #[serde(skip_serializing_if = "int64::is_default_i64_0")]
+  #[serde(default = "int64::default_0")]
+  #[serde(skip_serializing_if = "int64::is_default_0")]
   pub ammo: i64,
 
-  #[serde(default = "int64::default_i64_0")]
-  #[serde(skip_serializing_if = "int64::is_default_i64_0")]
+  #[serde(default = "int64::default_0")]
+  #[serde(skip_serializing_if = "int64::is_default_0")]
   pub magazine: i64,
 }
 
@@ -422,20 +422,20 @@ pub struct CDDAMapgenSetCommon {
   /**
    * @srcs  mapgen.cpp    mapgen_function_json_base::setup_setmap
    */
-  #[serde(default = "CDDAIntRange::default_int_range_1")]
-  #[serde(skip_serializing_if = "CDDAIntRange::is_default_int_range_1")]
+  #[serde(default = "CDDAIntRange::default_1")]
+  #[serde(skip_serializing_if = "CDDAIntRange::is_default_1")]
   pub repeat: CDDAIntRange,
-  #[serde(default = "int64::default_i64_1")]
-  #[serde(skip_serializing_if = "int64::is_default_i64_1")]
+  #[serde(default = "int64::default_1")]
+  #[serde(skip_serializing_if = "int64::is_default_1")]
   pub chance: i64,
-  #[serde(default = "int64::default_i64_0")]
-  #[serde(skip_serializing_if = "int64::is_default_i64_0")]
+  #[serde(default = "int64::default_0")]
+  #[serde(skip_serializing_if = "int64::is_default_0")]
   pub rotation: i64,
-  #[serde(default = "int64::default_i64_m1")]
-  #[serde(skip_serializing_if = "int64::is_default_i64_m1")]
+  #[serde(default = "int64::default_m1")]
+  #[serde(skip_serializing_if = "int64::is_default_m1")]
   pub fuel: i64,
-  #[serde(default = "int64::default_i64_m1")]
-  #[serde(skip_serializing_if = "int64::is_default_i64_m1")]
+  #[serde(default = "int64::default_m1")]
+  #[serde(skip_serializing_if = "int64::is_default_m1")]
   pub status: i64,
 }
 
