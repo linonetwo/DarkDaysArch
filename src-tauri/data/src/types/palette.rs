@@ -420,6 +420,7 @@ pub struct CDDAPaletteComputersValueComputerFailuresFailure {
   /**
    * @srcs mapgen.cpp   jmapgen_computer
    */
+  //TODO: enum
   pub action: String,
 }
 
@@ -428,6 +429,7 @@ pub struct CDDAPaletteComputersValueComputerOptionsOption {
   /**
    * @srcs mapgen.cpp   jmapgen_computer
    */
+  //TODO: enum
   pub action: String,
   /**
    * @srcs mapgen.cpp   jmapgen_computer
@@ -538,6 +540,7 @@ pub struct CDDAPaletteZonesValueZone {
   /**
    * @docs MAPGEN.md    Values: `"NPC_RETREAT"`, `"NPC_NO_INVESTIGATE"`, or `"NPC_INVESTIGATE_ONLY"`
    */
+    //TODO: enum
   #[serde(rename = "type")]
   pub type_field: String,
   /**
@@ -609,7 +612,7 @@ pub struct CDDAPaletteFurnitureValueFurniture {
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDAPaletteMonsterValueMonsterSpawnDataAmmo {
   /**
-   * @docs MAPGEN.md    default is false
+   * @docs MAPGEN.md    ammo id
    */
   #[serde(default)]
   #[serde(skip_serializing_if = "String::is_empty")]
@@ -727,8 +730,9 @@ pub struct CDDAPaletteVehiclesValueVehicle {
   /**
    * @docs MAPGEN.md    type of fuel   default unknown   gasoline maybe?
    */
+  //TODO: enum ?
   #[serde(default)]
-  pub feul: String,
+  pub fuel: String,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
@@ -742,8 +746,9 @@ pub struct CDDAPaletteGaspumpsValueGaspump {
   /**
    * @docs MAPGEN.md    type of fuel   default unknown   gasoline maybe?
    */
+  //TODO: enum ?
   #[serde(default)]
-  pub feul: String,
+  pub fuel: String,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
@@ -781,7 +786,7 @@ pub struct CDDAPaletteVendingsValueVending {
    */
   #[serde(default = "int64::default_m1")]
   #[serde(skip_serializing_if = "int64::is_default_m1")]
-  pub feul: i64,
+  pub fuel: i64,
   /**
    * @docs MAPGEN.md    body status    default -1   -1 means light damage    0 perfect    1 heavy damage
    */
@@ -819,7 +824,7 @@ pub struct CDDAPaletteNpcsValueNpc {
   #[serde(skip_serializing_if = "bool::is_default_false")]
   pub target: bool,
   /**
-   * @docs MAPGEN.md   default 0
+   * @docs MAPGEN.md
    */
   #[serde(default = "CDDAStringArray::default")]
   #[serde(skip_serializing_if = "CDDAStringArray::is_default")]

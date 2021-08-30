@@ -13,6 +13,8 @@
   ],
   "i18n-ally.keystyle": "nested",
   "files.associations": {
-    "utility": "cpp"
+    "utility": "cpp",
+    "atomic": "cpp",
+    "memory": "cpp"
   }
 }

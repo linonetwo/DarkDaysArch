@@ -10,9 +10,12 @@ pub type CDDATerrainArray = Vec<CDDATerrain>;
 pub struct CDDATerrain {
   #[serde(flatten)]
   pub ter_furn_common: CDDATerFurnCommon,
-
-  #[serde(flatten)]
-  pub ter_omittable: CDDATerrainOmittable,
+  /**
+   * @docs  JSON_INFO.md  Move cost to move through. A value of 0 means it's impassable (e.g. wall).
+   * You should not use negative values. The positive value is multiple of 50 move points
+   */
+  #[serde(default)]
+  pub move_cost: i64,
   /**
    * @docs JSON_INFO.md   if not defined, cannot be bashed to broken
    */
@@ -82,54 +85,6 @@ pub struct CDDATerrain {
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
-#[serde(untagged)]
-pub enum CDDATerrainOmittable {
-  Optional(CDDATerrainOptional),
-  Mandatory(CDDATerrainMandatory),
-}
-
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
-pub struct CDDATerrainMandatory {
-  /**
-   * this field have a default value CDDAName::Name(""), which need to be replaced with copied one
-   */
-  pub name: CDDAName,
-  /**
-   * this field have a default value "", which need to be replaced with copied one
-   */
-  pub description: String,
-  /**
-   * @docs  JSON_INFO.md  Move cost to move through. A value of 0 means it's impassable (e.g. wall).
-   * You should not use negative values. The positive value is multiple of 50 move points
-   */
-  pub move_cost: i64,
-}
-
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
-pub struct CDDATerrainOptional {
-  #[serde(rename = "copy-from")]
-  pub copy_from: String,
-  /**
-   * this field have a default value CDDAName::Name(""), which need to be replaced with copied one
-   */
-  #[serde(default)]
-  #[serde(skip_serializing_if = "CDDAName::is_default")]
-  pub name: CDDAName,
-  /**
-   * this field have a default value "", which need to be replaced with copied one
-   */
-  #[serde(default)]
-  #[serde(skip_serializing_if = "String::is_empty")]
-  pub description: String,
-  /**
-   * @docs  JSON_INFO.md  Move cost to move through. A value of 0 means it's impassable (e.g. wall).
-   * You should not use negative values. The positive value is multiple of 50 move points
-   */
-  #[serde(default)]
-  pub move_cost: i64,
-}
-
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDATerrainBash {
   #[serde(flatten)]
   pub bash_common: CDDATerFurnFieldBashCommon,
@@ -159,6 +114,7 @@ pub struct CDDATerrainHarvest {
   /**
    * @docs JSON_INFO.md    in this seasons, item group with id can be got
    */
+  //TODO: enum ?
   pub seasons: Vec<String>,
   /**
    * @docs JSON_INFO.md    item group

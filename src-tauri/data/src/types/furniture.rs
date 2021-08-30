@@ -12,12 +12,45 @@ pub struct CDDATerFurnCommon {
   pub type_field: String,
 
   pub id: String,
-
+  #[serde(default)]
+  #[serde(rename = "copy-from")]
+  #[serde(skip_serializing_if = "String::is_empty")]
+  pub copy_from: String,
   /**
-   * fields about symbol including looks_like
+   * this field have a default value CDDAName::Name(""), which need to be replaced with copied one
    */
-  #[serde(flatten)]
-  pub symbol_clutter: CDDATerFurnSymbol,
+  #[serde(default)]
+  #[serde(skip_serializing_if = "CDDAName::is_default")]
+  pub name: CDDAName,
+  /**
+   * this field have a default value "", which need to be replaced with copied one
+   */
+  #[serde(default)]
+  #[serde(skip_serializing_if = "String::is_empty")]
+  pub description: String,
+  /**
+   * only affects tile loader
+   */
+  #[serde(default)]
+  #[serde(skip_serializing_if = "String::is_empty")]
+  pub looks_like: String,
+  /**
+   * acsii symbol
+   */
+  #[serde(default)]
+  pub symbol: String,
+  /**
+   * symbol color
+   */
+  //TODO: enum 
+  #[serde(default)]
+  pub color: String,
+  /**
+   * background color
+   */
+  //TODO: enum 
+  #[serde(default)]
+  pub bgcolor: String,
   /**
    * @docs JSON_INFO.md   from an examine action list
    */
@@ -54,12 +87,14 @@ pub struct CDDATerFurnCommon {
   /**
    * @docs JSON_INFO.md   flags
    */
+  //TODO: enum 
   #[serde(default)]
   #[serde(skip_serializing_if = "Vec::is_empty")]
   pub flags: Vec<String>,
   /**
    * @docs JSON_INFO.md   can connect to some special types defined by flags
    */
+  //TODO: enum 
   #[serde(default)]
   #[serde(skip_serializing_if = "Vec::is_empty")]
   pub connects_to: Vec<String>,
@@ -100,69 +135,22 @@ pub struct CDDATerFurnCommon {
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
-#[serde(untagged)]
-pub enum CDDAFurnitureOmittable {
-  Optional(CDDAFurnitureOptional),
-  Mandatory(CDDAFurnitureMandatory),
-}
-
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
-pub struct CDDAFurnitureMandatory {
-  /**
-   * this field have a default value CDDAName::Name(""), which need to be replaced with copied one
-   */
-  pub name: CDDAName,
-  /**
-   * this field have a default value "", which need to be replaced with copied one
-   */
-  pub description: String,
-  /**
-   * Movement cost modifier (`-10` = impassable, `0` = no change). This is added to the movecost of the underlying terrain.
-   */
-  pub move_cost_mod: i64,
-  /**
-   * Strength required to move the furniture around. Negative values indicate an unmovable furniture.
-   */
-  pub required_str: i64,
-}
-
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
-pub struct CDDAFurnitureOptional {
-  #[serde(rename = "copy-from")]
-  pub copy_from: String,
-  /**
-   * this field have a default value CDDAName::Name(""), which need to be replaced with copied one
-   */
-  #[serde(default)]
-  #[serde(skip_serializing_if = "CDDAName::is_default")]
-  pub name: CDDAName,
-  /**
-   * this field have a default value "", which need to be replaced with copied one
-   */
-  #[serde(default)]
-  #[serde(skip_serializing_if = "String::is_empty")]
-  pub description: String,
-  /**
-   * Movement cost modifier (`-10` = impassable, `0` = no change). This is added to the movecost of the underlying terrain.
-   */
-  #[serde(default)]
-  #[serde(skip_serializing_if = "int64::is_default_0")]
-  pub move_cost_mod: i64,
-  /**
-   * Strength required to move the furniture around. Negative values indicate an unmovable furniture.
-   */
-  #[serde(default)]
-  #[serde(skip_serializing_if = "int64::is_default_0")]
-  pub required_str: i64,
-}
-
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDAFurniture {
   #[serde(flatten)]
   pub ter_furn_common: CDDATerFurnCommon,
 
-  #[serde(flatten)]
-  pub furn_omittable: CDDAFurnitureOmittable,
+  /**
+   * Movement cost modifier (`-10` = impassable, `0` = no change). This is added to the movecost of the underlying terrain.
+   */
+  #[serde(default)]
+  #[serde(skip_serializing_if = "int64::is_default_0")]
+  pub move_cost_mod: i64,
+  /**
+   * Strength required to move the furniture around. Negative values indicate an unmovable furniture.
+   */
+  #[serde(default)]
+  #[serde(skip_serializing_if = "int64::is_default_0")]
+  pub required_str: i64,
   /**
    * @docs JSON_INFO.md  Id of an item (tool) that will be available for crafting when this furniture is range
    */
@@ -195,52 +183,6 @@ pub struct CDDAFurniture {
   #[serde(default = "float64::default_1")]
   #[serde(skip_serializing_if = "float64::is_default_1")]
   pub surgery_skill_multiplier: f64,
-}
-
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
-#[serde(untagged)]
-pub enum CDDATerFurnSymbol {
-  Independent(CDDATerFurnSymbolInd),
-  Rely(CDDATerFurnSymbolRely),
-}
-
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
-pub struct CDDATerFurnSymbolInd {
-  pub symbol: String,
-  #[serde(flatten)]
-  pub color_select: CDDATerFurnColorSelect,
-}
-
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
-pub struct CDDATerFurnSymbolRely {
-  pub looks_like: String,
-  #[serde(default)]
-  pub symbol: String,
-  #[serde(default)]
-  #[serde(flatten)]
-  #[serde(skip_serializing_if = "CDDATerFurnColorSelect::is_default")]
-  pub color_select: CDDATerFurnColorSelect,
-}
-
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
-#[serde(untagged)]
-pub enum CDDATerFurnColorSelect {
-  Color { color: CDDATerFurnColor },
-  Bgcolor { bgcolor: CDDATerFurnColor },
-}
-
-impl Default for CDDATerFurnColorSelect {
-  fn default() -> CDDATerFurnColorSelect {
-    CDDATerFurnColorSelect::Color {
-      color: CDDATerFurnColor::Single("".to_string()),
-    }
-  }
-}
-
-impl CDDATerFurnColorSelect {
-  pub fn is_default(t: &CDDATerFurnColorSelect) -> bool {
-    t == &CDDATerFurnColorSelect::default()
-  }
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]

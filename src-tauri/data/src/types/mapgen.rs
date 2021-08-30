@@ -53,6 +53,7 @@ pub enum CDDAMapgen {
 pub struct CDDAMapgenCommon {
   #[serde(rename = "type")]
   pub type_field: String,
+  //TODO: enum ?
   #[serde(default)]
   pub method: String,
   pub object: Option<CDDAMapgenObject>,
