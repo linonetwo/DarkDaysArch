@@ -13,4 +13,3 @@ pub fn default_1() -> f64 {
 pub fn is_default_1(t: &f64) -> bool {
   t == &default_1()
 }
-

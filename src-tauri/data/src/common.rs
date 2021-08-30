@@ -64,7 +64,6 @@ impl CDDAStringArray {
 //   t == &T::default()
 // }
 
-
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(untagged)]
 pub enum CDDAName {

@@ -1,5 +1,5 @@
-use crate::common::{bool, float64, int64, string, CDDAIntRange, CDDAStringArray};
 use super::mapgen::CDDAMapgenCoor;
+use crate::common::{bool, float64, int64, string, CDDAIntRange, CDDAStringArray};
 use schemars::JsonSchema;
 use serde::{self, Deserialize, Serialize};
 use std::collections::BTreeMap;
@@ -681,7 +681,7 @@ pub struct CDDAPaletteMonsterValueMonsterCommon {
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDAPaletteMonsterValueMonsterMonster {
   pub monster: CDDAPaletteDistribution,
-  
+
   #[serde(flatten)]
   pub monster_common: CDDAPaletteMonsterValueMonsterCommon,
 }

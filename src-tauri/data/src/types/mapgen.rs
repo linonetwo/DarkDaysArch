@@ -1,7 +1,7 @@
 use super::palette::*;
+use crate::common::{int64, CDDAIntRange};
 use schemars::JsonSchema;
 use serde::{self, Deserialize, Serialize};
-use crate::common::{CDDAIntRange, int64};
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDAMapgenWithCache {
@@ -366,7 +366,7 @@ pub struct CDDAMapgenFactionOwner {
 #[serde(untagged)]
 pub enum CDDAMapgenPlaceLoot {
   Item(CDDAMapgenPlaceLootItem),
-  Group(CDDAMapgenPlaceLootGroup)
+  Group(CDDAMapgenPlaceLootGroup),
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
@@ -451,35 +451,35 @@ pub enum CDDAMapgenSet {
 #[serde(tag = "point")]
 #[allow(non_camel_case_types)]
 pub enum CDDAMapgenSetPoint {
-  terrain{
+  terrain {
     id: String,
     #[serde(flatten)]
     coordinate: CDDAMapgenCoor,
     #[serde(flatten)]
     set_common: CDDAMapgenSetCommon,
   },
-  furniture{
+  furniture {
     id: String,
     #[serde(flatten)]
     coordinate: CDDAMapgenCoor,
     #[serde(flatten)]
     set_common: CDDAMapgenSetCommon,
   },
-  trap{
+  trap {
     id: String,
     #[serde(flatten)]
     coordinate: CDDAMapgenCoor,
     #[serde(flatten)]
     set_common: CDDAMapgenSetCommon,
   },
-  radiation{
+  radiation {
     amount: CDDAIntRange,
     #[serde(flatten)]
     coordinate: CDDAMapgenCoor,
     #[serde(flatten)]
     set_common: CDDAMapgenSetCommon,
   },
-  bash{
+  bash {
     #[serde(flatten)]
     coordinate: CDDAMapgenCoor,
     #[serde(flatten)]
@@ -491,7 +491,7 @@ pub enum CDDAMapgenSetPoint {
 #[serde(tag = "line")]
 #[allow(non_camel_case_types)]
 pub enum CDDAMapgenSetLine {
-  terrain{
+  terrain {
     id: String,
     #[serde(flatten)]
     coordinate: CDDAMapgenCoor,
@@ -500,7 +500,7 @@ pub enum CDDAMapgenSetLine {
     #[serde(flatten)]
     set_common: CDDAMapgenSetCommon,
   },
-  furniture{
+  furniture {
     id: String,
     #[serde(flatten)]
     coordinate: CDDAMapgenCoor,
@@ -509,7 +509,7 @@ pub enum CDDAMapgenSetLine {
     #[serde(flatten)]
     set_common: CDDAMapgenSetCommon,
   },
-  trap{
+  trap {
     id: String,
     #[serde(flatten)]
     coordinate: CDDAMapgenCoor,
@@ -518,7 +518,7 @@ pub enum CDDAMapgenSetLine {
     #[serde(flatten)]
     set_common: CDDAMapgenSetCommon,
   },
-  radiation{
+  radiation {
     amount: CDDAIntRange,
     #[serde(flatten)]
     coordinate: CDDAMapgenCoor,
@@ -527,7 +527,7 @@ pub enum CDDAMapgenSetLine {
     #[serde(flatten)]
     set_common: CDDAMapgenSetCommon,
   },
-  bash{
+  bash {
     #[serde(flatten)]
     coordinate: CDDAMapgenCoor,
     #[serde(flatten)]
@@ -541,7 +541,7 @@ pub enum CDDAMapgenSetLine {
 #[serde(tag = "square")]
 #[allow(non_camel_case_types)]
 pub enum CDDAMapgenSetSquare {
-  terrain{
+  terrain {
     id: String,
     #[serde(flatten)]
     coordinate: CDDAMapgenCoor,
@@ -550,7 +550,7 @@ pub enum CDDAMapgenSetSquare {
     #[serde(flatten)]
     set_common: CDDAMapgenSetCommon,
   },
-  furniture{
+  furniture {
     id: String,
     #[serde(flatten)]
     coordinate: CDDAMapgenCoor,
@@ -559,7 +559,7 @@ pub enum CDDAMapgenSetSquare {
     #[serde(flatten)]
     set_common: CDDAMapgenSetCommon,
   },
-  trap{
+  trap {
     id: String,
     #[serde(flatten)]
     coordinate: CDDAMapgenCoor,
@@ -568,7 +568,7 @@ pub enum CDDAMapgenSetSquare {
     #[serde(flatten)]
     set_common: CDDAMapgenSetCommon,
   },
-  radiation{
+  radiation {
     amount: CDDAIntRange,
     #[serde(flatten)]
     coordinate: CDDAMapgenCoor,
@@ -577,7 +577,7 @@ pub enum CDDAMapgenSetSquare {
     #[serde(flatten)]
     set_common: CDDAMapgenSetCommon,
   },
-  bash{
+  bash {
     #[serde(flatten)]
     coordinate: CDDAMapgenCoor,
     #[serde(flatten)]
