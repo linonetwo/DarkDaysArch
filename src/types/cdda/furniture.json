@@ -13,34 +13,32 @@
       ],
       "properties": {
         "charges": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/CDDAIntRange"
-            },
-            {
-              "type": "null"
-            }
-          ]
+          "$ref": "#/definitions/CDDAIntRange"
         },
         "count": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/CDDAIntRange"
-            },
-            {
-              "type": "null"
-            }
-          ]
+          "$ref": "#/definitions/CDDAIntRange"
         },
         "item": {
           "type": "string"
         },
         "prob": {
-          "default": 0,
           "type": "integer",
           "format": "int64"
         }
       }
+    },
+    "CDDABashDeconItems": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CDDABashDeconItem"
+          }
+        }
+      ]
     },
     "CDDAByproduct": {
       "type": "object",
@@ -62,84 +60,89 @@
       "type": "object",
       "properties": {
         "bash_below": {
-          "default": false,
+          "description": "@srcs mapdata.cpp    map_bash_info   default false   This terrain is the roof of the tile below it, try to destroy that too",
           "type": "boolean"
         },
         "collapse_radius": {
-          "default": 0,
+          "description": "@docs JSON_INFO    Radius of the tent supported by this tile @srcs mapdata.cpp    map_bash_info   default 1",
           "type": "integer",
           "format": "int64"
         },
         "destroy_only": {
-          "default": false,
+          "description": "@srcs mapdata.cpp    map_bash_info   default false   Only used for destroying, not normally bashable",
           "type": "boolean"
         },
         "explosive": {
-          "default": 0,
+          "description": "@docs JSON_INFO  If greater than 0, destroying the object causes an explosion with this strength @srcs mapdata.cpp    map_bash_info   default 0",
           "type": "integer",
           "format": "int64"
         },
         "furn_set": {
+          "description": "@docs JSON_INFO    The furniture that will be set after the original has been deconstructed. default \"f_null\"",
           "default": "",
           "type": "string"
         },
         "items": {
-          "default": [],
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/CDDABashDeconItem"
-          }
+          "description": "@docs JSON_INFO    An item group (inline) or an id of an item group   default   \"EMPTY_GROUP\"",
+          "default": "EMPTY_GROUP",
+          "allOf": [
+            {
+              "$ref": "#/definitions/CDDABashDeconItems"
+            }
+          ]
         },
         "sound": {
+          "description": "@docs JSON_INFO    sound message @srcs mapdata.cpp    map_bash_info   default \"smash!\"",
           "default": "",
           "type": "string"
         },
         "sound_fail": {
+          "description": "@docs JSON_INFO    sound message when failing @srcs mapdata.cpp    map_bash_info   default \"thump!\"",
           "default": "",
           "type": "string"
         },
         "sound_fail_vol": {
-          "default": 0,
+          "description": "@docs JSON_INFO  sound volume when failing bashing @srcs mapdata.cpp    map_bash_info   default -1",
           "type": "integer",
           "format": "int64"
         },
         "sound_vol": {
-          "default": 0,
+          "description": "@docs JSON_INFO  sound volume when bashed @srcs mapdata.cpp    map_bash_info   default -1",
           "type": "integer",
           "format": "int64"
         },
         "str_max": {
-          "default": 0,
+          "description": "@srcs mapdata.cpp    map_bash_info   default -1  max str required: bash succeeds if str >= random # between str_min & str_max",
           "type": "integer",
           "format": "int64"
         },
         "str_max_blocked": {
-          "default": 0,
+          "description": "@srcs mapdata.cpp    map_bash_info   default -1   alternate values for has_adjacent_furniture(...) == true",
           "type": "integer",
           "format": "int64"
         },
         "str_max_supported": {
-          "default": 0,
+          "description": "@srcs mapdata.cpp    map_bash_info   default -1  Alternative values for floor supported by something from below",
           "type": "integer",
           "format": "int64"
         },
         "str_min": {
-          "default": 0,
+          "description": "@srcs mapdata.cpp    map_bash_info   default -1  min str required to bash",
           "type": "integer",
           "format": "int64"
         },
         "str_min_blocked": {
-          "default": 0,
+          "description": "@srcs mapdata.cpp    map_bash_info   default -1   alternate values for has_adjacent_furniture(...) == true",
           "type": "integer",
           "format": "int64"
         },
         "str_min_supported": {
-          "default": 0,
+          "description": "@srcs mapdata.cpp    map_bash_info   default -1  Alternative values for floor supported by something from below",
           "type": "integer",
           "format": "int64"
         },
         "tent_centers": {
-          "default": [],
+          "description": "@docs JSON_INFO    For furniture that is part of tents, this defines the id of the center part",
           "type": "array",
           "items": {
             "type": "string"
@@ -150,24 +153,24 @@
     "CDDAFurnDecon": {
       "type": "object",
       "properties": {
-        "can_do": {
-          "default": false,
-          "type": "boolean"
-        },
         "deconstruct_above": {
+          "description": "@srcs mapdata.cpp    map_deconstruct_info   default false This terrain provided a roof, we need to tear it down now",
           "default": false,
           "type": "boolean"
         },
         "furn_set": {
+          "description": "@docs JSON_INFO    The furniture that will be set after the original has been deconstructed. default \"f_null\"",
           "default": "",
           "type": "string"
         },
         "items": {
-          "default": [],
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/CDDABashDeconItem"
-          }
+          "description": "@docs JSON_INFO    An item group (inline) or an id of an item group   default   \"EMPTY_GROUP\"",
+          "default": "EMPTY_GROUP",
+          "allOf": [
+            {
+              "$ref": "#/definitions/CDDABashDeconItems"
+            }
+          ]
         }
       }
     },
@@ -175,23 +178,25 @@
       "type": "object",
       "required": [
         "base",
-        "growth_multiplier",
-        "harvest_multiplier",
         "transform"
       ],
       "properties": {
         "base": {
+          "description": "@docs JSON_INFO     transforms to after harvested @srcs mapdata.cpp    plant_info   default null",
           "type": "string"
         },
         "growth_multiplier": {
+          "description": "@docs JSON_INFO     modify growth speed @srcs mapdata.cpp    plant_info   default 1.0",
           "type": "number",
           "format": "double"
         },
         "harvest_multiplier": {
+          "description": "@docs JSON_INFO     modify harvest amount @srcs mapdata.cpp    plant_info   default 1.0",
           "type": "number",
           "format": "double"
         },
         "transform": {
+          "description": "@docs JSON_INFO     transforms to after planted @srcs mapdata.cpp    plant_info   default null",
           "type": "string"
         }
       }
@@ -205,14 +210,25 @@
       ],
       "properties": {
         "mass": {
-          "$ref": "#/definitions/CDDAMass"
+          "description": "@docs JSON_INFO      allowed mass       exceeding allowed mass/volume will give panalty @srcs mapdata.cpp    furn_workbench_info    default max",
+          "allOf": [
+            {
+              "$ref": "#/definitions/CDDAMass"
+            }
+          ]
         },
         "multiplier": {
+          "description": "@docs JSON_INFO    speed when manufacturing @srcs mapdata.cpp  furn_workbench_info   default 1.0",
           "type": "number",
           "format": "double"
         },
         "volume": {
-          "$ref": "#/definitions/CDDAVolume"
+          "description": "@docs JSON_INFO     allowed volume @srcs mapdata.cpp    furn_workbench_info     default max",
+          "allOf": [
+            {
+              "$ref": "#/definitions/CDDAVolume"
+            }
+          ]
         }
       }
     },
@@ -220,10 +236,10 @@
       "type": "object",
       "anyOf": [
         {
-          "$ref": "#/definitions/CDDATerFurnCommonOptional"
+          "$ref": "#/definitions/CDDATerFurnSymbolInd"
         },
         {
-          "$ref": "#/definitions/CDDATerFurnCommonMandatory"
+          "$ref": "#/definitions/CDDATerFurnSymbolRely"
         }
       ],
       "required": [
@@ -232,6 +248,7 @@
       ],
       "properties": {
         "bash": {
+          "description": "@docs JSON_INFO.md   if not defined, cannot be bashed to broken",
           "anyOf": [
             {
               "$ref": "#/definitions/CDDAFurnBash"
@@ -242,6 +259,7 @@
           ]
         },
         "boltcut": {
+          "description": "@docs JSON_INFO.md  Data for using with an bolt cutter    if not defined, cannot be boltcut ?   0.F not included",
           "anyOf": [
             {
               "$ref": "#/definitions/CDDATerFurnBoltcut"
@@ -252,38 +270,41 @@
           ]
         },
         "bonus_fire_warmth_feet": {
-          "default": 0,
+          "description": "@docs JSON_INFO.md   Increase warmth received on feet from nearby fire  (default = 300)",
           "type": "integer",
           "format": "int64"
         },
         "close": {
+          "description": "@docs JSON_INFO.md   transforms to when closed or opened",
           "type": "string"
         },
         "comfort": {
-          "default": 0,
+          "description": "@docs JSON_INFO.md   comfort  How comfortable this terrain/furniture is. Impact ability to fall asleep on it.",
           "type": "integer",
           "format": "int64"
         },
         "connects_to": {
-          "default": [],
+          "description": "@docs JSON_INFO.md   can connect to some special types defined by flags",
           "type": "array",
           "items": {
             "type": "string"
           }
         },
         "coverage": {
-          "default": 0,
+          "description": "@docs JSON_INFO.md   persentage of coverage",
           "type": "integer",
           "format": "int64"
         },
         "crafting_pseudo_item": {
+          "description": "@docs JSON_INFO.md  Id of an item (tool) that will be available for crafting when this furniture is range",
           "type": "string"
         },
         "curtain_transform": {
-          "description": "@srcs mapdata.cpp    furn to furn   ter to ter",
+          "description": "@srcs mapdata.cpp    furn needs furn id   ter needs ter id",
           "type": "string"
         },
         "deconstruct": {
+          "description": "@docs JSON_INFO.md   if not defined, cannot be deconstructed",
           "anyOf": [
             {
               "$ref": "#/definitions/CDDAFurnDecon"
@@ -301,36 +322,29 @@
           }
         },
         "examine_action": {
+          "description": "@docs JSON_INFO.md   from an examine action list",
           "type": "string"
         },
         "flags": {
-          "default": [],
+          "description": "@docs JSON_INFO.md   flags",
           "type": "array",
           "items": {
             "type": "string"
           }
         },
         "floor_bedding_warmth": {
-          "default": 0,
+          "description": "@docs JSON_INFO.md   Bonus warmth offered by this terrain/furniture when used to sleep.",
           "type": "integer",
           "format": "int64"
         },
         "id": {
           "type": "string"
         },
-        "map_bash_info": {
-          "type": "string"
-        },
-        "map_deconstrunct_info": {
-          "type": "string"
-        },
         "max_volume": {
-          "anyOf": [
+          "description": "@srcs mapdata.cpp    default is equal to DEFAULT_MAX_VOLUME_IN_SQUARE=1000L",
+          "allOf": [
             {
               "$ref": "#/definitions/CDDAVolume"
-            },
-            {
-              "type": "null"
             }
           ]
         },
@@ -338,6 +352,7 @@
           "type": "string"
         },
         "plant_data": {
+          "description": "@docs JSON_INFO.md   if not defined, can not be planted with things",
           "anyOf": [
             {
               "$ref": "#/definitions/CDDAFurnPlant"
@@ -348,6 +363,7 @@
           ]
         },
         "shoot": {
+          "description": "@srcs mapdata.cpp   Data for being shot    if not defined, cannot be shot to broken   0.F not included",
           "anyOf": [
             {
               "$ref": "#/definitions/CDDATerFurnShoot"
@@ -358,7 +374,7 @@
           ]
         },
         "surgery_skill_multiplier": {
-          "default": 0.0,
+          "description": "@docs JSON_INFO.md   default  null?1.0?   your surgery skill will be modified",
           "type": "number",
           "format": "double"
         },
@@ -366,6 +382,7 @@
           "type": "string"
         },
         "workbench": {
+          "description": "@docs JSON_INFO.md   if not defined, cannot be a workbench",
           "anyOf": [
             {
               "$ref": "#/definitions/CDDAFurnWorkbench"
@@ -380,15 +397,31 @@
     "CDDAFurnitureMandatory": {
       "type": "object",
       "required": [
+        "description",
         "move_cost_mod",
+        "name",
         "required_str"
       ],
       "properties": {
+        "description": {
+          "description": "this field have a default value \"\", which need to be replaced with copied one",
+          "type": "string"
+        },
         "move_cost_mod": {
+          "description": "Movement cost modifier (`-10` = impassable, `0` = no change). This is added to the movecost of the underlying terrain.",
           "type": "integer",
           "format": "int64"
         },
+        "name": {
+          "description": "this field have a default value CDDAName::Name(\"\"), which need to be replaced with copied one",
+          "allOf": [
+            {
+              "$ref": "#/definitions/CDDAName"
+            }
+          ]
+        },
         "required_str": {
+          "description": "Strength required to move the furniture around. Negative values indicate an unmovable furniture.",
           "type": "integer",
           "format": "int64"
         }
@@ -396,14 +429,32 @@
     },
     "CDDAFurnitureOptional": {
       "type": "object",
+      "required": [
+        "copy-from"
+      ],
       "properties": {
+        "copy-from": {
+          "type": "string"
+        },
+        "description": {
+          "description": "this field have a default value \"\", which need to be replaced with copied one",
+          "type": "string"
+        },
         "move_cost_mod": {
-          "default": 0,
+          "description": "Movement cost modifier (`-10` = impassable, `0` = no change). This is added to the movecost of the underlying terrain.",
           "type": "integer",
           "format": "int64"
         },
+        "name": {
+          "description": "this field have a default value CDDAName::Name(\"\"), which need to be replaced with copied one",
+          "allOf": [
+            {
+              "$ref": "#/definitions/CDDAName"
+            }
+          ]
+        },
         "required_str": {
-          "default": 0,
+          "description": "Strength required to move the furniture around. Negative values indicate an unmovable furniture.",
           "type": "integer",
           "format": "int64"
         }
@@ -457,18 +508,15 @@
           }
         },
         "duration": {
-          "description": "@srcs mapdata.cpp    activity_data_common",
-          "anyOf": [
+          "description": "@srcs mapdata.cpp    activity_data_common     time used",
+          "allOf": [
             {
               "$ref": "#/definitions/CDDATime"
-            },
-            {
-              "type": "null"
             }
           ]
         },
         "message": {
-          "description": "@srcs mapdata.cpp    activity_data_common",
+          "description": "@srcs mapdata.cpp    activity_data_common    message",
           "default": "",
           "type": "string"
         },
@@ -478,7 +526,7 @@
           "type": "string"
         },
         "sound": {
-          "description": "@srcs mapdata.cpp    activity_data_common",
+          "description": "@srcs mapdata.cpp    activity_data_common    sound",
           "default": "",
           "type": "string"
         },
@@ -502,38 +550,6 @@
         }
       ]
     },
-    "CDDATerFurnCommonMandatory": {
-      "type": "object",
-      "required": [
-        "description",
-        "name"
-      ],
-      "properties": {
-        "description": {
-          "type": "string"
-        },
-        "name": {
-          "$ref": "#/definitions/CDDAName"
-        }
-      }
-    },
-    "CDDATerFurnCommonOptional": {
-      "type": "object",
-      "required": [
-        "copy-from"
-      ],
-      "properties": {
-        "copy-from": {
-          "type": "string"
-        },
-        "description": {
-          "type": "string"
-        },
-        "name": {
-          "$ref": "#/definitions/CDDAName"
-        }
-      }
-    },
     "CDDATerFurnShoot": {
       "type": "object",
       "required": [
@@ -543,13 +559,12 @@
       ],
       "properties": {
         "chance_to_hit": {
-          "description": "@srcs mapdata.cpp  map_shoot_info   default 100",
-          "default": 0,
+          "description": "@srcs mapdata.cpp  map_shoot_info   Base chance to hit the object at all (defaults to 100%)",
           "type": "integer",
           "format": "int64"
         },
         "destroy_damage": {
-          "description": "@srcs mapdata.cpp  map_shoot_info",
+          "description": "@srcs mapdata.cpp  map_shoot_info   damage range required to have a chance to destroy",
           "type": "array",
           "items": [
             {
@@ -565,12 +580,11 @@
           "minItems": 2
         },
         "no_laser_destroy": {
-          "description": "@srcs mapdata.cpp  map_shoot_info   default false",
-          "default": false,
+          "description": "@srcs mapdata.cpp  map_shoot_info   Are lasers incapable of destroying the object (defaults to false)",
           "type": "boolean"
         },
         "reduce_damage": {
-          "description": "@srcs mapdata.cpp  map_shoot_info",
+          "description": "@srcs mapdata.cpp  map_shoot_info   damage reduction range to apply to shot when hit",
           "type": "array",
           "items": [
             {
@@ -586,7 +600,7 @@
           "minItems": 2
         },
         "reduce_damage_laser": {
-          "description": "@srcs mapdata.cpp  map_shoot_info",
+          "description": "@srcs mapdata.cpp  map_shoot_info   damage reduction range to apply to laser shot when hit",
           "type": "array",
           "items": [
             {

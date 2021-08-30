@@ -5,22 +5,24 @@
  * and run json-schema-to-typescript to regenerate this file.
  */
 
-export type CDDATerrain = CDDATerFurnCommonOptional | CDDATerFurnCommonMandatory;
-export type CDDAName = string | CDDATranslation;
+export type CDDATerrain = CDDATerFurnSymbolInd | CDDATerFurnSymbolRely;
+export type CDDATerFurnSymbolInd =
+  | {
+      color: CDDATerFurnColor;
+      [k: string]: unknown;
+    }
+  | {
+      bgcolor: CDDATerFurnColor;
+      [k: string]: unknown;
+    };
+export type CDDATerFurnColor = string | string[];
+export type CDDATerFurnSymbolRely =
+  | {
+      color: CDDATerFurnColor;
+      [k: string]: unknown;
+    }
+  | {
+      bgcolor: CDDATerFurnColor;
+      [k: string]: unknown;
+    };
 export type ArrayOf_CDDATerrain = CDDATerrain[];
-
-export interface CDDATerFurnCommonOptional {
-  "copy-from": string;
-  description?: string;
-  name?: CDDAName;
-  [k: string]: unknown;
-}
-export interface CDDATranslation {
-  aaa: string;
-  [k: string]: unknown;
-}
-export interface CDDATerFurnCommonMandatory {
-  description: string;
-  name: CDDAName;
-  [k: string]: unknown;
-}
