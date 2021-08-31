@@ -122,39 +122,6 @@
         }
       }
     },
-    "CDDATerFurnColor": {
-      "anyOf": [
-        {
-          "type": "string"
-        },
-        {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        }
-      ]
-    },
-    "CDDATerFurnHarvest": {
-      "type": "object",
-      "required": [
-        "id",
-        "seasons"
-      ],
-      "properties": {
-        "id": {
-          "description": "@docs JSON_INFO.md    item group",
-          "type": "string"
-        },
-        "seasons": {
-          "description": "@docs JSON_INFO.md    in this seasons, item group with id can be got",
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        }
-      }
-    },
     "CDDATerFurnShoot": {
       "type": "object",
       "required": [
@@ -222,103 +189,22 @@
         }
       }
     },
-    "CDDATerFurnSymbolInd": {
-      "type": "object",
-      "anyOf": [
-        {
-          "type": "object",
-          "required": [
-            "color"
-          ],
-          "properties": {
-            "color": {
-              "$ref": "#/definitions/CDDATerFurnColor"
-            }
-          }
-        },
-        {
-          "type": "object",
-          "required": [
-            "bgcolor"
-          ],
-          "properties": {
-            "bgcolor": {
-              "$ref": "#/definitions/CDDATerFurnColor"
-            }
-          }
-        }
-      ],
-      "required": [
-        "symbol"
-      ],
-      "properties": {
-        "symbol": {
-          "type": "string"
-        }
-      }
-    },
-    "CDDATerFurnSymbolRely": {
-      "type": "object",
-      "anyOf": [
-        {
-          "type": "object",
-          "required": [
-            "color"
-          ],
-          "properties": {
-            "color": {
-              "$ref": "#/definitions/CDDATerFurnColor"
-            }
-          }
-        },
-        {
-          "type": "object",
-          "required": [
-            "bgcolor"
-          ],
-          "properties": {
-            "bgcolor": {
-              "$ref": "#/definitions/CDDATerFurnColor"
-            }
-          }
-        }
-      ],
-      "required": [
-        "looks_like"
-      ],
-      "properties": {
-        "looks_like": {
-          "type": "string"
-        },
-        "symbol": {
-          "default": "",
-          "type": "string"
-        }
-      }
-    },
     "CDDATerrain": {
       "type": "object",
-      "anyOf": [
-        {
-          "$ref": "#/definitions/CDDATerFurnSymbolInd"
-        },
-        {
-          "$ref": "#/definitions/CDDATerFurnSymbolRely"
-        }
-      ],
       "required": [
         "id",
         "type"
       ],
       "properties": {
         "allowed_template_ids": {
-          "description": "@docs mapdata.cpp    ter_t    ???",
+          "description": "@srcs mapdata.cpp    ter_t    ???",
           "type": "array",
           "items": {
             "type": "string"
           }
         },
         "bash": {
+          "description": "@docs JSON_INFO.md   if not defined, cannot be bashed to broken",
           "anyOf": [
             {
               "$ref": "#/definitions/CDDATerrainBash"
@@ -327,6 +213,11 @@
               "type": "null"
             }
           ]
+        },
+        "bgcolor": {
+          "description": "background color",
+          "default": "",
+          "type": "string"
         },
         "boltcut": {
           "description": "@docs JSON_INFO.md  Data for using with an bolt cutter    if not defined, cannot be boltcut ?   0.F not included",
@@ -348,6 +239,11 @@
           "description": "@docs JSON_INFO.md   transforms to when closed or opened",
           "type": "string"
         },
+        "color": {
+          "description": "symbol color",
+          "default": "",
+          "type": "string"
+        },
         "comfort": {
           "description": "@docs JSON_INFO.md   comfort  How comfortable this terrain/furniture is. Impact ability to fall asleep on it.",
           "type": "integer",
@@ -360,6 +256,9 @@
             "type": "string"
           }
         },
+        "copy-from": {
+          "type": "string"
+        },
         "coverage": {
           "description": "@docs JSON_INFO.md   persentage of coverage",
           "type": "integer",
@@ -370,6 +269,7 @@
           "type": "string"
         },
         "deconstruct": {
+          "description": "@docs JSON_INFO.md   if not defined, cannot be deconstructed",
           "anyOf": [
             {
               "$ref": "#/definitions/CDDATerrainDecon"
@@ -378,6 +278,10 @@
               "type": "null"
             }
           ]
+        },
+        "description": {
+          "description": "this field have a default value \"\", which need to be replaced with copied one",
+          "type": "string"
         },
         "emissions": {
           "description": "@docs JSON_INFO.md    listing the `emit_id` of the fields the terrain/furniture will produce every 10 seconds",
@@ -403,15 +307,14 @@
           "format": "int64"
         },
         "harvest_by_season": {
-          "description": "@docs JSON_INFO.md    build-in trap",
+          "description": "@docs JSON_INFO.md    havest thing by season",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/CDDATerFurnHarvest"
+            "$ref": "#/definitions/CDDATerrainHarvest"
           }
         },
         "heat_radiation": {
-          "description": "@docs JSON_INFO.md   0 means no heat, 1 is equal to fire of intensity 1",
-          "default": 0,
+          "description": "@docs JSON_INFO.md   Heat emitted for a terrain. A value of 0 means no fire. A value of 1 equals a fire of intensity of 1. @srcs mapdata.cpp    map_data_common_t     default 0",
           "type": "integer",
           "format": "int64"
         },
@@ -419,11 +322,15 @@
           "type": "string"
         },
         "lockpick_message": {
-          "description": "@docs JSON_INFO.md",
+          "description": "@docs JSON_INFO.md   When the terrain is successfully lockpicked, this is the message that will be printed to the player. When it is missing, a generic `\"The lock opens…\"` message will be printed instead.",
           "type": "string"
         },
         "lockpick_result": {
-          "description": "@docs JSON_INFO.md",
+          "description": "@docs JSON_INFO.md    When the terrain is successfully lockpicked, this is the terrain it will turn into.",
+          "type": "string"
+        },
+        "looks_like": {
+          "description": "only affects tile loader",
           "type": "string"
         },
         "max_volume": {
@@ -431,6 +338,20 @@
           "allOf": [
             {
               "$ref": "#/definitions/CDDAVolume"
+            }
+          ]
+        },
+        "move_cost": {
+          "description": "@docs  JSON_INFO.md  Move cost to move through. A value of 0 means it's impassable (e.g. wall). You should not use negative values. The positive value is multiple of 50 move points",
+          "default": 0,
+          "type": "integer",
+          "format": "int64"
+        },
+        "name": {
+          "description": "this field have a default value CDDAName::Name(\"\"), which need to be replaced with copied one",
+          "allOf": [
+            {
+              "$ref": "#/definitions/CDDAName"
             }
           ]
         },
@@ -452,6 +373,11 @@
             }
           ]
         },
+        "symbol": {
+          "description": "acsii symbol",
+          "default": "",
+          "type": "string"
+        },
         "transforms_into": {
           "description": "@docs JSON_INFO.md    used for havest",
           "type": "string"
@@ -467,6 +393,9 @@
     },
     "CDDATerrainBash": {
       "type": "object",
+      "required": [
+        "ter_set"
+      ],
       "properties": {
         "bash_below": {
           "description": "@srcs mapdata.cpp    map_bash_info   default false   This terrain is the roof of the tile below it, try to destroy that too",
@@ -553,12 +482,15 @@
           }
         },
         "ter_set": {
-          "default": "",
+          "description": "@docs JSON_INFO    ter_set\" is only used upon \"deconstruct\" entries in terrain and is mandatory there.",
           "type": "string"
         },
         "ter_set_bashed_from_above": {
-          "default": "",
-          "type": "string"
+          "description": "@srcs mapdata.cpp    terrain to set if bashed from above (defaults to ter_set)",
+          "type": [
+            "string",
+            "null"
+          ]
         }
       }
     },
@@ -580,56 +512,29 @@
           ]
         },
         "ter_set": {
+          "description": "@docs JSON_INFO    ter_set\" is only used upon \"deconstruct\" entries in terrain and is mandatory there.",
           "default": "",
           "type": "string"
         }
       }
     },
-    "CDDATerrainMandatory": {
+    "CDDATerrainHarvest": {
       "type": "object",
       "required": [
-        "description",
-        "move_cost",
-        "name"
+        "id",
+        "seasons"
       ],
       "properties": {
-        "description": {
+        "id": {
+          "description": "@docs JSON_INFO.md    item group",
           "type": "string"
         },
-        "move_cost": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "name": {
-          "$ref": "#/definitions/CDDAName"
-        }
-      }
-    },
-    "CDDATerrainOptional": {
-      "type": "object",
-      "required": [
-        "copy-from"
-      ],
-      "properties": {
-        "copy-from": {
-          "type": "string"
-        },
-        "description": {
-          "description": "this field have a default value \"\", which need to be replaced with copied one",
-          "type": "string"
-        },
-        "move_cost": {
-          "default": 0,
-          "type": "integer",
-          "format": "int64"
-        },
-        "name": {
-          "description": "this field have a default value CDDAName::Name(\"\"), which need to be replaced with copied one",
-          "allOf": [
-            {
-              "$ref": "#/definitions/CDDAName"
-            }
-          ]
+        "seasons": {
+          "description": "@docs JSON_INFO.md    in this seasons, item group with id can be got",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       }
     },

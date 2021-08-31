@@ -234,14 +234,6 @@
     },
     "CDDAFurniture": {
       "type": "object",
-      "anyOf": [
-        {
-          "$ref": "#/definitions/CDDATerFurnSymbolInd"
-        },
-        {
-          "$ref": "#/definitions/CDDATerFurnSymbolRely"
-        }
-      ],
       "required": [
         "id",
         "type"
@@ -257,6 +249,11 @@
               "type": "null"
             }
           ]
+        },
+        "bgcolor": {
+          "description": "background color",
+          "default": "",
+          "type": "string"
         },
         "boltcut": {
           "description": "@docs JSON_INFO.md  Data for using with an bolt cutter    if not defined, cannot be boltcut ?   0.F not included",
@@ -278,6 +275,11 @@
           "description": "@docs JSON_INFO.md   transforms to when closed or opened",
           "type": "string"
         },
+        "color": {
+          "description": "symbol color",
+          "default": "",
+          "type": "string"
+        },
         "comfort": {
           "description": "@docs JSON_INFO.md   comfort  How comfortable this terrain/furniture is. Impact ability to fall asleep on it.",
           "type": "integer",
@@ -289,6 +291,9 @@
           "items": {
             "type": "string"
           }
+        },
+        "copy-from": {
+          "type": "string"
         },
         "coverage": {
           "description": "@docs JSON_INFO.md   persentage of coverage",
@@ -313,6 +318,10 @@
               "type": "null"
             }
           ]
+        },
+        "description": {
+          "description": "this field have a default value \"\", which need to be replaced with copied one",
+          "type": "string"
         },
         "emissions": {
           "description": "@docs JSON_INFO.md    listing the `emit_id` of the fields the terrain/furniture will produce every 10 seconds",
@@ -340,11 +349,28 @@
         "id": {
           "type": "string"
         },
+        "looks_like": {
+          "description": "only affects tile loader",
+          "type": "string"
+        },
         "max_volume": {
           "description": "@srcs mapdata.cpp    default is equal to DEFAULT_MAX_VOLUME_IN_SQUARE=1000L",
           "allOf": [
             {
               "$ref": "#/definitions/CDDAVolume"
+            }
+          ]
+        },
+        "move_cost_mod": {
+          "description": "Movement cost modifier (`-10` = impassable, `0` = no change). This is added to the movecost of the underlying terrain.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "name": {
+          "description": "this field have a default value CDDAName::Name(\"\"), which need to be replaced with copied one",
+          "allOf": [
+            {
+              "$ref": "#/definitions/CDDAName"
             }
           ]
         },
@@ -362,6 +388,11 @@
             }
           ]
         },
+        "required_str": {
+          "description": "Strength required to move the furniture around. Negative values indicate an unmovable furniture.",
+          "type": "integer",
+          "format": "int64"
+        },
         "shoot": {
           "description": "@srcs mapdata.cpp   Data for being shot    if not defined, cannot be shot to broken   0.F not included",
           "anyOf": [
@@ -378,6 +409,11 @@
           "type": "number",
           "format": "double"
         },
+        "symbol": {
+          "description": "acsii symbol",
+          "default": "",
+          "type": "string"
+        },
         "type": {
           "type": "string"
         },
@@ -391,72 +427,6 @@
               "type": "null"
             }
           ]
-        }
-      }
-    },
-    "CDDAFurnitureMandatory": {
-      "type": "object",
-      "required": [
-        "description",
-        "move_cost_mod",
-        "name",
-        "required_str"
-      ],
-      "properties": {
-        "description": {
-          "description": "this field have a default value \"\", which need to be replaced with copied one",
-          "type": "string"
-        },
-        "move_cost_mod": {
-          "description": "Movement cost modifier (`-10` = impassable, `0` = no change). This is added to the movecost of the underlying terrain.",
-          "type": "integer",
-          "format": "int64"
-        },
-        "name": {
-          "description": "this field have a default value CDDAName::Name(\"\"), which need to be replaced with copied one",
-          "allOf": [
-            {
-              "$ref": "#/definitions/CDDAName"
-            }
-          ]
-        },
-        "required_str": {
-          "description": "Strength required to move the furniture around. Negative values indicate an unmovable furniture.",
-          "type": "integer",
-          "format": "int64"
-        }
-      }
-    },
-    "CDDAFurnitureOptional": {
-      "type": "object",
-      "required": [
-        "copy-from"
-      ],
-      "properties": {
-        "copy-from": {
-          "type": "string"
-        },
-        "description": {
-          "description": "this field have a default value \"\", which need to be replaced with copied one",
-          "type": "string"
-        },
-        "move_cost_mod": {
-          "description": "Movement cost modifier (`-10` = impassable, `0` = no change). This is added to the movecost of the underlying terrain.",
-          "type": "integer",
-          "format": "int64"
-        },
-        "name": {
-          "description": "this field have a default value CDDAName::Name(\"\"), which need to be replaced with copied one",
-          "allOf": [
-            {
-              "$ref": "#/definitions/CDDAName"
-            }
-          ]
-        },
-        "required_str": {
-          "description": "Strength required to move the furniture around. Negative values indicate an unmovable furniture.",
-          "type": "integer",
-          "format": "int64"
         }
       }
     },
@@ -537,19 +507,6 @@
         }
       }
     },
-    "CDDATerFurnColor": {
-      "anyOf": [
-        {
-          "type": "string"
-        },
-        {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        }
-      ]
-    },
     "CDDATerFurnShoot": {
       "type": "object",
       "required": [
@@ -614,80 +571,6 @@
           ],
           "maxItems": 2,
           "minItems": 2
-        }
-      }
-    },
-    "CDDATerFurnSymbolInd": {
-      "type": "object",
-      "anyOf": [
-        {
-          "type": "object",
-          "required": [
-            "color"
-          ],
-          "properties": {
-            "color": {
-              "$ref": "#/definitions/CDDATerFurnColor"
-            }
-          }
-        },
-        {
-          "type": "object",
-          "required": [
-            "bgcolor"
-          ],
-          "properties": {
-            "bgcolor": {
-              "$ref": "#/definitions/CDDATerFurnColor"
-            }
-          }
-        }
-      ],
-      "required": [
-        "symbol"
-      ],
-      "properties": {
-        "symbol": {
-          "type": "string"
-        }
-      }
-    },
-    "CDDATerFurnSymbolRely": {
-      "type": "object",
-      "anyOf": [
-        {
-          "type": "object",
-          "required": [
-            "color"
-          ],
-          "properties": {
-            "color": {
-              "$ref": "#/definitions/CDDATerFurnColor"
-            }
-          }
-        },
-        {
-          "type": "object",
-          "required": [
-            "bgcolor"
-          ],
-          "properties": {
-            "bgcolor": {
-              "$ref": "#/definitions/CDDATerFurnColor"
-            }
-          }
-        }
-      ],
-      "required": [
-        "looks_like"
-      ],
-      "properties": {
-        "looks_like": {
-          "type": "string"
-        },
-        "symbol": {
-          "default": "",
-          "type": "string"
         }
       }
     },

@@ -598,7 +598,7 @@
             }
           ]
         },
-        "feul": {
+        "fuel": {
           "description": "@docs MAPGEN.md    type of fuel   default unknown   gasoline maybe?",
           "default": "",
           "type": "string"
@@ -908,7 +908,7 @@
       ],
       "properties": {
         "ammo_id": {
-          "description": "@docs MAPGEN.md    default is false",
+          "description": "@docs MAPGEN.md    ammo id",
           "type": "string"
         },
         "qty": {
@@ -1056,7 +1056,7 @@
       ],
       "properties": {
         "add_trait": {
-          "description": "@docs MAPGEN.md   default 0",
+          "description": "@docs MAPGEN.md",
           "allOf": [
             {
               "$ref": "#/definitions/CDDAStringArray"
@@ -1387,7 +1387,7 @@
         "vehicle"
       ],
       "properties": {
-        "feul": {
+        "fuel": {
           "description": "@docs MAPGEN.md    type of fuel   default unknown   gasoline maybe?",
           "default": "",
           "type": "string"
@@ -1422,7 +1422,7 @@
             }
           ]
         },
-        "feul": {
+        "fuel": {
           "description": "@docs MAPGEN.md    fuel status    default -1   -1 means 1%-7% fuel",
           "type": "integer",
           "format": "int64"

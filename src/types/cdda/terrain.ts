@@ -5,24 +5,307 @@
  * and run json-schema-to-typescript to regenerate this file.
  */
 
-export type CDDATerrain = CDDATerFurnSymbolInd | CDDATerFurnSymbolRely;
-export type CDDATerFurnSymbolInd =
-  | {
-      color: CDDATerFurnColor;
-      [k: string]: unknown;
-    }
-  | {
-      bgcolor: CDDATerFurnColor;
-      [k: string]: unknown;
-    };
-export type CDDATerFurnColor = string | string[];
-export type CDDATerFurnSymbolRely =
-  | {
-      color: CDDATerFurnColor;
-      [k: string]: unknown;
-    }
-  | {
-      bgcolor: CDDATerFurnColor;
-      [k: string]: unknown;
-    };
+export type CDDABashDeconItems = string | CDDABashDeconItem[];
+export type CDDAIntRange = number | number[];
+export type CDDATime = number | string;
+export type CDDAVolume = number | string;
+export type CDDAName = string | CDDATranslation;
 export type ArrayOf_CDDATerrain = CDDATerrain[];
+
+export interface CDDATerrain {
+  /**
+   * @srcs mapdata.cpp    ter_t    ???
+   */
+  allowed_template_ids?: string[];
+  /**
+   * @docs JSON_INFO.md   if not defined, cannot be bashed to broken
+   */
+  bash?: CDDATerrainBash | null;
+  /**
+   * background color
+   */
+  bgcolor?: string;
+  /**
+   * @docs JSON_INFO.md  Data for using with an bolt cutter    if not defined, cannot be boltcut ?   0.F not included
+   */
+  boltcut?: CDDATerFurnBoltcut | null;
+  /**
+   * @docs JSON_INFO.md   Increase warmth received on feet from nearby fire  (default = 300)
+   */
+  bonus_fire_warmth_feet?: number;
+  /**
+   * @docs JSON_INFO.md   transforms to when closed or opened
+   */
+  close?: string;
+  /**
+   * symbol color
+   */
+  color?: string;
+  /**
+   * @docs JSON_INFO.md   comfort  How comfortable this terrain/furniture is. Impact ability to fall asleep on it.
+   */
+  comfort?: number;
+  /**
+   * @docs JSON_INFO.md   can connect to some special types defined by flags
+   */
+  connects_to?: string[];
+  "copy-from"?: string;
+  /**
+   * @docs JSON_INFO.md   persentage of coverage
+   */
+  coverage?: number;
+  /**
+   * @srcs mapdata.cpp    furn needs furn id   ter needs ter id
+   */
+  curtain_transform?: string;
+  /**
+   * @docs JSON_INFO.md   if not defined, cannot be deconstructed
+   */
+  deconstruct?: CDDATerrainDecon | null;
+  /**
+   * this field have a default value "", which need to be replaced with copied one
+   */
+  description?: string;
+  /**
+   * @docs JSON_INFO.md    listing the `emit_id` of the fields the terrain/furniture will produce every 10 seconds
+   */
+  emissions?: string[];
+  /**
+   * @docs JSON_INFO.md   from an examine action list
+   */
+  examine_action?: string;
+  /**
+   * @docs JSON_INFO.md   flags
+   */
+  flags?: string[];
+  /**
+   * @docs JSON_INFO.md   Bonus warmth offered by this terrain/furniture when used to sleep.
+   */
+  floor_bedding_warmth?: number;
+  /**
+   * @docs JSON_INFO.md    havest thing by season
+   */
+  harvest_by_season?: CDDATerrainHarvest[];
+  /**
+   * @docs JSON_INFO.md   Heat emitted for a terrain. A value of 0 means no fire. A value of 1 equals a fire of intensity of 1. @srcs mapdata.cpp    map_data_common_t     default 0
+   */
+  heat_radiation?: number;
+  id: string;
+  /**
+   * @docs JSON_INFO.md   When the terrain is successfully lockpicked, this is the message that will be printed to the player. When it is missing, a generic `"The lock opens…"` message will be printed instead.
+   */
+  lockpick_message?: string;
+  /**
+   * @docs JSON_INFO.md    When the terrain is successfully lockpicked, this is the terrain it will turn into.
+   */
+  lockpick_result?: string;
+  /**
+   * only affects tile loader
+   */
+  looks_like?: string;
+  /**
+   * @srcs mapdata.cpp    default is equal to DEFAULT_MAX_VOLUME_IN_SQUARE=1000L
+   */
+  max_volume?: CDDAVolume;
+  /**
+   * @docs  JSON_INFO.md  Move cost to move through. A value of 0 means it's impassable (e.g. wall). You should not use negative values. The positive value is multiple of 50 move points
+   */
+  move_cost?: number;
+  /**
+   * this field have a default value CDDAName::Name(""), which need to be replaced with copied one
+   */
+  name?: CDDAName;
+  open?: string;
+  /**
+   * @docs JSON_INFO.md    default roof
+   */
+  roof?: string;
+  /**
+   * @srcs mapdata.cpp   Data for being shot    if not defined, cannot be shot to broken   0.F not included
+   */
+  shoot?: CDDATerFurnShoot | null;
+  /**
+   * acsii symbol
+   */
+  symbol?: string;
+  /**
+   * @docs JSON_INFO.md    used for havest
+   */
+  transforms_into?: string;
+  /**
+   * @docs JSON_INFO.md    build-in trap
+   */
+  trap?: string;
+  type: string;
+  [k: string]: unknown;
+}
+export interface CDDATerrainBash {
+  /**
+   * @srcs mapdata.cpp    map_bash_info   default false   This terrain is the roof of the tile below it, try to destroy that too
+   */
+  bash_below?: boolean;
+  /**
+   * @docs JSON_INFO    Radius of the tent supported by this tile @srcs mapdata.cpp    map_bash_info   default 1
+   */
+  collapse_radius?: number;
+  /**
+   * @srcs mapdata.cpp    map_bash_info   default false   Only used for destroying, not normally bashable
+   */
+  destroy_only?: boolean;
+  /**
+   * @docs JSON_INFO  If greater than 0, destroying the object causes an explosion with this strength @srcs mapdata.cpp    map_bash_info   default 0
+   */
+  explosive?: number;
+  /**
+   * @docs JSON_INFO    An item group (inline) or an id of an item group   default   "EMPTY_GROUP"
+   */
+  items?: CDDABashDeconItems & string;
+  /**
+   * @docs JSON_INFO    sound message @srcs mapdata.cpp    map_bash_info   default "smash!"
+   */
+  sound?: string;
+  /**
+   * @docs JSON_INFO    sound message when failing @srcs mapdata.cpp    map_bash_info   default "thump!"
+   */
+  sound_fail?: string;
+  /**
+   * @docs JSON_INFO  sound volume when failing bashing @srcs mapdata.cpp    map_bash_info   default -1
+   */
+  sound_fail_vol?: number;
+  /**
+   * @docs JSON_INFO  sound volume when bashed @srcs mapdata.cpp    map_bash_info   default -1
+   */
+  sound_vol?: number;
+  /**
+   * @srcs mapdata.cpp    map_bash_info   default -1  max str required: bash succeeds if str >= random # between str_min & str_max
+   */
+  str_max?: number;
+  /**
+   * @srcs mapdata.cpp    map_bash_info   default -1   alternate values for has_adjacent_furniture(...) == true
+   */
+  str_max_blocked?: number;
+  /**
+   * @srcs mapdata.cpp    map_bash_info   default -1  Alternative values for floor supported by something from below
+   */
+  str_max_supported?: number;
+  /**
+   * @srcs mapdata.cpp    map_bash_info   default -1  min str required to bash
+   */
+  str_min?: number;
+  /**
+   * @srcs mapdata.cpp    map_bash_info   default -1   alternate values for has_adjacent_furniture(...) == true
+   */
+  str_min_blocked?: number;
+  /**
+   * @srcs mapdata.cpp    map_bash_info   default -1  Alternative values for floor supported by something from below
+   */
+  str_min_supported?: number;
+  /**
+   * @docs JSON_INFO    For furniture that is part of tents, this defines the id of the center part
+   */
+  tent_centers?: string[];
+  /**
+   * @docs JSON_INFO    ter_set" is only used upon "deconstruct" entries in terrain and is mandatory there.
+   */
+  ter_set: string;
+  /**
+   * @srcs mapdata.cpp    terrain to set if bashed from above (defaults to ter_set)
+   */
+  ter_set_bashed_from_above?: string | null;
+  [k: string]: unknown;
+}
+export interface CDDABashDeconItem {
+  charges?: CDDAIntRange;
+  count?: CDDAIntRange;
+  item: string;
+  prob?: number;
+  [k: string]: unknown;
+}
+export interface CDDATerFurnBoltcut {
+  /**
+   * @srcs mapdata.cpp    activity_data_common
+   */
+  byproducts?: CDDAByproduct[];
+  /**
+   * @srcs mapdata.cpp    activity_data_common     time used
+   */
+  duration?: CDDATime;
+  /**
+   * @srcs mapdata.cpp    activity_data_common    message
+   */
+  message?: string;
+  /**
+   * @srcs mapdata.cpp    activity_data_ter   ter or furn id    limited by original ter or furn
+   */
+  result?: string;
+  /**
+   * @srcs mapdata.cpp    activity_data_common    sound
+   */
+  sound?: string;
+  /**
+   * @srcs mapdata.cpp    activity_data_common
+   */
+  valid?: boolean;
+  [k: string]: unknown;
+}
+export interface CDDAByproduct {
+  count: CDDAIntRange;
+  /**
+   * @srcs mapdata.cpp    activity_byproduct
+   */
+  item: string;
+  [k: string]: unknown;
+}
+export interface CDDATerrainDecon {
+  /**
+   * @srcs mapdata.cpp    map_deconstruct_info   default false This terrain provided a roof, we need to tear it down now
+   */
+  deconstruct_above?: boolean;
+  /**
+   * @docs JSON_INFO    An item group (inline) or an id of an item group   default   "EMPTY_GROUP"
+   */
+  items?: CDDABashDeconItems & string;
+  /**
+   * @docs JSON_INFO    ter_set" is only used upon "deconstruct" entries in terrain and is mandatory there.
+   */
+  ter_set?: string;
+  [k: string]: unknown;
+}
+export interface CDDATerrainHarvest {
+  /**
+   * @docs JSON_INFO.md    item group
+   */
+  id: string;
+  /**
+   * @docs JSON_INFO.md    in this seasons, item group with id can be got
+   */
+  seasons: string[];
+  [k: string]: unknown;
+}
+export interface CDDATranslation {
+  aaa: string;
+  [k: string]: unknown;
+}
+export interface CDDATerFurnShoot {
+  /**
+   * @srcs mapdata.cpp  map_shoot_info   Base chance to hit the object at all (defaults to 100%)
+   */
+  chance_to_hit?: number;
+  /**
+   * @srcs mapdata.cpp  map_shoot_info   damage range required to have a chance to destroy
+   */
+  destroy_damage: [number, number];
+  /**
+   * @srcs mapdata.cpp  map_shoot_info   Are lasers incapable of destroying the object (defaults to false)
+   */
+  no_laser_destroy?: boolean;
+  /**
+   * @srcs mapdata.cpp  map_shoot_info   damage reduction range to apply to shot when hit
+   */
+  reduce_damage: [number, number];
+  /**
+   * @srcs mapdata.cpp  map_shoot_info   damage reduction range to apply to laser shot when hit
+   */
+  reduce_damage_laser: [number, number];
+  [k: string]: unknown;
+}
