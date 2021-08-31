@@ -133,6 +133,16 @@ impl CDDATime {
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDATranslation {
-  // Name(String),
-  pub aaa: String,
+  #[serde(default)]
+  #[serde(rename = "str")]
+  pub string: String,
+  #[serde(default)]
+  #[serde(rename = "//NOLINT(cata-text-style)")]
+  pub cata_style: String,
+}
+// used to change some value whose type supporting copy-from
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+pub struct CDDACopyChange {
+  #[serde(default)]
+  pub flags: Vec<String>,
 }

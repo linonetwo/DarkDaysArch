@@ -15,6 +15,7 @@
   "files.associations": {
     "utility": "cpp",
     "atomic": "cpp",
-    "memory": "cpp"
+    "memory": "cpp",
+    "istream": "cpp"
   }
 }

@@ -10,7 +10,7 @@ use std::{
  *  with way to optimize
  * convert jsonschema to ts: https://github.com/bcherny/json-schema-to-typescript
 */
-use data::types::{furniture, mapgen, palette, terrain, tileset};
+use data::types::{furniture, mapgen, palette, terrain, tileset, trap};
 
 fn generate<T>(path: PathBuf)
 where
