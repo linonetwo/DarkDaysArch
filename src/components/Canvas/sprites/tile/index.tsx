@@ -19,7 +19,7 @@ const defaultTextStyle = new TextStyle({
 });
 
 export interface ITileProps {
-  onHoverTile: (event: InteractionEvent) => void;
+  onHoverTile?: (event: InteractionEvent) => void;
   tile: [MapgenPaletteKeys, string];
   x: number;
   y: number;

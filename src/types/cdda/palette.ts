@@ -235,7 +235,7 @@ export interface CDDAPaletteGaspumpsValueGaspump {
   /**
    * @docs MAPGEN.md    type of fuel   default unknown   gasoline maybe?
    */
-  feul?: string;
+  fuel?: string;
   [k: string]: unknown;
 }
 export interface CDDAPaletteGraffitiValueGraffiti {
@@ -413,7 +413,7 @@ export interface CDDAPaletteMonsterValueMonsterSpawnData {
 }
 export interface CDDAPaletteMonsterValueMonsterSpawnDataAmmo {
   /**
-   * @docs MAPGEN.md    default is false
+   * @docs MAPGEN.md    ammo id
    */
   ammo_id?: string;
   /**
@@ -495,7 +495,7 @@ export interface CDDAPaletteNestedValueNestedNeighbors {
 }
 export interface CDDAPaletteNpcsValueNpc {
   /**
-   * @docs MAPGEN.md   default 0
+   * @docs MAPGEN.md
    */
   add_trait?: CDDAStringArray;
   class: string;
@@ -586,7 +586,7 @@ export interface CDDAPaletteVehiclesValueVehicle {
   /**
    * @docs MAPGEN.md    type of fuel   default unknown   gasoline maybe?
    */
-  feul?: string;
+  fuel?: string;
   /**
    * @docs MAPGEN.md    if of vehicle id or vehicle group id
    */
@@ -601,7 +601,7 @@ export interface CDDAPaletteVendingsValueVending {
   /**
    * @docs MAPGEN.md    fuel status    default -1   -1 means 1%-7% fuel
    */
-  feul?: number;
+  fuel?: number;
   /**
    * @docs MAPGEN.md    default randomly choose one of "vending_food" or "vending_drink"
    */
