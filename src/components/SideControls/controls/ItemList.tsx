@@ -1,7 +1,5 @@
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
-import { TreeView, TreeItem } from '@material-ui/lab';
-import { ExpandMore as ExpandMoreIcon, ChevronRight as ChevronRightIcon } from '@material-ui/icons';
 
 import { Dispatch, RootState } from 'src/store/store';
 
@@ -32,8 +30,12 @@ export function ItemList(): JSX.Element {
   return (
     <ItemListContainer>
       {terrain.map((item) => (
-        <ItemContainer key={item.id}>{item.id}</ItemContainer>
+        <TileItem tileID={item.id} key={item.id} />
       ))}
     </ItemListContainer>
   );
+}
+
+function TileItem({ tileID }: { tileID: string }): JSX.Element {
+  return <ItemContainer>{tileID}</ItemContainer>;
 }
