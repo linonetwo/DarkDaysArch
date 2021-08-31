@@ -540,7 +540,7 @@ pub struct CDDAPaletteZonesValueZone {
   /**
    * @docs MAPGEN.md    Values: `"NPC_RETREAT"`, `"NPC_NO_INVESTIGATE"`, or `"NPC_INVESTIGATE_ONLY"`
    */
-    //TODO: enum
+  //TODO: enum
   #[serde(rename = "type")]
   pub type_field: String,
   /**

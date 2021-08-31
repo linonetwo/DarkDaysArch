@@ -95,6 +95,7 @@ pub struct CDDATerrainBash {
   /**
    * @srcs mapdata.cpp    terrain to set if bashed from above (defaults to ter_set)
    */
+  #[serde(skip_serializing_if = "Option::is_none")]
   pub ter_set_bashed_from_above: Option<String>,
 }
 

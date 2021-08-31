@@ -1,4 +1,5 @@
 use crate::common::*;
+use crate::list;
 use schemars::JsonSchema;
 use serde;
 use serde::{Deserialize, Serialize};
@@ -7,21 +8,14 @@ pub type CDDAFurnArray = Vec<CDDAFurniture>;
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDATerFurnCommon {
-  //mandatory
-  #[serde(rename = "type")]
-  pub type_field: String,
+  #[serde(flatten)]
+  pub select_list: list::SelectList,
 
-  pub id: String,
   #[serde(default)]
   #[serde(rename = "copy-from")]
   #[serde(skip_serializing_if = "String::is_empty")]
   pub copy_from: String,
-  /**
-   * this field have a default value CDDAName::Name(""), which need to be replaced with copied one
-   */
-  #[serde(default)]
-  #[serde(skip_serializing_if = "CDDAName::is_default")]
-  pub name: CDDAName,
+
   /**
    * this field have a default value "", which need to be replaced with copied one
    */
@@ -42,13 +36,13 @@ pub struct CDDATerFurnCommon {
   /**
    * symbol color
    */
-  //TODO: enum 
+  //TODO: enum
   #[serde(default)]
   pub color: String,
   /**
    * background color
    */
-  //TODO: enum 
+  //TODO: enum
   #[serde(default)]
   pub bgcolor: String,
   /**
@@ -87,14 +81,14 @@ pub struct CDDATerFurnCommon {
   /**
    * @docs JSON_INFO.md   flags
    */
-  //TODO: enum 
+  //TODO: enum
   #[serde(default)]
   #[serde(skip_serializing_if = "Vec::is_empty")]
   pub flags: Vec<String>,
   /**
    * @docs JSON_INFO.md   can connect to some special types defined by flags
    */
-  //TODO: enum 
+  //TODO: enum
   #[serde(default)]
   #[serde(skip_serializing_if = "Vec::is_empty")]
   pub connects_to: Vec<String>,
