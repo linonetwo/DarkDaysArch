@@ -140,3 +140,9 @@ pub fn read_terrain_file(terrain_file_path: &str) -> Result<terrain::CDDATerrain
   let raw_terrain: terrain::CDDATerrainArray = serde_json::from_str(&raw_terrain_string).map_err(|e| e.to_string())?;
   Ok(raw_terrain)
 }
+
+// TODO: prepare a State that contains all JSON first
+// #[tauri::command]
+// pub fn get_json_by_id(id: String) -> Result<CDDA_JSON, String> {
+
+// }
