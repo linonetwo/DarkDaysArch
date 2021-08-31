@@ -2,6 +2,7 @@ pub mod bool;
 pub mod float64;
 pub mod int64;
 pub mod string;
+pub mod tuple;
 
 use serde::{self, Deserialize, Serialize};
 // use std::collections::BTreeMap;

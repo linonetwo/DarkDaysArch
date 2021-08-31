@@ -63,15 +63,26 @@ fn main() {
   // println!("{:?}", raw_list);
   // println!("{}",list_json);
 
-  let omt_file_path = "../public/json/overmap_terrain_commercial.json";
-  let mut raw_omt_file = File::open(omt_file_path).unwrap();
-  let mut raw_omt_string = String::new();
-  raw_omt_file.read_to_string(&mut raw_omt_string).unwrap();
-  let raw_omt: overmap_terrain::CDDAOvermapTerrainArray = serde_json::from_str(&raw_omt_string).unwrap();
+  // let omt_file_path = "../public/json/overmap_terrain_commercial.json";
+  // let mut raw_omt_file = File::open(omt_file_path).unwrap();
+  // let mut raw_omt_string = String::new();
+  // raw_omt_file.read_to_string(&mut raw_omt_string).unwrap();
+  // let raw_omt: overmap_terrain::CDDAOvermapTerrainArray = serde_json::from_str(&raw_omt_string).unwrap();
 
-  let omt_json = serde_json::to_string(&raw_omt).unwrap();
+  // let omt_json = serde_json::to_string(&raw_omt).unwrap();
 
-  // println!("{:?}", raw_omt);
-  println!("{}",omt_json);
+  // // println!("{:?}", raw_omt);
+  // println!("{}",omt_json);
+
+  let oms_file_path = "../public/json/specials.json";
+  let mut raw_oms_file = File::open(oms_file_path).unwrap();
+  let mut raw_oms_string = String::new();
+  raw_oms_file.read_to_string(&mut raw_oms_string).unwrap();
+  let raw_oms: overmap_special::CDDAOvermapSpecialArray = serde_json::from_str(&raw_oms_string).unwrap();
+
+  let oms_json = serde_json::to_string(&raw_oms).unwrap();
+
+  // println!("{:?}", raw_oms);
+  println!("{}",oms_json);
 
 }
