@@ -4,6 +4,7 @@ import { ISideControl } from 'src/components/SideControls/interface';
 import { FileTree, OpenedFiles } from 'src/components/SideControls/controls';
 import { SourceFileViewer } from 'src/components/Details';
 import { World } from 'src/components/Canvas';
+import { ItemList } from 'src/components/SideControls/controls/ItemList';
 
 export interface IPanelConfig {
   /** 左侧的竖着的按钮列表 */
@@ -33,7 +34,7 @@ export const panelConfig: IPanelConfig[] = [
     },
     controls: [
       { icon: 'History', id: 'ItemHistory', component: <div>aaa</div> },
-      { icon: 'EmojiSymbols', id: 'ItemList', component: <div>bbb</div> },
+      { icon: 'EmojiSymbols', id: 'ItemList', component: <ItemList /> },
     ],
     detail: <World />,
   },
