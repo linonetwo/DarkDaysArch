@@ -1,5 +1,6 @@
 use crate::common::*;
-use crate::list::SelectList;
+use crate::common::string::overmap_terrain_Literal;
+use crate::list::SelectListItem;
 use schemars::JsonSchema;
 use serde::{self, Deserialize, Serialize};
 
@@ -7,8 +8,11 @@ pub type CDDAOvermapTerrainArray = Vec<CDDAOvermapTerrain>;
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDAOvermapTerrain {
+  #[serde(rename = "type")]
+  pub cdda_json_type: overmap_terrain_Literal,
+
   #[serde(flatten)]
-  pub select_list: SelectList,
+  pub select_list: SelectListItem,
 
   #[serde(rename = "copy-from")]
   #[serde(skip_serializing_if = "Option::is_none")]

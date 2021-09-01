@@ -1,4 +1,5 @@
 use super::mapgen::CDDAMapgenCoor;
+use crate::common::string::palette_Literal;
 use crate::common::{bool, float64, int64, string, CDDAIntRange, CDDAStringArray};
 use schemars::JsonSchema;
 use serde::{self, Deserialize, Serialize};
@@ -9,7 +10,8 @@ pub type CDDAPaletteArray = Vec<CDDAPalette>;
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDAPalette {
   #[serde(rename = "type")]
-  pub type_field: String,
+  pub cdda_json_type: palette_Literal,
+
   pub id: String,
 
   #[serde(rename = "//")]

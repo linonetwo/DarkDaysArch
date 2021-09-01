@@ -10,6 +10,7 @@ pub mod region_settings;
 pub mod terrain;
 pub mod tileset;
 pub mod trap;
+pub mod mod_info;
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub enum CDDA_JSON {

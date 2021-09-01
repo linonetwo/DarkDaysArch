@@ -1,5 +1,6 @@
 use super::furniture::*;
 use crate::common::*;
+use crate::common::string::terrain_Literal;
 use schemars::JsonSchema;
 use serde;
 use serde::{Deserialize, Serialize};
@@ -8,6 +9,9 @@ pub type CDDATerrainArray = Vec<CDDATerrain>;
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDATerrain {
+  #[serde(rename = "type")]
+  pub cdda_json_type: terrain_Literal,
+
   #[serde(flatten)]
   pub ter_furn_common: CDDATerFurnCommon,
   /**

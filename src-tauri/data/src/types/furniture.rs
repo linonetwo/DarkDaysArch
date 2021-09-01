@@ -1,5 +1,6 @@
 use crate::common::*;
 use crate::list;
+use crate::common::string::furniture_Literal;
 use schemars::JsonSchema;
 use serde;
 use serde::{Deserialize, Serialize};
@@ -9,7 +10,7 @@ pub type CDDAFurnArray = Vec<CDDAFurniture>;
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDATerFurnCommon {
   #[serde(flatten)]
-  pub select_list: list::SelectList,
+  pub select_list: list::SelectListItem,
 
   #[serde(default)]
   #[serde(rename = "copy-from")]
@@ -130,6 +131,9 @@ pub struct CDDATerFurnCommon {
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDAFurniture {
+  #[serde(rename = "type")]
+  pub cdda_json_type: furniture_Literal,
+
   #[serde(flatten)]
   pub ter_furn_common: CDDATerFurnCommon,
 
