@@ -1,0 +1,90 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Array_of_SelectListItemWithType",
+  "type": "array",
+  "items": {
+    "$ref": "#/definitions/SelectListItemWithType"
+  },
+  "definitions": {
+    "CDDAJSONType": {
+      "type": "string",
+      "enum": [
+        "MOD_INFO_Literal",
+        "furniture_Literal",
+        "mapgen_Literal",
+        "overmap_special_Literal",
+        "overmap_terrain_Literal",
+        "palette_Literal",
+        "terrain_Literal",
+        "trap_Literal"
+      ]
+    },
+    "CDDAName": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "$ref": "#/definitions/CDDATranslation"
+        }
+      ]
+    },
+    "CDDAStringArray": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "CDDATranslation": {
+      "type": "object",
+      "properties": {
+        "//NOLINT(cata-text-style)": {
+          "default": "",
+          "type": "string"
+        },
+        "str": {
+          "default": "",
+          "type": "string"
+        }
+      }
+    },
+    "SelectListItemWithType": {
+      "description": "Minimal information about a JSON, this is used as result when searching for a JSON. We can use id in the result to request full JSON content.\n\nThis is SelectListItem with a `type` field. SelectListItem struct is going to be `serde(flatten)` into many other struct, and the `type` field will overwrite their literal `type` field, so we need to use a `SelectListItemWithType` struct to isolate the general `type` field.",
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "abstrct": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "id": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/CDDAStringArray"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "name": {
+          "$ref": "#/definitions/CDDAName"
+        },
+        "type": {
+          "$ref": "#/definitions/CDDAJSONType"
+        }
+      }
+    }
+  }
+}
