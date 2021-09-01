@@ -19,6 +19,10 @@ pub enum CDDAJSONType {
   terrain_Literal,
   #[allow(non_camel_case_types)]
   trap_Literal,
+  #[allow(non_camel_case_types)]
+  EXTERNAL_OPTION_Literal,
+  #[allow(non_camel_case_types)]
+  ITEM_BLACKLIST_Literal,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
@@ -75,4 +79,18 @@ pub enum MOD_INFO_Literal {
 pub enum trap_Literal {
   #[allow(non_camel_case_types)]
   trap,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[allow(non_camel_case_types)]
+pub enum EXTERNAL_OPTION_Literal {
+  #[allow(non_camel_case_types)]
+  EXTERNAL_OPTION,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[allow(non_camel_case_types)]
+pub enum ITEM_BLACKLIST_Literal {
+  #[allow(non_camel_case_types)]
+  ITEM_BLACKLIST,
 }

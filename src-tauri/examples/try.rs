@@ -1,11 +1,14 @@
-use serde_json;
-use serde_json::{Result,Value};
-use std::{fs::File, io::Read};
-use data::types::*;
 use data::list;
+use data::types::*;
+use glob::glob;
+use project_root::get_project_root;
+use schemars::JsonSchema;
 use serde;
 use serde::{Deserialize, Serialize};
-use schemars::JsonSchema;
+use serde_json;
+use serde_json::Value;
+use std::path::Path;
+use std::{collections::BTreeMap, fs::canonicalize, fs::File, io::Read};
 
 fn main() {
   // let map_file_path = "../public/json/magic_academy.json";
@@ -74,15 +77,63 @@ fn main() {
   // // println!("{:?}", raw_omt);
   // println!("{}",omt_json);
 
-  let oms_file_path = "../public/json/specials.json";
-  let mut raw_oms_file = File::open(oms_file_path).unwrap();
-  let mut raw_oms_string = String::new();
-  raw_oms_file.read_to_string(&mut raw_oms_string).unwrap();
-  let raw_oms: overmap_special::CDDAOvermapSpecialArray = serde_json::from_str(&raw_oms_string).unwrap();
+  // let oms_file_path = "../public/json/specials.json";
+  // let mut raw_oms_file = File::open(oms_file_path).unwrap();
+  // let mut raw_oms_string = String::new();
+  // raw_oms_file.read_to_string(&mut raw_oms_string).unwrap();
+  // let raw_oms: overmap_special::CDDAOvermapSpecialArray = serde_json::from_str(&raw_oms_string).unwrap();
 
-  let oms_json = serde_json::to_string(&raw_oms).unwrap();
+  // let oms_json = serde_json::to_string(&raw_oms).unwrap();
 
-  println!("{:?}", raw_oms);
-  println!("{}",oms_json);
+  // println!("{:?}", raw_oms);
+  // println!("{}",oms_json);
 
+  let result = load_cdda_data_folder("assets/Kenan-Modpack-Chinese".into());
+  println!("{:?}", result);
+}
+
+pub fn load_cdda_data_folder(data_folder_path_name: String) -> Result<String, String> {
+  let data_folder_absolute_file_path: String = canonicalize(Path::join(
+    &Path::join(&get_project_root().map_err(|e| e.to_string())?, "../public"),
+    &data_folder_path_name,
+  ))
+  .map_err(|e| e.to_string())?
+  .display()
+  .to_string();
+  /** Map from mod id to mod fileNames */
+  let mut files_in_folder: BTreeMap<String, Vec<std::string::String>> = BTreeMap::new();
+  // search for all mod info, to get mod id
+  for entry in glob(&format!("{}/*/modinfo.json", data_folder_absolute_file_path)).expect("Failed to read glob pattern in load_cdda_data_folder") {
+    match entry {
+      Ok(mod_info_file_absolute_path_buf) => {
+        let mod_info_file_absolute_path: String = mod_info_file_absolute_path_buf.display().to_string();
+        // read tile_config file
+        let mod_info_json: mod_info::CDDAModInfoArray = serde_json::from_reader(File::open(mod_info_file_absolute_path_buf).map_err(|e| e.to_string())?)
+          .map_err(|e| format!("{} {}", e.to_string(), mod_info_file_absolute_path))?;
+        let mod_id = match mod_info_json
+          .get(0)
+          .unwrap_or_else(|| panic!("{} don't have a valid mod info.", mod_info_file_absolute_path))
+        {
+          mod_info::CDDAModInfoWithExternalOption::ModInfo(mod_info_item) => mod_info_item.id.clone(),
+          _ => panic!("{} first item is not a mod info.", mod_info_file_absolute_path),
+        };
+        // create record in Map
+        let mut file_names_in_mod: Vec<std::string::String> = vec![];
+        // search for all files in this mod
+        for entry in glob(&format!("{}/*/*.json", mod_info_file_absolute_path)).expect("Failed to read 2nd glob pattern in load_cdda_data_folder") {
+          match entry {
+            Ok(mod_json_file_absolute_path_buf) => {
+              file_names_in_mod.push(mod_json_file_absolute_path_buf.display().to_string());
+            }
+            Err(e) => println!("{:?}", e),
+          };
+        }
+        files_in_folder.insert(mod_id, file_names_in_mod);
+      }
+      Err(e) => println!("{:?}", e),
+    }
+  }
+  println!("{:?}", files_in_folder);
+  Ok("".into())
+  // state.knowledge_graph
 }
