@@ -74,15 +74,25 @@ fn main() {
   // // println!("{:?}", raw_omt);
   // println!("{}",omt_json);
 
-  let oms_file_path = "../public/json/specials.json";
-  let mut raw_oms_file = File::open(oms_file_path).unwrap();
-  let mut raw_oms_string = String::new();
-  raw_oms_file.read_to_string(&mut raw_oms_string).unwrap();
-  let raw_oms: overmap_special::CDDAOvermapSpecialArray = serde_json::from_str(&raw_oms_string).unwrap();
+  // let oms_file_path = "../public/json/specials.json";
+  // let mut raw_oms_file = File::open(oms_file_path).unwrap();
+  // let mut raw_oms_string = String::new();
+  // raw_oms_file.read_to_string(&mut raw_oms_string).unwrap();
+  // let raw_oms: overmap_special::CDDAOvermapSpecialArray = serde_json::from_str(&raw_oms_string).unwrap();
 
-  let oms_json = serde_json::to_string(&raw_oms).unwrap();
+  // let oms_json = serde_json::to_string(&raw_oms).unwrap();
 
-  println!("{:?}", raw_oms);
-  println!("{}",oms_json);
+  // println!("{:?}", raw_oms);
+  // println!("{}",oms_json);
 
+  let region_file_path = "../public/json/regional_map_settings.json";
+  let mut raw_region_file = File::open(region_file_path).unwrap();
+  let mut raw_region_string = String::new();
+  raw_region_file.read_to_string(&mut raw_region_string).unwrap();
+  let raw_region: region_settings::CDDARegionSettingsArray = serde_json::from_str(&raw_region_string).unwrap();
+
+  let region_json = serde_json::to_string(&raw_region).unwrap();
+
+  // println!("{:?}", raw_region);
+  println!("{}",region_json);
 }
