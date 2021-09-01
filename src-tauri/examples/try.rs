@@ -82,7 +82,7 @@ fn main() {
 
   let oms_json = serde_json::to_string(&raw_oms).unwrap();
 
-  // println!("{:?}", raw_oms);
+  println!("{:?}", raw_oms);
   println!("{}",oms_json);
 
 }

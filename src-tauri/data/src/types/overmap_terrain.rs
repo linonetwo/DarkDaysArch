@@ -103,9 +103,9 @@ pub struct CDDAOvermapTerrainSpawns {
   /**
    * @src overmap  common_types  must be an interval   default 0 (maybe)
    */
-  #[serde(default = "tuple::default_i_0m1")]
-  #[serde(skip_serializing_if = "tuple::is_default_i_0m1")]
-  pub population: (i64, i64),
+  #[serde(default)]
+  #[serde(skip_serializing_if = "Interval::<i64>::is_default")]
+  pub population: Interval<i64>,
   /**
    * @src overmap  i64   default 0
    */

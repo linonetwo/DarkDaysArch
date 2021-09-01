@@ -11,9 +11,9 @@ use schemars::JsonSchema;
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 #[serde(untagged)]
 pub enum CDDAIntRange {
-  // without unit
+  // single int
   Single(i64),
-  // with unit
+  // with size 1 or 2
   Range(Vec<i64>),
 }
 impl CDDAIntRange {
@@ -146,4 +146,42 @@ pub struct CDDATranslation {
 pub struct CDDACopyChange {
   #[serde(default)]
   pub flags: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+pub struct Interval<T>(T,T);
+
+impl<T: Default+PartialEq> Default for Interval<T> {
+  fn default() -> Interval<T> {
+    Interval::<T>(T::default(),T::default())
+  }
+}
+
+impl<T:Default+PartialEq> Interval<T> {
+  pub fn is_default(t: &Interval<T>) -> bool {
+    t == &Interval::<T>::default()
+  }
+
+  pub fn default_int_0m1() -> Interval<i64> {
+    Interval::<i64>(0,-1)
+  }
+
+  pub fn is_default_int_0m1(t: &Interval<i64>) -> bool {
+    t == &Interval::<i64>::default_int_0m1()
+  }
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+pub struct TriPoint<T>(T,T,T);
+
+impl<T: Default+PartialEq> Default for TriPoint<T> {
+  fn default() -> TriPoint<T> {
+    TriPoint::<T>(T::default(),T::default(),T::default())
+  }
+}
+
+impl<T: Default+PartialEq> TriPoint<T> {
+  pub fn is_default(t: &TriPoint<T>) -> bool {
+    t == &TriPoint::<T>::default()
+  }
 }
