@@ -1,3 +1,6 @@
+use std::collections::BTreeMap;
+use serde::{Deserialize, Serialize};
+
 pub mod furniture;
 pub mod mapgen;
 pub mod overmap_special;
@@ -7,6 +10,7 @@ pub mod terrain;
 pub mod tileset;
 pub mod trap;
 
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub enum CDDA_JSON {
   Furniture(furniture::CDDAFurniture),
   Mapgen(mapgen::CDDAMapgen),
@@ -14,4 +18,14 @@ pub enum CDDA_JSON {
   Palette(palette::CDDAPalette),
   Terrain(terrain::CDDATerrain),
   Tileset(tileset::CDDATileSetConfig),
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct CDDAKnowledgeGraph {
+  pub furniture: furniture::CDDAFurniture,
+  pub mapgen: mapgen::CDDAMapgen,
+  pub overmap_terrain: overmap_terrain::CDDAOvermapTerrain,
+  pub palette: palette::CDDAPalette,
+  pub terrain: terrain::CDDATerrain,
+  pub tileset: tileset::CDDATileSetConfig,
 }

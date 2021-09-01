@@ -6,6 +6,7 @@ use std::path::Path;
 use std::{collections::BTreeMap, fs::File, io::Read};
 
 use crate::parsers;
+use crate::types;
 
 pub fn invoke_handler() -> impl Fn(tauri::Invoke) + Send + Sync + 'static {
   tauri::generate_handler![read_tileset_folder, read_mapgen_file, read_terrain_file]
@@ -145,4 +146,9 @@ pub fn read_terrain_file(terrain_file_path: &str) -> Result<terrain::CDDATerrain
 // #[tauri::command]
 // pub fn get_json_by_id(id: String) -> Result<CDDA_JSON, String> {
 
+// }
+
+// #[tauri::command]
+// pub fn load_cdda_data_folder(state: tauri::State<types::state::AppState>, data_folder_path: String) -> Result<String, String> {
+//   state.knowledge_graph
 // }
