@@ -6,6 +6,8 @@ An Architecture helper and mod content Designer for Cataclysm-DarkDaysAhead.
 
 [Diagrams about architecture and UI structure](docs/diagrams), it uses draw.io (diagrams.net), so you can install drawio plugin of VSCode to open it.
 
+![screenshot](docs/images/screenshot.png)
+
 ## Development
 
 `npm run` following scripts, for example, `npm run tauri:dev`
