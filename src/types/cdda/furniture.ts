@@ -8,12 +8,14 @@
 export type CDDABashDeconItems = string | CDDABashDeconItem[];
 export type CDDAIntRange = number | number[];
 export type CDDATime = number | string;
+export type CDDAStringArray = string | string[];
 export type CDDAVolume = number | string;
 export type CDDAName = string | CDDATranslation;
 export type CDDAMass = number | string;
 export type ArrayOf_CDDAFurniture = CDDAFurniture[];
 
 export interface CDDAFurniture {
+  abstrct?: string | null;
   /**
    * @docs JSON_INFO.md   if not defined, cannot be bashed to broken
    */
@@ -83,7 +85,7 @@ export interface CDDAFurniture {
    * @docs JSON_INFO.md   Bonus warmth offered by this terrain/furniture when used to sleep.
    */
   floor_bedding_warmth?: number;
-  id: string;
+  id?: CDDAStringArray | null;
   /**
    * only affects tile loader
    */
@@ -96,9 +98,6 @@ export interface CDDAFurniture {
    * Movement cost modifier (`-10` = impassable, `0` = no change). This is added to the movecost of the underlying terrain.
    */
   move_cost_mod?: number;
-  /**
-   * this field have a default value CDDAName::Name(""), which need to be replaced with copied one
-   */
   name?: CDDAName;
   open?: string;
   /**
@@ -257,7 +256,8 @@ export interface CDDAFurnDecon {
   [k: string]: unknown;
 }
 export interface CDDATranslation {
-  aaa: string;
+  "//NOLINT(cata-text-style)"?: string;
+  str?: string;
   [k: string]: unknown;
 }
 export interface CDDAFurnPlant {

@@ -10,7 +10,7 @@ use std::{
  *  with way to optimize
  * convert jsonschema to ts: https://github.com/bcherny/json-schema-to-typescript
 */
-use data::types::{furniture, mapgen, palette, terrain, tileset, trap};
+use data::types::{furniture, mapgen, palette, terrain, tileset, trap, mod_info};
 
 fn generate<T>(path: PathBuf)
 where
@@ -28,4 +28,5 @@ fn main() {
   generate::<palette::CDDAPaletteArray>(Path::join(project_root, "../src/types/cdda/palette.json"));
   generate::<furniture::CDDAFurnArray>(Path::join(project_root, "../src/types/cdda/furniture.json"));
   generate::<terrain::CDDATerrainArray>(Path::join(project_root, "../src/types/cdda/terrain.json"));
+  generate::<mod_info::CDDAModInfoArray>(Path::join(project_root, "../src/types/cdda/mod_info.json"));
 }

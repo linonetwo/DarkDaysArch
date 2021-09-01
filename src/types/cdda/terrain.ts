@@ -8,11 +8,13 @@
 export type CDDABashDeconItems = string | CDDABashDeconItem[];
 export type CDDAIntRange = number | number[];
 export type CDDATime = number | string;
+export type CDDAStringArray = string | string[];
 export type CDDAVolume = number | string;
 export type CDDAName = string | CDDATranslation;
 export type ArrayOf_CDDATerrain = CDDATerrain[];
 
 export interface CDDATerrain {
+  abstrct?: string | null;
   /**
    * @srcs mapdata.cpp    ter_t    ???
    */
@@ -90,7 +92,7 @@ export interface CDDATerrain {
    * @docs JSON_INFO.md   Heat emitted for a terrain. A value of 0 means no fire. A value of 1 equals a fire of intensity of 1. @srcs mapdata.cpp    map_data_common_t     default 0
    */
   heat_radiation?: number;
-  id: string;
+  id?: CDDAStringArray | null;
   /**
    * @docs JSON_INFO.md   When the terrain is successfully lockpicked, this is the message that will be printed to the player. When it is missing, a generic `"The lock opens…"` message will be printed instead.
    */
@@ -111,9 +113,6 @@ export interface CDDATerrain {
    * @docs  JSON_INFO.md  Move cost to move through. A value of 0 means it's impassable (e.g. wall). You should not use negative values. The positive value is multiple of 50 move points
    */
   move_cost?: number;
-  /**
-   * this field have a default value CDDAName::Name(""), which need to be replaced with copied one
-   */
   name?: CDDAName;
   open?: string;
   /**
@@ -283,7 +282,8 @@ export interface CDDATerrainHarvest {
   [k: string]: unknown;
 }
 export interface CDDATranslation {
-  aaa: string;
+  "//NOLINT(cata-text-style)"?: string;
+  str?: string;
   [k: string]: unknown;
 }
 export interface CDDATerFurnShoot {

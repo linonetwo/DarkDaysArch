@@ -235,10 +235,15 @@
     "CDDAFurniture": {
       "type": "object",
       "required": [
-        "id",
         "type"
       ],
       "properties": {
+        "abstrct": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
         "bash": {
           "description": "@docs JSON_INFO.md   if not defined, cannot be bashed to broken",
           "anyOf": [
@@ -347,7 +352,14 @@
           "format": "int64"
         },
         "id": {
-          "type": "string"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/CDDAStringArray"
+            },
+            {
+              "type": "null"
+            }
+          ]
         },
         "looks_like": {
           "description": "only affects tile loader",
@@ -367,12 +379,7 @@
           "format": "int64"
         },
         "name": {
-          "description": "this field have a default value CDDAName::Name(\"\"), which need to be replaced with copied one",
-          "allOf": [
-            {
-              "$ref": "#/definitions/CDDAName"
-            }
-          ]
+          "$ref": "#/definitions/CDDAName"
         },
         "open": {
           "type": "string"
@@ -463,6 +470,19 @@
         },
         {
           "$ref": "#/definitions/CDDATranslation"
+        }
+      ]
+    },
+    "CDDAStringArray": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       ]
     },
@@ -587,11 +607,13 @@
     },
     "CDDATranslation": {
       "type": "object",
-      "required": [
-        "aaa"
-      ],
       "properties": {
-        "aaa": {
+        "//NOLINT(cata-text-style)": {
+          "default": "",
+          "type": "string"
+        },
+        "str": {
+          "default": "",
           "type": "string"
         }
       }

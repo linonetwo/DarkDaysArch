@@ -81,6 +81,19 @@
         }
       ]
     },
+    "CDDAStringArray": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      ]
+    },
     "CDDATerFurnBoltcut": {
       "type": "object",
       "properties": {
@@ -192,10 +205,15 @@
     "CDDATerrain": {
       "type": "object",
       "required": [
-        "id",
         "type"
       ],
       "properties": {
+        "abstrct": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
         "allowed_template_ids": {
           "description": "@srcs mapdata.cpp    ter_t    ???",
           "type": "array",
@@ -319,7 +337,14 @@
           "format": "int64"
         },
         "id": {
-          "type": "string"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/CDDAStringArray"
+            },
+            {
+              "type": "null"
+            }
+          ]
         },
         "lockpick_message": {
           "description": "@docs JSON_INFO.md   When the terrain is successfully lockpicked, this is the message that will be printed to the player. When it is missing, a generic `\"The lock opens…\"` message will be printed instead.",
@@ -348,12 +373,7 @@
           "format": "int64"
         },
         "name": {
-          "description": "this field have a default value CDDAName::Name(\"\"), which need to be replaced with copied one",
-          "allOf": [
-            {
-              "$ref": "#/definitions/CDDAName"
-            }
-          ]
+          "$ref": "#/definitions/CDDAName"
         },
         "open": {
           "type": "string"
@@ -551,11 +571,13 @@
     },
     "CDDATranslation": {
       "type": "object",
-      "required": [
-        "aaa"
-      ],
       "properties": {
-        "aaa": {
+        "//NOLINT(cata-text-style)": {
+          "default": "",
+          "type": "string"
+        },
+        "str": {
+          "default": "",
           "type": "string"
         }
       }

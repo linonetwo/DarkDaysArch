@@ -1,0 +1,135 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Array_of_CDDAModInfo",
+  "type": "array",
+  "items": {
+    "$ref": "#/definitions/CDDAModInfo"
+  },
+  "definitions": {
+    "CDDAModInfo": {
+      "description": "@docs https://github.com/CleverRaven/Cataclysm-DDA/blob/master/doc/MODDING.md#modinfojson",
+      "type": "object",
+      "required": [
+        "description",
+        "id",
+        "name",
+        "type"
+      ],
+      "properties": {
+        "//": {
+          "type": "string"
+        },
+        "authors": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/CDDAModInfoAuthors"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "category": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/CDDAModInfoCategory"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dependencies": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "description": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "maintainers": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/definitions/MOD_INFO_Literal"
+        },
+        "version": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "CDDAModInfoAuthors": {
+      "anyOf": [
+        {
+          "type": "object",
+          "required": [
+            "Name"
+          ],
+          "properties": {
+            "Name": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "NameList"
+          ],
+          "properties": {
+            "NameList": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "CDDAModInfoCategory": {
+      "type": "string",
+      "enum": [
+        "content",
+        "total_conversion",
+        "items",
+        "creatures",
+        "misc_additions",
+        "buildings",
+        "vehicles",
+        "rebalance",
+        "magical",
+        "item_exclude",
+        "monster_exclude",
+        "graphical"
+      ]
+    },
+    "MOD_INFO_Literal": {
+      "type": "string",
+      "enum": [
+        "MOD_INFO"
+      ]
+    }
+  }
+}
