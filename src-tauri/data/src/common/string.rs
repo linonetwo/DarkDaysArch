@@ -23,6 +23,7 @@ pub enum CDDAJSONType {
   EXTERNAL_OPTION_Literal,
   #[allow(non_camel_case_types)]
   ITEM_BLACKLIST_Literal,
+  region_settings_Literal,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
@@ -93,4 +94,8 @@ pub enum EXTERNAL_OPTION_Literal {
 pub enum ITEM_BLACKLIST_Literal {
   #[allow(non_camel_case_types)]
   ITEM_BLACKLIST,
+}
+pub enum region_settings_Literal {
+  #[allow(non_camel_case_types)]
+  region_settings,
 }

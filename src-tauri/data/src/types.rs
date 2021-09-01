@@ -1,11 +1,12 @@
-use std::collections::BTreeMap;
 use serde::{Deserialize, Serialize};
+use std::collections::BTreeMap;
 
 pub mod furniture;
 pub mod mapgen;
 pub mod overmap_special;
 pub mod overmap_terrain;
 pub mod palette;
+pub mod region_settings;
 pub mod terrain;
 pub mod tileset;
 pub mod trap;

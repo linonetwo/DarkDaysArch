@@ -88,6 +88,18 @@ fn main() {
   // println!("{:?}", raw_oms);
   // println!("{}",oms_json);
 
+
+  let region_file_path = "../public/json/regional_map_settings.json";
+  let mut raw_region_file = File::open(region_file_path).unwrap();
+  let mut raw_region_string = String::new();
+  raw_region_file.read_to_string(&mut raw_region_string).unwrap();
+  let raw_region: region_settings::CDDARegionSettingsArray = serde_json::from_str(&raw_region_string).unwrap();
+
+  let region_json = serde_json::to_string(&raw_region).unwrap();
+
+  // println!("{:?}", raw_region);
+  println!("{}",region_json);
+
   let result = load_cdda_data_folder("assets/Kenan-Modpack-Chinese".into());
   println!("{:?}", result);
 }
