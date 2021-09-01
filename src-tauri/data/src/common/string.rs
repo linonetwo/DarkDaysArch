@@ -19,6 +19,8 @@ pub enum CDDAJSONType {
   terrain_Literal,
   #[allow(non_camel_case_types)]
   trap_Literal,
+  #[allow(non_camel_case_types)]
+  region_settings_Literal,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
@@ -75,4 +77,11 @@ pub enum MOD_INFO_Literal {
 pub enum trap_Literal {
   #[allow(non_camel_case_types)]
   trap,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[allow(non_camel_case_types)]
+pub enum region_settings_Literal {
+  #[allow(non_camel_case_types)]
+  region_settings,
 }
