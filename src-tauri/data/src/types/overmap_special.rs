@@ -1,6 +1,6 @@
 use crate::common::string::overmap_special_Literal;
 use crate::common::*;
-use crate::list::SelectList;
+use crate::list::SelectListItem;
 use schemars::JsonSchema;
 use serde::{self, Deserialize, Serialize};
 
@@ -13,7 +13,7 @@ pub struct CDDAOvermapSpecial {
 
   //no name allowed
   #[serde(flatten)]
-  pub select_list: SelectList,
+  pub select_list: SelectListItem,
 
   #[serde(default)]
   #[serde(rename = "//")]

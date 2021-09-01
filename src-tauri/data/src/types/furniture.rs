@@ -10,7 +10,7 @@ pub type CDDAFurnArray = Vec<CDDAFurniture>;
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDATerFurnCommon {
   #[serde(flatten)]
-  pub select_list: list::SelectList,
+  pub select_list: list::SelectListItem,
 
   #[serde(default)]
   #[serde(rename = "copy-from")]

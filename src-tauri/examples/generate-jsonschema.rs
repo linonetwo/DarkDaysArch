@@ -5,12 +5,13 @@ use std::{
   path::{Path, PathBuf},
 };
 
+use data::list::SelectListArray;
 /**
  * convert serde to jsonschema: https://imfeld.dev/writing/generating_typescript_types_from_rust
  *  with way to optimize
  * convert jsonschema to ts: https://github.com/bcherny/json-schema-to-typescript
 */
-use data::types::{furniture, mapgen, palette, terrain, tileset, trap, mod_info};
+use data::types::{furniture, mapgen, mod_info, palette, terrain, tileset, trap};
 
 fn generate<T>(path: PathBuf)
 where
@@ -23,10 +24,11 @@ where
 
 fn main() {
   let project_root = &get_project_root().unwrap();
+  generate::<SelectListArray>(Path::join(project_root, "../src/types/cdda/selectList.json"));
   generate::<tileset::CDDATileSetConfigWithCache>(Path::join(project_root, "../src/types/cdda/tileset.json"));
   generate::<mapgen::CDDAMapgenWithCache>(Path::join(project_root, "../src/types/cdda/mapgen.json"));
   generate::<palette::CDDAPaletteArray>(Path::join(project_root, "../src/types/cdda/palette.json"));
   generate::<furniture::CDDAFurnArray>(Path::join(project_root, "../src/types/cdda/furniture.json"));
   generate::<terrain::CDDATerrainArray>(Path::join(project_root, "../src/types/cdda/terrain.json"));
-  generate::<mod_info::CDDAModInfoArray>(Path::join(project_root, "../src/types/cdda/mod_info.json"));
+  generate::<mod_info::CDDAModInfoArray>(Path::join(project_root, "../src/types/cdda/modInfo.json"));
 }
