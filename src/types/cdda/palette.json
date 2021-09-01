@@ -336,7 +336,7 @@
           }
         },
         "type": {
-          "type": "string"
+          "$ref": "#/definitions/palette_Literal"
         },
         "vehicles": {
           "type": "object",
@@ -1489,6 +1489,12 @@
             "type": "string"
           }
         }
+      ]
+    },
+    "palette_Literal": {
+      "type": "string",
+      "enum": [
+        "palette"
       ]
     }
   }

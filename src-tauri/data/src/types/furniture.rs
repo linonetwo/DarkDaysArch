@@ -1,5 +1,6 @@
 use crate::common::*;
 use crate::list;
+use crate::common::string::furniture_Literal;
 use schemars::JsonSchema;
 use serde;
 use serde::{Deserialize, Serialize};
@@ -130,6 +131,9 @@ pub struct CDDATerFurnCommon {
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDAFurniture {
+  #[serde(rename = "type")]
+  pub cdda_json_type: furniture_Literal,
+
   #[serde(flatten)]
   pub ter_furn_common: CDDATerFurnCommon,
 

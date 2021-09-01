@@ -8,9 +8,6 @@ pub type SelectListArray = Vec<SelectList>;
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 // #[serde(allow_unknown)]
 pub struct SelectList {
-  // enum maybe
-  #[serde(rename = "type")]
-  pub type_field: String,
   #[serde(skip_serializing_if = "Option::is_none")]
   pub id: Option<CDDAStringArray>,
   #[serde(rename = "abstrct")]

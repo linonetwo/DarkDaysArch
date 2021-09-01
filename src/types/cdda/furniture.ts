@@ -11,6 +11,7 @@ export type CDDATime = number | string;
 export type CDDAStringArray = string | string[];
 export type CDDAVolume = number | string;
 export type CDDAName = string | CDDATranslation;
+export type Furniture_Literal = "furniture";
 export type CDDAMass = number | string;
 export type ArrayOf_CDDAFurniture = CDDAFurniture[];
 
@@ -120,7 +121,7 @@ export interface CDDAFurniture {
    * acsii symbol
    */
   symbol?: string;
-  type: string;
+  type: Furniture_Literal;
   /**
    * @docs JSON_INFO.md   if not defined, cannot be a workbench
    */

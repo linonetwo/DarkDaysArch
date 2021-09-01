@@ -312,6 +312,7 @@ export type CDDAPaletteTrapsValueObject = CDDAPaletteTrapsValueTrap | CDDAPalett
 export type CDDAPaletteVehiclesValue = CDDAPaletteVehiclesValueVehicle | CDDAPaletteVehiclesValueVehicle[];
 export type CDDAPaletteVendingsValue = CDDAPaletteVendingsValueVending | CDDAPaletteVendingsValueVending[];
 export type CDDAPaletteZonesValue = CDDAPaletteZonesValueZone | CDDAPaletteZonesValueZone[];
+export type Mapgen_Literal = "mapgen";
 
 export interface CDDAMapgenWithCache {
   /**
@@ -328,7 +329,7 @@ export interface CDDAMapgenOM {
   method?: string;
   object?: CDDAMapgenObject | null;
   om_terrain: string;
-  type: string;
+  type: Mapgen_Literal;
   [k: string]: unknown;
 }
 export interface CDDAMapgenObject {
@@ -1188,7 +1189,7 @@ export interface CDDAPaletteZonesValueZone {
 export interface CDDAMapgenUpdate {
   method?: string;
   object?: CDDAMapgenObject | null;
-  type: string;
+  type: Mapgen_Literal;
   update_mapgen_id: string;
   [k: string]: unknown;
 }
@@ -1196,6 +1197,6 @@ export interface CDDAMapgenNested {
   method?: string;
   nested_mapgen_id: string;
   object?: CDDAMapgenObject | null;
-  type: string;
+  type: Mapgen_Literal;
   [k: string]: unknown;
 }

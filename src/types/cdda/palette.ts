@@ -58,6 +58,7 @@ export type CDDAPaletteTrapsValueObject = CDDAPaletteTrapsValueTrap | CDDAPalett
 export type CDDAPaletteVehiclesValue = CDDAPaletteVehiclesValueVehicle | CDDAPaletteVehiclesValueVehicle[];
 export type CDDAPaletteVendingsValue = CDDAPaletteVendingsValueVending | CDDAPaletteVendingsValueVending[];
 export type CDDAPaletteZonesValue = CDDAPaletteZonesValueZone | CDDAPaletteZonesValueZone[];
+export type Palette_Literal = "palette";
 export type ArrayOf_CDDAPalette = CDDAPalette[];
 
 export interface CDDAPalette {
@@ -138,7 +139,7 @@ export interface CDDAPalette {
   traps?: {
     [k: string]: CDDAPaletteTrapsValue;
   };
-  type: string;
+  type: Palette_Literal;
   vehicles?: {
     [k: string]: CDDAPaletteVehiclesValue;
   };

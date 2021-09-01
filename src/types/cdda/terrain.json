@@ -407,7 +407,7 @@
           "type": "string"
         },
         "type": {
-          "type": "string"
+          "$ref": "#/definitions/terrain_Literal"
         }
       }
     },
@@ -591,6 +591,12 @@
         {
           "type": "string"
         }
+      ]
+    },
+    "terrain_Literal": {
+      "type": "string",
+      "enum": [
+        "terrain"
       ]
     }
   }
