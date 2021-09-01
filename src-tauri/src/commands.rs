@@ -1,4 +1,4 @@
-use data::types::{furniture, mapgen, palette, terrain, tileset};
+use data::types::{furniture, mapgen, palette, terrain, tileset, CDDA_JSON};
 use glob::glob;
 use image_base64::to_base64;
 use project_root::get_project_root;
@@ -12,26 +12,31 @@ pub fn invoke_handler() -> impl Fn(tauri::Invoke) + Send + Sync + 'static {
 }
 
 #[tauri::command]
-pub fn read_tileset_folder(tileset_path_name: &str) -> tileset::CDDATileSetConfigWithCache {
-  let tileset_absolute_file_path = Path::join(&Path::join(&get_project_root().unwrap(), "../public"), tileset_path_name)
-    .into_os_string()
-    .into_string()
-    .unwrap();
+pub fn read_tileset_folder(tileset_path_name: &str) -> Result<tileset::CDDATileSetConfigWithCache, String> {
+  let tileset_absolute_file_path: String = Path::join(&Path::join(&get_project_root().map_err(|e| e.to_string())?, "../public"), tileset_path_name)
+    .to_str()
+    .ok_or_else(|| format!("Path join failed in read_tileset_folder({})", tileset_path_name))?
+    .into();
   let mut files_in_folder: Vec<std::string::String> = vec![];
   for entry in glob(&format!("{}/*", tileset_absolute_file_path)).expect("Failed to read glob pattern") {
     match entry {
       Ok(path) => {
-        files_in_folder.push(path.into_os_string().into_string().unwrap());
+        files_in_folder.push(
+          path
+            .to_str()
+            .ok_or_else(|| format!("glob failed in read_tileset_folder({})", tileset_path_name))?
+            .into(),
+        );
       }
       Err(e) => println!("{:?}", e),
     }
   }
   // read tile_config file
   let config_file_path = format!("{}/tile_config.json", tileset_absolute_file_path);
-  let mut raw_tile_config_file = File::open(config_file_path).unwrap();
+  let mut raw_tile_config_file = File::open(config_file_path).map_err(|e| e.to_string())?;
   let mut raw_tile_config_string = String::new();
-  raw_tile_config_file.read_to_string(&mut raw_tile_config_string).unwrap();
-  let raw_tile_config: tileset::CDDATileSetConfig = serde_json::from_str(&raw_tile_config_string).unwrap();
+  raw_tile_config_file.read_to_string(&mut raw_tile_config_string).map_err(|e| e.to_string())?;
+  let raw_tile_config: tileset::CDDATileSetConfig = serde_json::from_str(&raw_tile_config_string).map_err(|e| e.to_string())?;
   // prepare textures
   let mut textures: BTreeMap<String, String> = BTreeMap::new();
   for tile_config_item in &raw_tile_config.tiles_new {
@@ -41,25 +46,27 @@ pub fn read_tileset_folder(tileset_path_name: &str) -> tileset::CDDATileSetConfi
 
   let tile_data_index = parsers::tileset::prepare_tile_data_index(raw_tile_config);
   let config_with_cache = tileset::CDDATileSetConfigWithCache { textures, tile_data_index };
-  config_with_cache
+  Ok(config_with_cache)
 }
 
 #[tauri::command]
-pub fn read_mapgen_file(mapgen_file_path: &str) -> mapgen::CDDAMapgenWithCache {
-  let mapgen_absolute_file_path = Path::join(&Path::join(&get_project_root().unwrap(), "../public"), mapgen_file_path);
+pub fn read_mapgen_file(mapgen_file_path: &str) -> Result<mapgen::CDDAMapgenWithCache, String> {
+  let mapgen_absolute_file_path = Path::join(&Path::join(&get_project_root().map_err(|e| e.to_string())?, "../public"), mapgen_file_path);
   // read mapgen
-  let mut raw_mapgen_file = File::open(mapgen_absolute_file_path).unwrap();
+  let mut raw_mapgen_file = File::open(mapgen_absolute_file_path).map_err(|e| e.to_string())?;
   let mut raw_mapgen_string = String::new();
-  raw_mapgen_file.read_to_string(&mut raw_mapgen_string).unwrap();
-  let raw_mapgen: mapgen::CDDAMapgenArray = serde_json::from_str(&raw_mapgen_string).unwrap();
+  raw_mapgen_file.read_to_string(&mut raw_mapgen_string).map_err(|e| e.to_string())?;
+  let raw_mapgen: mapgen::CDDAMapgenArray = serde_json::from_str(&raw_mapgen_string).map_err(|e| e.to_string())?;
   // read palette
-  let mut raw_palette_file = File::open("../public/json/house_general_palette.json").unwrap();
+  let mut raw_palette_file = File::open("../public/json/house_general_palette.json").map_err(|e| e.to_string())?;
   let mut raw_palette_string = String::new();
-  raw_palette_file.read_to_string(&mut raw_palette_string).unwrap();
-  let raw_palette: palette::CDDAPaletteArray = serde_json::from_str(&raw_palette_string).unwrap();
+  raw_palette_file.read_to_string(&mut raw_palette_string).map_err(|e| e.to_string())?;
+  let raw_palette: palette::CDDAPaletteArray = serde_json::from_str(&raw_palette_string).map_err(|e| e.to_string())?;
 
   // TODO: merge mapgen palette and raw_palette
-  let standard_domestic_palette = raw_palette.get(0).unwrap();
+  let standard_domestic_palette = raw_palette
+    .get(0)
+    .ok_or_else(|| format!("raw_palette.get(0) failed in read_mapgen_file({})", mapgen_file_path))?;
 
   let parsed_map: Vec<Vec<Vec<Vec<mapgen::ItemIDOrItemList>>>> = raw_mapgen
     .iter()
@@ -120,16 +127,22 @@ pub fn read_mapgen_file(mapgen_file_path: &str) -> mapgen::CDDAMapgenWithCache {
     })
     .collect();
   let mapgen_with_cache = mapgen::CDDAMapgenWithCache { raw_mapgen, parsed_map };
-  mapgen_with_cache
+  Ok(mapgen_with_cache)
 }
 
 #[tauri::command]
-pub fn read_terrain_file(terrain_file_path: &str) -> terrain::CDDATerrainArray {
-  let terrain_absolute_file_path = Path::join(&Path::join(&get_project_root().unwrap(), "../public"), terrain_file_path);
+pub fn read_terrain_file(terrain_file_path: &str) -> Result<terrain::CDDATerrainArray, String> {
+  let terrain_absolute_file_path = Path::join(&Path::join(&get_project_root().map_err(|e| e.to_string())?, "../public"), terrain_file_path);
   // read terrain
-  let mut raw_terrain_file = File::open(terrain_absolute_file_path).unwrap();
+  let mut raw_terrain_file = File::open(terrain_absolute_file_path).map_err(|e| e.to_string())?;
   let mut raw_terrain_string = String::new();
-  raw_terrain_file.read_to_string(&mut raw_terrain_string).unwrap();
-  let raw_terrain: terrain::CDDATerrainArray = serde_json::from_str(&raw_terrain_string).unwrap();
-  raw_terrain
+  raw_terrain_file.read_to_string(&mut raw_terrain_string).map_err(|e| e.to_string())?;
+  let raw_terrain: terrain::CDDATerrainArray = serde_json::from_str(&raw_terrain_string).map_err(|e| e.to_string())?;
+  Ok(raw_terrain)
 }
+
+// TODO: prepare a State that contains all JSON first
+// #[tauri::command]
+// pub fn get_json_by_id(id: String) -> Result<CDDA_JSON, String> {
+
+// }
