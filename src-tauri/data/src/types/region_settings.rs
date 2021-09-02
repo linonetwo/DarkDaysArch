@@ -1,5 +1,5 @@
 use crate::common::*;
-use crate::list::SelectList;
+use crate::list::SelectListItem;
 use schemars::JsonSchema;
 use serde::{self, Deserialize, Serialize};
 use std::collections::BTreeMap;
@@ -12,10 +12,10 @@ pub type CDDARegionSettingsArray = Vec<CDDARegionSettings>;
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDARegionSettings {
   #[serde(rename = "type")]
-  pub cdda_json_type: region_settings_Literal,
+  pub cdda_json_type: string::region_settings_Literal,
 
   #[serde(flatten)]
-  pub select_list: SelectList,
+  pub select_list: SelectListItem,
   /**
    * @docs REGION_SETTINGS    Default overmap terrain for this region.     overmap terrain id    vec means z-axis
    */
