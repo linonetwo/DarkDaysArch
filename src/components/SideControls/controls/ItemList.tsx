@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/no-null */
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -29,9 +30,13 @@ export function ItemList(): JSX.Element {
 
   return (
     <ItemListContainer>
-      {terrain.map((item) => (
-        <TileItem tileID={item.id} key={item.id} />
-      ))}
+      {terrain.map((item) =>
+        typeof item.id === 'string' ? (
+          <TileItem tileID={item.id} key={item.id} />
+        ) : Array.isArray(item.id) ? (
+          item.id.map((id) => <TileItem tileID={id} key={id} />)
+        ) : null,
+      )}
     </ItemListContainer>
   );
 }

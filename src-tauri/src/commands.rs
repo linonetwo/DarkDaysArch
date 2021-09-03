@@ -204,7 +204,7 @@ pub fn load_cdda_data_folder(state: tauri::State<types::state::AppState>, data_f
         Ok(json_array) => {
           for json_enum in json_array {
             match json_enum {
-              CDDA_JSON::furniture(json) => {
+              CDDA_JSON::Furniture(json) => {
                 println!("{} {:?} {:?} {}", mod_id, json.cdda_json_type, json.ter_furn_common.select_list.id, file_path);
               }
               Others => {}
