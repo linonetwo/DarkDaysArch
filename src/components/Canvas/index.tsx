@@ -1,8 +1,9 @@
-import { useState, useCallback, MouseEvent, useMemo, MutableRefObject } from 'react';
+import { useState, useCallback, MouseEvent, useMemo, MutableRefObject, useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import { Stage } from 'react-pixi-fiber';
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import { Spector } from 'spectorjs';
 
 import ContextMenu from '../ContextMenu';
 import Tiles from './sprites/tile/tiles';
@@ -65,6 +66,11 @@ export function World(): JSX.Element {
   const cameraPosition = useSelector((state: RootState) => ({ x: state.cameraMouse.cameraX, y: state.cameraMouse.cameraY }));
   const loadTexturesLoading = useSelector((state: RootState) => state.loading.effects.files.loadTextures);
   const actualWidth = useMemo(() => window.innerWidth - sidePanelWidth, [sidePanelWidth]);
+
+  useEffect(() => {
+    const spector = new Spector();
+    spector.displayUI();
+  }, []);
 
   if (loadTexturesLoading) {
     return (
