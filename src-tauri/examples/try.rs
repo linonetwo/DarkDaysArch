@@ -6,9 +6,9 @@ use schemars::JsonSchema;
 use serde;
 use serde::{Deserialize, Serialize};
 use serde_json;
-use serde_json::Value;
 use std::path::Path;
 use std::{collections::BTreeMap, fs::canonicalize, fs::File, io::Read};
+
 
 fn main() {
   // let map_file_path = "../public/json/magic_academy.json";

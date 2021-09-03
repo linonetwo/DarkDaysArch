@@ -9,12 +9,15 @@ pub enum CDDAJSONType {
   mapgen_Literal,
   overmap_special_Literal,
   overmap_terrain_Literal,
+  overmap_location_Literal,
+  overmap_connection_Literal,
   palette_Literal,
   terrain_Literal,
   trap_Literal,
   EXTERNAL_OPTION_Literal,
   ITEM_BLACKLIST_Literal,
   region_settings_Literal,
+  city_building_Literal,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
@@ -39,6 +42,20 @@ pub enum overmap_special_Literal {
 #[allow(non_camel_case_types)]
 pub enum overmap_terrain_Literal {
   overmap_terrain,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[allow(non_camel_case_types)]
+pub enum overmap_connection_Literal {
+  #[allow(non_camel_case_types)]
+  overmap_connection,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[allow(non_camel_case_types)]
+pub enum overmap_location_Literal {
+  #[allow(non_camel_case_types)]
+  overmap_location,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
@@ -81,4 +98,11 @@ pub enum ITEM_BLACKLIST_Literal {
 #[allow(non_camel_case_types)]
 pub enum region_settings_Literal {
   region_settings,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[allow(non_camel_case_types)]
+pub enum city_building_Literal {
+  #[allow(non_camel_case_types)]
+  city_building,
 }

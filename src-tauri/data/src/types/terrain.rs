@@ -1,6 +1,6 @@
 use super::furniture::*;
-use crate::common::*;
 use crate::common::string::terrain_Literal;
+use crate::common::*;
 use schemars::JsonSchema;
 use serde;
 use serde::{Deserialize, Serialize};
