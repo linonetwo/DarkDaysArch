@@ -1,6 +1,6 @@
 use super::palette::*;
-use crate::common::{int64, CDDAIntRange};
 use crate::common::string::mapgen_Literal;
+use crate::common::{int64, CDDAIntRange};
 use schemars::JsonSchema;
 use serde::{self, Deserialize, Serialize};
 

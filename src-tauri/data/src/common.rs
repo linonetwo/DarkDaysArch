@@ -161,7 +161,9 @@ impl<T: Default + PartialEq> Interval<T> {
   pub fn is_default(t: &Interval<T>) -> bool {
     t == &Interval::<T>::default()
   }
+}
 
+impl Interval<i64> {
   pub fn default_int_0m1() -> Interval<i64> {
     Interval::<i64>(0, -1)
   }

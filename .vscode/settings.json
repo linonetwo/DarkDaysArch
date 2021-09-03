@@ -95,5 +95,19 @@
     "xtr1common": "cpp",
     "xtree": "cpp",
     "xutility": "cpp"
+  },
+  "terminal.integrated.defaultProfile.windows": "Git Bash",
+  "terminal.integrated.profiles.windows": {
+    "Git Bash": {
+      "source": "Git Bash"
+    },
+    "Command Prompt": {
+      "path": [
+        "${env:windir}\\Sysnative\\cmd.exe",
+        "${env:windir}\\System32\\cmd.exe"
+      ],
+      "args": [],
+      "icon": "terminal-cmd"
+    }
   }
 }

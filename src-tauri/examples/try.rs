@@ -6,9 +6,9 @@ use schemars::JsonSchema;
 use serde;
 use serde::{Deserialize, Serialize};
 use serde_json;
-use serde_json::Value;
 use std::path::Path;
 use std::{collections::BTreeMap, fs::canonicalize, fs::File, io::Read};
+
 
 fn main() {
   // let map_file_path = "../public/json/magic_academy.json";
@@ -100,8 +100,41 @@ fn main() {
   // // println!("{:?}", raw_region);
   // println!("{}",region_json);
 
-  let result = load_cdda_data_folder("assets/Kenan-Modpack-Chinese".into());
-  println!("{:?}", result);
+  // let city_file_path = "../public/json/city_buildings.json";
+  // let mut raw_city_file = File::open(city_file_path).unwrap();
+  // let mut raw_city_string = String::new();
+  // raw_city_file.read_to_string(&mut raw_city_string).unwrap();
+  // let raw_city: city_building::CDDACityBuildingArray = serde_json::from_str(&raw_city_string).unwrap();
+
+  // let city_json = serde_json::to_string(&raw_city).unwrap();
+
+  // // println!("{:?}", raw_city);
+  // println!("{}",city_json);
+
+  // let omconnection_file_path = "../public/json/overmap_connections.json";
+  // let mut raw_omconnection_file = File::open(omconnection_file_path).unwrap();
+  // let mut raw_omconnection_string = String::new();
+  // raw_omconnection_file.read_to_string(&mut raw_omconnection_string).unwrap();
+  // let raw_omconnection: overmap_connection::CDDAOvermapConnectionArray = serde_json::from_str(&raw_omconnection_string).unwrap();
+
+  // let omconnection_json = serde_json::to_string(&raw_omconnection).unwrap();
+
+  // // println!("{:?}", raw_omconnection);
+  // println!("{}",omconnection_json);
+
+  let oml_file_path = "../public/json/special_locations.json";
+  let mut raw_oml_file = File::open(oml_file_path).unwrap();
+  let mut raw_oml_string = String::new();
+  raw_oml_file.read_to_string(&mut raw_oml_string).unwrap();
+  let raw_oml: overmap_location::CDDAOvermapLocationArray = serde_json::from_str(&raw_oml_string).unwrap();
+
+  let oml_json = serde_json::to_string(&raw_oml).unwrap();
+
+  println!("{:?}", raw_oml);
+  // println!("{}",oml_json);
+
+  // let result = load_cdda_data_folder("assets/Kenan-Modpack-Chinese".into());
+  // println!("{:?}", result);
 }
 
 pub fn load_cdda_data_folder(data_folder_path_name: String) -> Result<String, String> {

@@ -1,6 +1,6 @@
+use crate::common::string::furniture_Literal;
 use crate::common::*;
 use crate::list;
-use crate::common::string::furniture_Literal;
 use schemars::JsonSchema;
 use serde;
 use serde::{Deserialize, Serialize};
