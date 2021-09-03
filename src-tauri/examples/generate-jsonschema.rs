@@ -5,7 +5,7 @@ use std::{
   path::{Path, PathBuf},
 };
 
-use data::list::SelectListArray;
+use data::list::SelectList;
 /**
  * convert serde to jsonschema: https://imfeld.dev/writing/generating_typescript_types_from_rust
  *  with way to optimize
@@ -24,7 +24,7 @@ where
 
 fn main() {
   let project_root = &get_project_root().unwrap();
-  generate::<SelectListArray>(Path::join(project_root, "../src/types/cdda/selectList.json"));
+  generate::<SelectList>(Path::join(project_root, "../src/types/cdda/selectList.json"));
   generate::<tileset::CDDATileSetConfigWithCache>(Path::join(project_root, "../src/types/cdda/tileset.json"));
   generate::<mapgen::CDDAMapgenWithCache>(Path::join(project_root, "../src/types/cdda/mapgen.json"));
   generate::<palette::CDDAPaletteArray>(Path::join(project_root, "../src/types/cdda/palette.json"));

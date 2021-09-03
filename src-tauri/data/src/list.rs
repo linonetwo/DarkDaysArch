@@ -4,7 +4,7 @@ use schemars::JsonSchema;
 use serde;
 use serde::{Deserialize, Serialize};
 
-pub type SelectListArray = Vec<SelectListItemWithType>;
+pub type SelectList = Vec<SelectListItemWithType>;
 
 /**
  * Minimal information about a JSON, this is used as result when searching for a JSON.

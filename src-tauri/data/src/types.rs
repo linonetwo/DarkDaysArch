@@ -14,14 +14,19 @@ pub mod mod_info;
 pub mod external_option;
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[allow(non_camel_case_types)]
+#[serde(untagged)]
 pub enum CDDA_JSON {
-  Furniture(furniture::CDDAFurniture),
-  Mapgen(mapgen::CDDAMapgen),
-  OvermapTerrain(overmap_terrain::CDDAOvermapTerrain),
-  Palette(palette::CDDAPalette),
-  Terrain(terrain::CDDATerrain),
-  Tileset(tileset::CDDATileSetConfig),
+  furniture(furniture::CDDAFurniture),
+  mapgen(mapgen::CDDAMapgen),
+  overmap_terrain(overmap_terrain::CDDAOvermapTerrain),
+  palette(palette::CDDAPalette),
+  terrain(terrain::CDDATerrain),
+  tileset(tileset::CDDATileSetConfig),
 }
+
+#[allow(non_camel_case_types)]
+pub type CDDA_JSON_Array = Vec<CDDA_JSON>;
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct CDDAKnowledgeGraph {
