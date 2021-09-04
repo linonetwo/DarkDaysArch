@@ -69,7 +69,7 @@ pub fn read_mapgen_file(mapgen_file_path: &str) -> Result<mapgen::CDDAMapgenWith
     .get(0)
     .ok_or_else(|| format!("raw_palette.get(0) failed in read_mapgen_file({})", mapgen_file_path))?;
 
-  let parsed_map: Vec<Vec<Vec<Vec<mapgen::ItemIDOrItemList>>>> = raw_mapgen
+  let parsed_map: Vec<Vec<Vec<Vec<mapgen::ItemId>>>> = raw_mapgen
     .iter()
     .map(|mapgen| match mapgen {
       mapgen::CDDAMapgen::Om(overmap_terrain_mapgen) => {
@@ -100,13 +100,10 @@ pub fn read_mapgen_file(mapgen_file_path: &str) -> Result<mapgen::CDDAMapgenWith
                   .map(|c| {
                     let char_string = c.to_string();
                     let mut tile_ids = parsers::palette::lookup_mapgen_char_in_palette(&char_string, merged_palette);
-                    if !tile_ids.iter().any(|tile_id| match tile_id {
-                      mapgen::ItemIDOrItemList::Id((tile_id_type, _)) => *tile_id_type == mapgen::MapgenPaletteKeys::terrain,
-                      mapgen::ItemIDOrItemList::ItemList(item) => false,
-                    }) {
+                    if !tile_ids.iter().any(|item| item.0 == mapgen::MapgenPaletteKeys::terrain) {
                       tile_ids.insert(
                         0,
-                        mapgen::ItemIDOrItemList::Id((mapgen::MapgenPaletteKeys::terrain, om_object.fill_ter.clone())),
+                        mapgen::ItemId(mapgen::MapgenPaletteKeys::terrain, om_object.fill_ter.clone()),
                       );
                     }
                     // if char_string == "H" {

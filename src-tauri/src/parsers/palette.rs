@@ -2,8 +2,8 @@ use data::types::{mapgen, palette};
 
 use crate::utils;
 
-pub fn lookup_mapgen_char_in_palette(char_string: &String, palette: &palette::CDDAPalette) -> Vec<mapgen::ItemIDOrItemList> {
-  let mut items_this_tile: Vec<mapgen::ItemIDOrItemList> = vec![];
+pub fn lookup_mapgen_char_in_palette(char_string: &String, palette: &palette::CDDAPalette) -> Vec<mapgen::ItemId> {
+  let mut items_this_tile: Vec<mapgen::ItemId> = vec![];
   // each type may have some different logic, so we cannot abstract these
 
   // terrain
@@ -12,13 +12,13 @@ pub fn lookup_mapgen_char_in_palette(char_string: &String, palette: &palette::CD
     Some(terrain_value) => match terrain_value {
       // "a": "t_thconc_floor",
       palette::CDDAPaletteTerrainValue::Id(id) => {
-        items_this_tile.push(mapgen::ItemIDOrItemList::Id((mapgen::MapgenPaletteKeys::terrain, id.clone())));
+        items_this_tile.push(mapgen::ItemId(mapgen::MapgenPaletteKeys::terrain, id.clone()));
       }
       palette::CDDAPaletteTerrainValue::Object(terrain_value) => {
-        items_this_tile.push(mapgen::ItemIDOrItemList::Id((
+        items_this_tile.push(mapgen::ItemId(
           mapgen::MapgenPaletteKeys::terrain,
           terrain_value.terrain.clone(),
-        )));
+        ));
       }
       // "o": [["t_window_domestic", 10], "t_window_no_curtains", "t_window_open", "t_window_no_curtains_open", ["t_curtains", 5]],
       // possible: [["t_window_domestic", 10], ["t_window_no_curtains", "t_window_open"], "t_window_no_curtains_open", [["t_curtains", 5], ["t_door_o", 5], "t_door_locked_interior"]
@@ -26,7 +26,7 @@ pub fn lookup_mapgen_char_in_palette(char_string: &String, palette: &palette::CD
         let random_id = pick_random_list_id_by_distribution(&random_list_ids);
         match random_id {
           Some(id) => {
-            items_this_tile.push(mapgen::ItemIDOrItemList::Id((mapgen::MapgenPaletteKeys::terrain, id)));
+            items_this_tile.push(mapgen::ItemId(mapgen::MapgenPaletteKeys::terrain, id));
           }
           None => {}
         };
@@ -39,13 +39,13 @@ pub fn lookup_mapgen_char_in_palette(char_string: &String, palette: &palette::CD
             let random_id = pick_random_list_id_by_distribution(&palette_parameter.default.distribution);
             match random_id {
               Some(id) => {
-                items_this_tile.push(mapgen::ItemIDOrItemList::Id((mapgen::MapgenPaletteKeys::terrain, id)));
+                items_this_tile.push(mapgen::ItemId(mapgen::MapgenPaletteKeys::terrain, id));
               }
               None => {}
             };
           }
           None => {
-            items_this_tile.push(mapgen::ItemIDOrItemList::Id((mapgen::MapgenPaletteKeys::terrain, ref_object.fallback.clone())));
+            items_this_tile.push(mapgen::ItemId(mapgen::MapgenPaletteKeys::terrain, ref_object.fallback.clone()));
           }
         };
       }
@@ -58,13 +58,13 @@ pub fn lookup_mapgen_char_in_palette(char_string: &String, palette: &palette::CD
     Some(furniture_value) => match furniture_value {
       // "a": "t_thconc_floor",
       palette::CDDAPaletteFurnitureValue::Id(id) => {
-        items_this_tile.push(mapgen::ItemIDOrItemList::Id((mapgen::MapgenPaletteKeys::furniture, id.clone())));
+        items_this_tile.push(mapgen::ItemId(mapgen::MapgenPaletteKeys::furniture, id.clone()));
       }
       palette::CDDAPaletteFurnitureValue::Object(furniture_value) => {
-        items_this_tile.push(mapgen::ItemIDOrItemList::Id((
+        items_this_tile.push(mapgen::ItemId(
           mapgen::MapgenPaletteKeys::furniture,
           furniture_value.furniture.clone(),
-        )));
+        ));
       }
       // "o": [["t_window_domestic", 10], "t_window_no_curtains", "t_window_open", "t_window_no_curtains_open", ["t_curtains", 5]],
       // possible: [["t_window_domestic", 10], ["t_window_no_curtains", "t_window_open"], "t_window_no_curtains_open", [["t_curtains", 5], ["t_door_o", 5], "t_door_locked_interior"]
@@ -72,7 +72,7 @@ pub fn lookup_mapgen_char_in_palette(char_string: &String, palette: &palette::CD
         let random_id = pick_random_list_id_by_distribution(&random_list_ids);
         match random_id {
           Some(id) => {
-            items_this_tile.push(mapgen::ItemIDOrItemList::Id((mapgen::MapgenPaletteKeys::furniture, id)));
+            items_this_tile.push(mapgen::ItemId(mapgen::MapgenPaletteKeys::furniture, id));
           }
           None => {}
         };
@@ -85,16 +85,16 @@ pub fn lookup_mapgen_char_in_palette(char_string: &String, palette: &palette::CD
             let random_id = pick_random_list_id_by_distribution(&palette_parameter.default.distribution);
             match random_id {
               Some(id) => {
-                items_this_tile.push(mapgen::ItemIDOrItemList::Id((mapgen::MapgenPaletteKeys::furniture, id)));
+                items_this_tile.push(mapgen::ItemId(mapgen::MapgenPaletteKeys::furniture, id));
               }
               None => {}
             };
           }
           None => {
-            items_this_tile.push(mapgen::ItemIDOrItemList::Id((
+            items_this_tile.push(mapgen::ItemId(
               mapgen::MapgenPaletteKeys::furniture,
               ref_object.fallback.clone(),
-            )));
+            ));
           }
         };
       }

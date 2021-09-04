@@ -15,21 +15,17 @@ pub struct CDDAMapgenWithCache {
    * And we have multiple mapgen in a file, so this will be a 3D matrix.
    * But each location can have terrain, furniture, item and so on, so each tile will be a list, so this is a 4D tensor
    */
-  pub parsed_map: Vec<Vec<Vec<Vec<ItemIDOrItemList>>>>,
+  pub parsed_map: Vec<Vec<Vec<Vec<ItemId>>>>,
 }
 
 /**
  * A char in map rows can mean multiple item, like # mean a terrain and a furniture, and some terrain can have id same as a furniture, so we have to keep id's type in a tuple
  */
+/**
+ * (type, id), where type is like "terrain" or "furniture"
+ */
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
-#[serde(untagged)]
-pub enum ItemIDOrItemList {
-  /**
-   * (type, id), where type is like "terrain" or "furniture"
-   */
-  Id((MapgenPaletteKeys, String)),
-  ItemList(Vec<(MapgenPaletteKeys, String)>),
-}
+pub struct ItemId (pub MapgenPaletteKeys, pub String);
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub enum MapgenPaletteKeys {
