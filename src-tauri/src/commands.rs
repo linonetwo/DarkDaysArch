@@ -1,3 +1,4 @@
+use data::common::CDDAStringArray;
 use data::types::{furniture, mapgen, mod_info, palette, terrain, tileset, CDDA_JSON_Array, CDDA_JSON};
 use glob::glob;
 use image_base64::to_base64;
@@ -101,10 +102,7 @@ pub fn read_mapgen_file(mapgen_file_path: &str) -> Result<mapgen::CDDAMapgenWith
                     let char_string = c.to_string();
                     let mut tile_ids = parsers::palette::lookup_mapgen_char_in_palette(&char_string, merged_palette);
                     if !tile_ids.iter().any(|item| item.0 == mapgen::MapgenPaletteKeys::terrain) {
-                      tile_ids.insert(
-                        0,
-                        mapgen::ItemId(mapgen::MapgenPaletteKeys::terrain, om_object.fill_ter.clone()),
-                      );
+                      tile_ids.insert(0, mapgen::ItemId(mapgen::MapgenPaletteKeys::terrain, om_object.fill_ter.clone()));
                     }
                     // if char_string == "H" {
                     //   println!("{:?}", tile_ids);
@@ -146,7 +144,7 @@ pub fn read_terrain_file(terrain_file_path: &str) -> Result<terrain::CDDATerrain
 // }
 
 #[tauri::command]
-pub fn load_cdda_data_folder(state: tauri::State<types::state::AppState>, data_folder_path: String) -> Result<String, String> {
+pub fn load_cdda_data_folder<'s>(state: tauri::State<'s, types::state::AppState>, data_folder_path: String) -> Result<String, String> {
   let data_folder_absolute_file_path: String = canonicalize(Path::join(
     &Path::join(&get_project_root().map_err(|e| e.to_string())?, "../public"),
     &data_folder_path,
@@ -202,7 +200,23 @@ pub fn load_cdda_data_folder(state: tauri::State<types::state::AppState>, data_f
           for json_enum in json_array {
             match json_enum {
               CDDA_JSON::Furniture(json) => {
-                println!("{} {:?} {:?} {}", mod_id, json.cdda_json_type, json.ter_furn_common.select_list.id, file_path);
+                match &json
+                  .ter_furn_common
+                  .select_list
+                  .id
+                  .clone()
+                  .unwrap_or_else(|| panic!("Furniture missing id:\n{} {}", mod_id, file_path))
+                {
+                  CDDAStringArray::Single(id) => {
+                    // .0 means get first variant from the tuple enum AppState
+                    state.0.lock().unwrap().knowledge_graph.furniture.insert(id.clone(), json.clone());
+                  }
+                  CDDAStringArray::Multiple(ids) => {
+                    for id in ids.clone() {
+                      state.0.lock().unwrap().knowledge_graph.furniture.insert(id.clone(), json.clone());
+                    }
+                  }
+                }
               }
               Others => {}
             }

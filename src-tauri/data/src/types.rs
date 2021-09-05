@@ -36,17 +36,38 @@ pub enum CDDA_JSON {
 #[allow(non_camel_case_types)]
 pub type CDDA_JSON_Array = Vec<CDDA_JSON>;
 
+/**
+ * Get each type of JSON by id
+ */
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct CDDAKnowledgeGraph {
-  pub furniture: furniture::CDDAFurniture,
-  pub mapgen: mapgen::CDDAMapgen,
-  pub overmap_terrain: overmap_terrain::CDDAOvermapTerrain,
-  pub overmap_special: overmap_special::CDDAOvermapSpecial,
-  pub overmap_connection: overmap_connection::CDDAOvermapConnection,
-  pub overmap_location: overmap_location::CDDAOvermapLocation,
-  pub city_building: city_building::CDDACityBuilding,
-  pub region_settings: region_settings::CDDARegionSettings,
-  pub palette: palette::CDDAPalette,
-  pub terrain: terrain::CDDATerrain,
-  pub tileset: tileset::CDDATileSetConfig,
+  pub furniture: BTreeMap<String, furniture::CDDAFurniture>,
+  pub mapgen: BTreeMap<String, mapgen::CDDAMapgen>,
+  pub overmap_terrain: BTreeMap<String, overmap_terrain::CDDAOvermapTerrain>,
+  pub overmap_special: BTreeMap<String, overmap_special::CDDAOvermapSpecial>,
+  pub overmap_connection: BTreeMap<String, overmap_connection::CDDAOvermapConnection>,
+  pub overmap_location: BTreeMap<String, overmap_location::CDDAOvermapLocation>,
+  pub city_building: BTreeMap<String, city_building::CDDACityBuilding>,
+  pub region_settings: BTreeMap<String, region_settings::CDDARegionSettings>,
+  pub palette: BTreeMap<String, palette::CDDAPalette>,
+  pub terrain: BTreeMap<String, terrain::CDDATerrain>,
+  pub tileset: BTreeMap<String, tileset::CDDATileSetConfig>,
+}
+
+impl CDDAKnowledgeGraph {
+  pub fn new() -> CDDAKnowledgeGraph {
+    CDDAKnowledgeGraph {
+      furniture: Default::default(),
+      mapgen: Default::default(),
+      overmap_terrain: Default::default(),
+      overmap_special: Default::default(),
+      overmap_connection: Default::default(),
+      overmap_location: Default::default(),
+      city_building: Default::default(),
+      region_settings: Default::default(),
+      palette: Default::default(),
+      terrain: Default::default(),
+      tileset: Default::default(),
+    }
+  }
 }
