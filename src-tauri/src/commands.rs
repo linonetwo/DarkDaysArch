@@ -10,7 +10,7 @@ use crate::parsers;
 use crate::types;
 
 pub fn invoke_handler() -> impl Fn(tauri::Invoke) + Send + Sync + 'static {
-  tauri::generate_handler![read_tileset_folder, read_mapgen_file, read_terrain_file]
+  tauri::generate_handler![read_tileset_folder, read_mapgen_file, load_cdda_data_folder]
 }
 
 #[tauri::command]
@@ -126,17 +126,6 @@ pub fn read_mapgen_file(mapgen_file_path: &str) -> Result<mapgen::CDDAMapgenWith
   Ok(mapgen_with_cache)
 }
 
-#[tauri::command]
-pub fn read_terrain_file(terrain_file_path: &str) -> Result<terrain::CDDATerrainArray, String> {
-  let terrain_absolute_file_path = Path::join(&Path::join(&get_project_root().map_err(|e| e.to_string())?, "../public"), terrain_file_path);
-  // read terrain
-  let mut raw_terrain_file = File::open(terrain_absolute_file_path).map_err(|e| e.to_string())?;
-  let mut raw_terrain_string = String::new();
-  raw_terrain_file.read_to_string(&mut raw_terrain_string).map_err(|e| e.to_string())?;
-  let raw_terrain: terrain::CDDATerrainArray = serde_json::from_str(&raw_terrain_string).map_err(|e| e.to_string())?;
-  Ok(raw_terrain)
-}
-
 // TODO: prepare a State that contains all JSON first
 // #[tauri::command]
 // pub fn get_json_by_id(id: String) -> Result<CDDA_JSON, String> {
@@ -228,6 +217,6 @@ pub fn load_cdda_data_folder<'s>(state: tauri::State<'s, types::state::AppState>
       }
     }
   }
-  Ok("".into())
+  Ok("Done".into())
   // state.knowledge_graph
 }

@@ -106,14 +106,15 @@ export const files = createModel<RootModel>()({
         console.error(error);
       }
     },
-    async loadDemoTerrains(terrainFilePath: string) {
-      // TODO: make this a general kg loader
+    async loadMods(dataFolderPath: string) {
       try {
         // eslint-disable-next-line @typescript-eslint/await-thenable
-        const terrain = await invoke<ArrayOf_CDDATerrain>('read_terrain_file', {
-          terrainFilePath,
+        const result = await invoke<string>('load_cdda_data_folder', {
+          dataFolderPath,
         });
-        dispatch.knowledgeGraph.update({ terrain });
+        // DEBUG: console
+        console.log(`result`, result);
+        // dispatch.knowledgeGraph.update({ terrain });
       } catch (error) {
         console.error(error);
       }

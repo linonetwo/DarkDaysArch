@@ -31,7 +31,7 @@ export default function App(): JSX.Element {
       dispatch.files.selectFile('json/magic_academy.json');
     });
     void dispatch.files.loadTextures('assets/ChibiUltica');
-    void dispatch.files.loadDemoTerrains('json/terrain-floors-indoor.json');
+    void dispatch.files.loadMods('assets/Kenan-Modpack-Chinese');
   }, [dispatch.files]);
 
   const selectedButtonIndex = useSelector((state: RootState) => state.uiState.selectedButtonIndex);
