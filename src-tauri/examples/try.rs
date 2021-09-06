@@ -111,11 +111,11 @@ fn main() {
     let mut raw_string = String::new();
     raw_file.read_to_string(&mut raw_string).unwrap();
 
-    println!("{}",&raw_string);
+    // println!("{}",&raw_string);
 
     let raw: CDDA_JSON_Array = serde_json::from_str(&raw_string).unwrap();
 
-    println!("{:?}",raw);
+    // println!("{:?}",raw);
 
     for item_ter in raw {
       knowledge.update(item_ter,Path::new("a.txt").to_path_buf());

@@ -72,6 +72,27 @@ pub struct CDDAKnowledgeGraph {
   // pub tileset: BTreeMap<String, tileset::CDDATileSetConfig>,
 }
 
+macro_rules! match_insert_index {
+  ($m:expr, $l:ident, $($x:path, $y:expr, $z:path),*) => {
+    match $m {
+      $(
+        $x(item) => {
+          match item.get_id() {
+            Some(ids) => {
+              for id in ids {
+                $y.insert(id.clone(),(*item).clone());
+                $l.push((id.clone(),$z));
+              }
+            },
+            None => {}
+          }
+        },
+      )*
+      _ => {},
+    }
+  };
+}
+
 impl CDDAKnowledgeGraph {
   pub fn new() -> CDDAKnowledgeGraph {
     CDDAKnowledgeGraph {
@@ -105,116 +126,131 @@ impl CDDAKnowledgeGraph {
       }
     }
     // create or change index
-    match &update_data {
-      CDDA_JSON::palette(palette_item) => {
-        match palette_item.get_id() {
-          Some(ids) => {
-            for id in ids {
-              self.palette.insert(id.clone(),(*palette_item).clone());
-              id_clutter_list.push((id.clone(),CDDAType::Palette));
-            }
-          },
-          None => {}
-        }
-      },
-      CDDA_JSON::mapgen(mapgen_item) => {
-        match mapgen_item.get_id() {
-          Some(id) => {
-            self.mapgen.insert(id.clone(),(*mapgen_item).clone());
-            id_clutter_list.push((id.clone(),CDDAType::Mapgen));
-          },
-          None => {}
-        }
-      },
-      CDDA_JSON::furniture(furniture_item) => {
-        match furniture_item.get_id() {
-          Some(ids) => {
-            for id in ids {
-              self.furniture.insert(id.clone(),(*furniture_item).clone());
-              id_clutter_list.push((id.clone(),CDDAType::Furniture));
-            }
-          },
-          None => {}
-        }
-      },
-      CDDA_JSON::terrain(terrain_item) => {
-        match terrain_item.get_id() {
-          Some(ids) => {
-            for id in ids {
-              self.terrain.insert(id.clone(),(*terrain_item).clone());
-              id_clutter_list.push((id.clone(),CDDAType::Terrain));
-            }
-          },
-          None => {}
-        }
-      },
-      CDDA_JSON::overmap_terrain(omt_item) => {
-        match omt_item.get_id() {
-          Some(ids) => {
-            for id in ids {
-              self.overmap_terrain.insert(id.clone(),(*omt_item).clone());
-              id_clutter_list.push((id.clone(),CDDAType::OvermapTerrain));
-            }
-          },
-          None => {}
-        }
-      },
-      CDDA_JSON::overmap_special(oms_item) => {
-        match oms_item.get_id() {
-          Some(ids) => {
-            for id in ids {
-              self.overmap_special.insert(id.clone(),(*oms_item).clone());
-              id_clutter_list.push((id.clone(),CDDAType::OvermapSpecial));
-            }
-          },
-          None => {}
-        }
-      },
-      CDDA_JSON::overmap_location(oml_item) => {
-        match oml_item.get_id() {
-          Some(ids) => {
-            for id in ids {
-              self.overmap_location.insert(id.clone(),(*oml_item).clone());
-              id_clutter_list.push((id.clone(),CDDAType::OvermapLocation));
-            }
-          },
-          None => {}
-        }
-      },
-      CDDA_JSON::overmap_connection(omc_item) => {
-        match omc_item.get_id() {
-          Some(ids) => {
-            for id in ids {
-              self.overmap_connection.insert(id.clone(),(*omc_item).clone());
-              id_clutter_list.push((id.clone(),CDDAType::OvermapConnection));
-            }
-          },
-          None => {}
-        }
-      },
-      CDDA_JSON::city_building(city_item) => {
-        match city_item.get_id() {
-          Some(ids) => {
-            for id in ids {
-              self.city_building.insert(id.clone(),(*city_item).clone());
-              id_clutter_list.push((id.clone(),CDDAType::CityBuilding));
-            }
-          },
-          None => {}
-        }
-      },
-      CDDA_JSON::region_settings(region_item) => {
-        match region_item.get_id() {
-          Some(ids) => {
-            for id in ids {
-              self.region_settings.insert(id.clone(),(*region_item).clone());
-              id_clutter_list.push((id.clone(),CDDAType::RegionSettings));
-            }
-          },
-          None => {}
-        }
-      },
-      _ => {}
-    };
+    match_insert_index![
+      &update_data, id_clutter_list,
+      CDDA_JSON::furniture, self.furniture, CDDAType::Furniture,
+      CDDA_JSON::mapgen, self.mapgen, CDDAType::Mapgen,
+      CDDA_JSON::overmap_terrain, self.overmap_terrain, CDDAType::OvermapTerrain,
+      CDDA_JSON::overmap_special, self.overmap_special, CDDAType::OvermapSpecial,
+      CDDA_JSON::overmap_connection, self.overmap_connection, CDDAType::OvermapConnection,
+      CDDA_JSON::overmap_location, self.overmap_location, CDDAType::OvermapLocation,
+      CDDA_JSON::city_building, self.city_building, CDDAType::CityBuilding,
+      CDDA_JSON::region_settings, self.region_settings, CDDAType::RegionSettings,
+      CDDA_JSON::palette, self.palette, CDDAType::Palette,
+      CDDA_JSON::terrain, self.terrain, CDDAType::Terrain
+    ]
+    // match &update_data {
+    //   CDDA_JSON::palette(palette_item) => {
+    //     match palette_item.get_id() {
+    //       Some(ids) => {
+    //         for id in ids {
+    //           self.palette.insert(id.clone(),(*palette_item).clone());
+    //           id_clutter_list.push((id.clone(),CDDAType::Palette));
+    //         }
+    //       },
+    //       None => {}
+    //     }
+    //   },
+    //   CDDA_JSON::mapgen(mapgen_item) => {
+    //     match mapgen_item.get_id() {
+    //       Some(ids) => {
+    //         for id in ids {
+    //           self.mapgen.insert(id.clone(),(*mapgen_item).clone());
+    //           id_clutter_list.push((id.clone(),CDDAType::Mapgen));
+    //         }
+    //       },
+    //       None => {}
+    //     }
+    //   },
+    //   CDDA_JSON::furniture(furniture_item) => {
+    //     match furniture_item.get_id() {
+    //       Some(ids) => {
+    //         for id in ids {
+    //           self.furniture.insert(id.clone(),(*furniture_item).clone());
+    //           id_clutter_list.push((id.clone(),CDDAType::Furniture));
+    //         }
+    //       },
+    //       None => {}
+    //     }
+    //   },
+    //   CDDA_JSON::terrain(terrain_item) => {
+    //     match terrain_item.get_id() {
+    //       Some(ids) => {
+    //         for id in ids {
+    //           self.terrain.insert(id.clone(),(*terrain_item).clone());
+    //           id_clutter_list.push((id.clone(),CDDAType::Terrain));
+    //         }
+    //       },
+    //       None => {}
+    //     }
+    //   },
+    //   CDDA_JSON::overmap_terrain(omt_item) => {
+    //     match omt_item.get_id() {
+    //       Some(ids) => {
+    //         for id in ids {
+    //           self.overmap_terrain.insert(id.clone(),(*omt_item).clone());
+    //           id_clutter_list.push((id.clone(),CDDAType::OvermapTerrain));
+    //         }
+    //       },
+    //       None => {}
+    //     }
+    //   },
+    //   CDDA_JSON::overmap_special(oms_item) => {
+    //     match oms_item.get_id() {
+    //       Some(ids) => {
+    //         for id in ids {
+    //           self.overmap_special.insert(id.clone(),(*oms_item).clone());
+    //           id_clutter_list.push((id.clone(),CDDAType::OvermapSpecial));
+    //         }
+    //       },
+    //       None => {}
+    //     }
+    //   },
+    //   CDDA_JSON::overmap_location(oml_item) => {
+    //     match oml_item.get_id() {
+    //       Some(ids) => {
+    //         for id in ids {
+    //           self.overmap_location.insert(id.clone(),(*oml_item).clone());
+    //           id_clutter_list.push((id.clone(),CDDAType::OvermapLocation));
+    //         }
+    //       },
+    //       None => {}
+    //     }
+    //   },
+    //   CDDA_JSON::overmap_connection(omc_item) => {
+    //     match omc_item.get_id() {
+    //       Some(ids) => {
+    //         for id in ids {
+    //           self.overmap_connection.insert(id.clone(),(*omc_item).clone());
+    //           id_clutter_list.push((id.clone(),CDDAType::OvermapConnection));
+    //         }
+    //       },
+    //       None => {}
+    //     }
+    //   },
+    //   CDDA_JSON::city_building(city_item) => {
+    //     match city_item.get_id() {
+    //       Some(ids) => {
+    //         for id in ids {
+    //           self.city_building.insert(id.clone(),(*city_item).clone());
+    //           id_clutter_list.push((id.clone(),CDDAType::CityBuilding));
+    //         }
+    //       },
+    //       None => {}
+    //     }
+    //   },
+    //   CDDA_JSON::region_settings(region_item) => {
+    //     match region_item.get_id() {
+    //       Some(ids) => {
+    //         for id in ids {
+    //           self.region_settings.insert(id.clone(),(*region_item).clone());
+    //           id_clutter_list.push((id.clone(),CDDAType::RegionSettings));
+    //         }
+    //       },
+    //       None => {}
+    //     }
+    //   },
+    //   _ => {},
+    // };
   }
 }

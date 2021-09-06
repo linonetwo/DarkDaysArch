@@ -620,15 +620,17 @@ pub enum CDDAMapgenSetSquare {
 }
 
 impl CDDAMapgen {
-  pub fn get_id(&self) -> Option<String> {
+  pub fn get_id(&self) -> Option<Vec<String>> {
+    let mut result:Vec<String> = Vec::new();
     match self {
       CDDAMapgen::Update(update) => {
-        return Some(update.update_mapgen_id.clone());
+        result.push(update.update_mapgen_id.clone());
       },
       CDDAMapgen::Nested(nested) => {
-        return Some(nested.nested_mapgen_id.clone());
+        result.push(nested.nested_mapgen_id.clone());
       },
-      _ => { return None; }
+      _ => {return None;}
     };
+    Some(result)
   }
 }
