@@ -1,5 +1,6 @@
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
+use std::path::PathBuf;
 
 pub mod city_building;
 pub mod external_option;
@@ -17,20 +18,34 @@ pub mod tileset;
 pub mod trap;
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub enum CDDAType {
+  Furniture,
+  Mapgen,
+  OvermapTerrain,
+  OvermapSpecial,
+  OvermapConnection,
+  OvermapLocation,
+  CityBuilding,
+  RegionSettings,
+  Palette,
+  Terrain,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(tag = "type")]
 #[allow(non_camel_case_types)]
-#[serde(untagged)]
 pub enum CDDA_JSON {
-  Furniture(furniture::CDDAFurniture),
-  Mapgen(mapgen::CDDAMapgen),
-  OvermapTerrain(overmap_terrain::CDDAOvermapTerrain),
-  OvermapSpecial(overmap_special::CDDAOvermapSpecial),
-  OvermapConnection(overmap_connection::CDDAOvermapConnection),
-  OvermapLocation(overmap_location::CDDAOvermapLocation),
-  CityBuilding(city_building::CDDACityBuilding),
-  RegionSettings(region_settings::CDDARegionSettings),
-  Palette(palette::CDDAPalette),
-  Terrain(terrain::CDDATerrain),
-  Tileset(tileset::CDDATileSetConfig),
+  furniture(furniture::CDDAFurniture),
+  mapgen(mapgen::CDDAMapgen),
+  overmap_terrain(overmap_terrain::CDDAOvermapTerrain),
+  overmap_special(overmap_special::CDDAOvermapSpecial),
+  overmap_connection(overmap_connection::CDDAOvermapConnection),
+  overmap_location(overmap_location::CDDAOvermapLocation),
+  city_building(city_building::CDDACityBuilding),
+  region_settings(region_settings::CDDARegionSettings),
+  palette(palette::CDDAPalette),
+  terrain(terrain::CDDATerrain),
+  // tileset(tileset::CDDATileSetConfig),
   #[serde(other)]
   Unknown,
 }
@@ -53,7 +68,8 @@ pub struct CDDAKnowledgeGraph {
   pub region_settings: BTreeMap<String, region_settings::CDDARegionSettings>,
   pub palette: BTreeMap<String, palette::CDDAPalette>,
   pub terrain: BTreeMap<String, terrain::CDDATerrain>,
-  pub tileset: BTreeMap<String, tileset::CDDATileSetConfig>,
+  pub file_content: BTreeMap<String,Vec<(String,CDDAType)>>,
+  // pub tileset: BTreeMap<String, tileset::CDDATileSetConfig>,
 }
 
 impl CDDAKnowledgeGraph {
@@ -69,106 +85,130 @@ impl CDDAKnowledgeGraph {
       region_settings: Default::default(),
       palette: Default::default(),
       terrain: Default::default(),
-      tileset: Default::default(),
+      file_content: Default::default(),
+      // tileset: Default::default(),
     }
   }
 
   // remind to release memory for original CDDA_JSON object
-  pub fn update(&mut self, update_data: CDDA_JSON) {
+  pub fn update(&mut self, update_data: CDDA_JSON, file_path: PathBuf) {
+    let file = file_path.display().to_string();
+  // get the mutable inner list for a file_path, if create one if not found
+    let id_clutter_list: &mut Vec<(String,CDDAType)>;
+    match self.file_content.get_mut(&file) {
+      Some(id_list) => {
+        id_clutter_list = id_list;
+      },
+      None => {
+        self.file_content.insert(file.clone(), Vec::new());
+        id_clutter_list = self.file_content.get_mut(&file).unwrap();
+      }
+    }
+    // create or change index
     match &update_data {
-      CDDA_JSON::Palette(palette_item) => {
+      CDDA_JSON::palette(palette_item) => {
         match palette_item.get_id() {
           Some(ids) => {
             for id in ids {
-              self.palette.insert(id,(*palette_item).clone());
+              self.palette.insert(id.clone(),(*palette_item).clone());
+              id_clutter_list.push((id.clone(),CDDAType::Palette));
             }
           },
           None => {}
         }
       },
-      CDDA_JSON::Mapgen(mapgen_item) => {
+      CDDA_JSON::mapgen(mapgen_item) => {
         match mapgen_item.get_id() {
           Some(id) => {
-            self.mapgen.insert(id,(*mapgen_item).clone());
+            self.mapgen.insert(id.clone(),(*mapgen_item).clone());
+            id_clutter_list.push((id.clone(),CDDAType::Mapgen));
           },
           None => {}
         }
       },
-      CDDA_JSON::Furniture(furniture_item) => {
+      CDDA_JSON::furniture(furniture_item) => {
         match furniture_item.get_id() {
           Some(ids) => {
             for id in ids {
-              self.furniture.insert(id,(*furniture_item).clone());
+              self.furniture.insert(id.clone(),(*furniture_item).clone());
+              id_clutter_list.push((id.clone(),CDDAType::Furniture));
             }
           },
           None => {}
         }
       },
-      CDDA_JSON::Terrain(terrain_item) => {
+      CDDA_JSON::terrain(terrain_item) => {
         match terrain_item.get_id() {
           Some(ids) => {
             for id in ids {
-              self.terrain.insert(id,(*terrain_item).clone());
+              self.terrain.insert(id.clone(),(*terrain_item).clone());
+              id_clutter_list.push((id.clone(),CDDAType::Terrain));
             }
           },
           None => {}
         }
       },
-      CDDA_JSON::OvermapTerrain(omt_item) => {
+      CDDA_JSON::overmap_terrain(omt_item) => {
         match omt_item.get_id() {
           Some(ids) => {
             for id in ids {
-              self.overmap_terrain.insert(id,(*omt_item).clone());
+              self.overmap_terrain.insert(id.clone(),(*omt_item).clone());
+              id_clutter_list.push((id.clone(),CDDAType::OvermapTerrain));
             }
           },
           None => {}
         }
       },
-      CDDA_JSON::OvermapSpecial(oms_item) => {
+      CDDA_JSON::overmap_special(oms_item) => {
         match oms_item.get_id() {
           Some(ids) => {
             for id in ids {
-              self.overmap_special.insert(id,(*oms_item).clone());
+              self.overmap_special.insert(id.clone(),(*oms_item).clone());
+              id_clutter_list.push((id.clone(),CDDAType::OvermapSpecial));
             }
           },
           None => {}
         }
       },
-      CDDA_JSON::OvermapLocation(oml_item) => {
+      CDDA_JSON::overmap_location(oml_item) => {
         match oml_item.get_id() {
           Some(ids) => {
             for id in ids {
-              self.overmap_location.insert(id,(*oml_item).clone());
+              self.overmap_location.insert(id.clone(),(*oml_item).clone());
+              id_clutter_list.push((id.clone(),CDDAType::OvermapLocation));
             }
           },
           None => {}
         }
       },
-      CDDA_JSON::OvermapConnection(omc_item) => {
+      CDDA_JSON::overmap_connection(omc_item) => {
         match omc_item.get_id() {
           Some(ids) => {
             for id in ids {
-              self.overmap_connection.insert(id,(*omc_item).clone());
+              self.overmap_connection.insert(id.clone(),(*omc_item).clone());
+              id_clutter_list.push((id.clone(),CDDAType::OvermapConnection));
             }
           },
           None => {}
         }
       },
-      CDDA_JSON::CityBuilding(city_item) => {
+      CDDA_JSON::city_building(city_item) => {
         match city_item.get_id() {
           Some(ids) => {
             for id in ids {
-              self.city_building.insert(id,(*city_item).clone());
+              self.city_building.insert(id.clone(),(*city_item).clone());
+              id_clutter_list.push((id.clone(),CDDAType::CityBuilding));
             }
           },
           None => {}
         }
       },
-      CDDA_JSON::RegionSettings(region_item) => {
+      CDDA_JSON::region_settings(region_item) => {
         match region_item.get_id() {
           Some(ids) => {
             for id in ids {
-              self.region_settings.insert(id,(*region_item).clone());
+              self.region_settings.insert(id.clone(),(*region_item).clone());
+              id_clutter_list.push((id.clone(),CDDAType::RegionSettings));
             }
           },
           None => {}

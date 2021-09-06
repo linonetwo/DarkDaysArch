@@ -48,8 +48,6 @@ pub enum CDDAMapgen {
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDAMapgenCommon {
-  #[serde(rename = "type")]
-  pub cdda_json_type: mapgen_Literal,
   //TODO: enum ?
   #[serde(default)]
   pub method: String,

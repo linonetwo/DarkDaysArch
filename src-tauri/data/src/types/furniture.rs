@@ -131,9 +131,6 @@ pub struct CDDATerFurnCommon {
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDAFurniture {
-  #[serde(rename = "type")]
-  pub cdda_json_type: furniture_Literal,
-
   #[serde(flatten)]
   pub ter_furn_common: CDDATerFurnCommon,
 

@@ -11,9 +11,6 @@ pub type CDDARegionSettingsArray = Vec<CDDARegionSettings>;
  */
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDARegionSettings {
-  #[serde(rename = "type")]
-  pub cdda_json_type: string::region_settings_Literal,
-
   #[serde(flatten)]
   pub select_list: SelectListItem,
   /**

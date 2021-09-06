@@ -1,0 +1,53 @@
+[
+  {
+    "type": "palette",
+    "id": "standard_domestic_landscaping_palette",
+    "//": "Intended to be used in conjunction with standard_domestic_palette. Load the domestic palette first, then this one to use open symbols for landscaping.",
+    "terrain": {
+      "%": ["t_region_shrub", "t_region_shrub_fruit", "t_region_shrub_decorative"],
+      "[": [["t_region_tree_fruit", 2], ["t_region_tree_nut", 2], "t_region_tree_shade"],
+      "!": "t_region_groundcover_urban",
+      "_": "t_pavement",
+      "`": "t_concrete"
+    },
+    "furniture": { "!": "f_region_flower" }
+  },
+  {
+    "type": "overmap_terrain",
+    "abstract": "megastore_parksssing",
+    "name": "megastore parking lot",
+    "sym": "O",
+    "color": "dark_gray",
+    "extras": "build",
+    "see_cost": 5,
+    "mondensity": 2,
+    "spawns": {
+      "group": "GROUP_FOREST",
+      "chance": 100
+    }
+  },
+  {
+    "type": "overmap_special",
+    "abstract": "11Crater",
+    "overmaps": [ { "point": [ 0, 0, 0 ], "overmap": "crater" } ],
+    "locations": [ "land" ],
+    "occurrences": [ 0, 6 ],
+    "rotate": false,
+    "flags": [ "BLOB", "CLASSIC" ]
+  },
+  {
+    "type": "trap",
+    "id": "tr_bubblewrap",
+    "name": "bubble wrap",
+    "color": "light_cyan",
+    "memorial_male": { "ctxt": "memorial_male", "str": "Stepped on bubble wrap." },
+    "memorial_female": { "ctxt": "memorial_female", "str": "Stepped on bubble wrap." },
+    "symbol": "_",
+    "visibility": 0,
+    "avoidance": 8,
+    "difficulty": 0,
+    "action": "bubble",
+    "drops": [ "bubblewrap" ],
+    "vehicle_data": { "sound_volume": 18, "sound": "Pop!" }
+  }
+]

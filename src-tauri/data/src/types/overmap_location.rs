@@ -8,9 +8,6 @@ pub type CDDAOvermapLocationArray = Vec<CDDAOvermapLocation>;
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDAOvermapLocation {
-  #[serde(rename = "type")]
-  pub cdda_json_type: overmap_location_Literal,
-
   //no name allowed
   #[serde(flatten)]
   pub select_list: SelectListItem,

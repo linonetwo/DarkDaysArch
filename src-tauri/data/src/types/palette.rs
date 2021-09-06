@@ -10,8 +10,8 @@ pub type CDDAPaletteArray = Vec<CDDAPalette>;
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDAPalette {
-  #[serde(rename = "type")]
-  pub cdda_json_type: palette_Literal,
+  // #[serde(rename = "type")]
+  // pub cdda_json_type: palette_Literal,
 
   #[serde(flatten)]
   pub select_list: list::SelectListItem,

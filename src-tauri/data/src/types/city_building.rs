@@ -9,9 +9,6 @@ pub type CDDACityBuildingArray = Vec<CDDACityBuilding>;
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDACityBuilding {
-  #[serde(rename = "type")]
-  pub cdda_json_type: city_building_Literal,
-
   #[serde(flatten)]
   pub select_list: SelectListItem,
   /**

@@ -26,21 +26,11 @@ fn main() {
   // println!("{:?}", raw_map);
   // println!("{}",map_json);
 
-  let palette_file_path = "../public/json/house_general_palette.json";
-  let mut raw_palette_file = File::open(palette_file_path).unwrap();
-  let mut raw_palette_string = String::new();
-  raw_palette_file.read_to_string(&mut raw_palette_string).unwrap();
-  let raw_palette: CDDA_JSON_Array = serde_json::from_str(&raw_palette_string).unwrap();
-
-  let mut knowledge: CDDAKnowledgeGraph = CDDAKnowledgeGraph::new();
-
-  for item_ter in raw_palette {
-    knowledge.update(item_ter);
-  }
-
-  println!("{}", knowledge.palette.len());
-  println!("{:?}", knowledge);
-
+  // let palette_file_path = "../public/json/house_general_palette.json";
+  // let mut raw_palette_file = File::open(palette_file_path).unwrap();
+  // let mut raw_palette_string = String::new();
+  // raw_palette_file.read_to_string(&mut raw_palette_string).unwrap();
+  // let raw_palette: CDDAPaletteArray = serde_json::from_str(&raw_palette_string).unwrap();
 
   // let palette_json = serde_json::to_string(&raw_palette).unwrap();
 
@@ -112,4 +102,26 @@ fn main() {
 
   // // println!("{:?}", raw_region);
   // println!("{}",region_json);
+
+  let mut knowledge: CDDAKnowledgeGraph = CDDAKnowledgeGraph::new();
+
+  {
+    let file_path = "../public/json/test.json";
+    let mut raw_file = File::open(file_path).unwrap();
+    let mut raw_string = String::new();
+    raw_file.read_to_string(&mut raw_string).unwrap();
+
+    println!("{}",&raw_string);
+
+    let raw: CDDA_JSON_Array = serde_json::from_str(&raw_string).unwrap();
+
+    println!("{:?}",raw);
+
+    for item_ter in raw {
+      knowledge.update(item_ter,Path::new("a.txt").to_path_buf());
+    }
+  }
+
+  println!("{:?}", knowledge);
+
 }

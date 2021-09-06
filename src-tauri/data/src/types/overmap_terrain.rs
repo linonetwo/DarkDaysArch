@@ -8,9 +8,6 @@ pub type CDDAOvermapTerrainArray = Vec<CDDAOvermapTerrain>;
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDAOvermapTerrain {
-  #[serde(rename = "type")]
-  pub cdda_json_type: overmap_terrain_Literal,
-
   #[serde(flatten)]
   pub select_list: SelectListItem,
 

@@ -8,9 +8,6 @@ pub type CDDAOvermapConnectionArray = Vec<CDDAOvermapConnection>;
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDAOvermapConnection {
-  #[serde(rename = "type")]
-  pub cdda_json_type: overmap_connection_Literal,
-
   //no name allowed
   #[serde(flatten)]
   pub select_list: SelectListItem,
