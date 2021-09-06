@@ -490,3 +490,27 @@ pub struct CDDARegionSettingsOvermapFeatureFlagSettings {
    */
   pub whitelist: Vec<String>,
 }
+
+
+impl CDDARegionSettings {
+  pub fn get_id(&self) -> Option<Vec<String>> {
+    let select_list = &self.select_list;
+    let mut result:Vec<String> = Vec::new();
+    match &select_list.id {
+      Some(id_mix) => {
+        match id_mix {
+          CDDAStringArray::Single(id) => {
+            result.push((*id).clone());
+          },
+          CDDAStringArray::Multiple(ids) => {
+            for id in ids {
+              result.push((*id).clone());
+            }
+          }
+        }
+      },
+      None => { return None; }
+    };
+    Some(result)
+  }
+}

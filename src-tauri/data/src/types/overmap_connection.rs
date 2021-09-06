@@ -43,3 +43,26 @@ pub struct CDDAOvermapConnectionSubtype {
   #[serde(skip_serializing_if = "Vec::is_empty")]
   pub flags: Vec<String>,
 }
+
+impl CDDAOvermapConnection {
+  pub fn get_id(&self) -> Option<Vec<String>> {
+    let select_list = &self.select_list;
+    let mut result:Vec<String> = Vec::new();
+    match &select_list.id {
+      Some(id_mix) => {
+        match id_mix {
+          CDDAStringArray::Single(id) => {
+            result.push((*id).clone());
+          },
+          CDDAStringArray::Multiple(ids) => {
+            for id in ids {
+              result.push((*id).clone());
+            }
+          }
+        }
+      },
+      None => { return None; }
+    };
+    Some(result)
+  }
+}

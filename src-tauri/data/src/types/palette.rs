@@ -1,6 +1,7 @@
 use super::mapgen::CDDAMapgenCoor;
 use crate::common::string::palette_Literal;
 use crate::common::{bool, float64, int64, string, CDDAIntRange, CDDAStringArray};
+use crate::list;
 use schemars::JsonSchema;
 use serde::{self, Deserialize, Serialize};
 use std::collections::BTreeMap;
@@ -12,7 +13,8 @@ pub struct CDDAPalette {
   #[serde(rename = "type")]
   pub cdda_json_type: palette_Literal,
 
-  pub id: String,
+  #[serde(flatten)]
+  pub select_list: list::SelectListItem,
 
   #[serde(rename = "//")]
   #[serde(default)]
@@ -908,4 +910,27 @@ pub struct CDDAPaletteMonstersValueMonster {
   #[serde(default = "float64::default_m1")]
   #[serde(skip_serializing_if = "float64::is_default_m1")]
   pub density: f64,
+}
+
+impl CDDAPalette {
+  pub fn get_id(&self) -> Option<Vec<String>> {
+    let select_list = &self.select_list;
+    let mut result:Vec<String> = Vec::new();
+    match &select_list.id {
+      Some(id_mix) => {
+        match id_mix {
+          CDDAStringArray::Single(id) => {
+            result.push((*id).clone());
+          },
+          CDDAStringArray::Multiple(ids) => {
+            for id in ids {
+              result.push((*id).clone());
+            }
+          }
+        }
+      },
+      None => { return None; }
+    };
+    Some(result)
+  }
 }

@@ -30,6 +30,14 @@ pub fn is_default_300(t: &i64) -> bool {
   t == &default_300()
 }
 
+pub fn default_1000() -> i64 {
+  1000
+}
+
+pub fn is_default_1000(t: &i64) -> bool {
+  t == &default_1000()
+}
+
 pub fn default_m1() -> i64 {
   -1
 }

@@ -53,14 +53,28 @@ pub struct CDDAMapgenCommon {
   //TODO: enum ?
   #[serde(default)]
   pub method: String,
+  /**
+  * @docs MAPGEN.md      weight value determines how rare it is default 1000, 0 means disabled
+  */
+  #[serde(default = "int64::default_1000")]
+  #[serde(skip_serializing_if = "int64::is_default_1000")]
+  pub weight: i64,
   pub object: Option<CDDAMapgenObject>,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDAMapgenOM {
-  pub om_terrain: String,
+  pub om_terrain: CDDAMapgenOMTerrain,
   #[serde(flatten)]
   pub common: CDDAMapgenCommon,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
+#[serde(untagged)]
+pub enum CDDAMapgenOMTerrain {
+  Single(String),
+  Line(Vec<String>),
+  Square(Vec<Vec<String>>),
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
@@ -79,8 +93,30 @@ pub struct CDDAMapgenNested {
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDAMapgenObject {
+  /**
+  * @docs MAPGEN.md      required when rows is undefined
+  */
+  #[serde(default)]
+  #[serde(skip_serializing_if = "String::is_empty")]
   pub fill_ter: String,
+  /**
+  * @docs MAPGEN.md      required when fill_ter is undefined
+  */
+  #[serde(default)]
+  #[serde(skip_serializing_if = "Vec::is_empty")]
   pub rows: Vec<String>,
+  /**
+  * @docs MAPGEN.md      required when fill_ter is undefined
+  */
+  #[serde(default = "CDDAIntRange::default_0")]
+  #[serde(skip_serializing_if = "CDDAIntRange::is_default_0")]
+  pub rotation: CDDAIntRange,
+  /**
+  * @docs MAPGEN.md      not sure how it works
+  */
+  #[serde(default)]
+  #[serde(skip_serializing_if = "String::is_empty")]
+  pub predecessor_mapgen: String,
   #[serde(default)]
   #[serde(skip_serializing_if = "Vec::is_empty")]
   pub palettes: Vec<String>,
@@ -583,4 +619,18 @@ pub enum CDDAMapgenSetSquare {
     #[serde(flatten)]
     set_common: CDDAMapgenSetCommon,
   },
+}
+
+impl CDDAMapgen {
+  pub fn get_id(&self) -> Option<String> {
+    match self {
+      CDDAMapgen::Update(update) => {
+        return Some(update.update_mapgen_id.clone());
+      },
+      CDDAMapgen::Nested(nested) => {
+        return Some(nested.nested_mapgen_id.clone());
+      },
+      _ => { return None; }
+    };
+  }
 }

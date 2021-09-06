@@ -1,11 +1,15 @@
+#[allow(unused_imports)]
+
 use data::list;
 use data::types::*;
+use data::common::*;
 use glob::glob;
 use project_root::get_project_root;
 use schemars::JsonSchema;
 use serde;
 use serde::{Deserialize, Serialize};
 use serde_json;
+use std::fs::create_dir;
 use std::path::Path;
 use std::{collections::BTreeMap, fs::canonicalize, fs::File, io::Read};
 
@@ -22,11 +26,21 @@ fn main() {
   // println!("{:?}", raw_map);
   // println!("{}",map_json);
 
-  // let palette_file_path = "../public/json/house_general_palette.json";
-  // let mut raw_palette_file = File::open(palette_file_path).unwrap();
-  // let mut raw_palette_string = String::new();
-  // raw_palette_file.read_to_string(&mut raw_palette_string).unwrap();
-  // let raw_palette: palette::CDDAPaletteArray = serde_json::from_str(&raw_palette_string).unwrap();
+  let palette_file_path = "../public/json/house_general_palette.json";
+  let mut raw_palette_file = File::open(palette_file_path).unwrap();
+  let mut raw_palette_string = String::new();
+  raw_palette_file.read_to_string(&mut raw_palette_string).unwrap();
+  let raw_palette: CDDA_JSON_Array = serde_json::from_str(&raw_palette_string).unwrap();
+
+  let mut knowledge: CDDAKnowledgeGraph = CDDAKnowledgeGraph::new();
+
+  for item_ter in raw_palette {
+    knowledge.update(item_ter);
+  }
+
+  println!("{}", knowledge.palette.len());
+  println!("{:?}", knowledge);
+
 
   // let palette_json = serde_json::to_string(&raw_palette).unwrap();
 
@@ -52,7 +66,7 @@ fn main() {
 
   // let ter_json = serde_json::to_string(&raw_ter).unwrap();
 
-  // // println!("{:?}", raw_ter);
+  // println!("{:?}", raw_ter);
   // println!("{}",ter_json);
 
   // let list_file_path = "../public/json/terrain-floors-indoor.json";
@@ -88,14 +102,14 @@ fn main() {
   // println!("{:?}", raw_oms);
   // println!("{}",oms_json);
 
-  let region_file_path = "../public/json/regional_map_settings.json";
-  let mut raw_region_file = File::open(region_file_path).unwrap();
-  let mut raw_region_string = String::new();
-  raw_region_file.read_to_string(&mut raw_region_string).unwrap();
-  let raw_region: region_settings::CDDARegionSettingsArray = serde_json::from_str(&raw_region_string).unwrap();
+  // let region_file_path = "../public/json/regional_map_settings.json";
+  // let mut raw_region_file = File::open(region_file_path).unwrap();
+  // let mut raw_region_string = String::new();
+  // raw_region_file.read_to_string(&mut raw_region_string).unwrap();
+  // let raw_region: region_settings::CDDARegionSettingsArray = serde_json::from_str(&raw_region_string).unwrap();
 
-  let region_json = serde_json::to_string(&raw_region).unwrap();
+  // let region_json = serde_json::to_string(&raw_region).unwrap();
 
-  // println!("{:?}", raw_region);
-  println!("{}",region_json);
+  // // println!("{:?}", raw_region);
+  // println!("{}",region_json);
 }
