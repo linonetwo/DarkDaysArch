@@ -234,9 +234,6 @@
     },
     "CDDAFurniture": {
       "type": "object",
-      "required": [
-        "type"
-      ],
       "properties": {
         "abstrct": {
           "type": [
@@ -420,9 +417,6 @@
           "description": "acsii symbol",
           "default": "",
           "type": "string"
-        },
-        "type": {
-          "$ref": "#/definitions/furniture_Literal"
         },
         "workbench": {
           "description": "@docs JSON_INFO.md   if not defined, cannot be a workbench",
@@ -627,12 +621,6 @@
         {
           "type": "string"
         }
-      ]
-    },
-    "furniture_Literal": {
-      "type": "string",
-      "enum": [
-        "furniture"
       ]
     }
   }

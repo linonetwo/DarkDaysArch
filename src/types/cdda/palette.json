@@ -187,15 +187,27 @@
         }
       }
     },
+    "CDDAName": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "$ref": "#/definitions/CDDATranslation"
+        }
+      ]
+    },
     "CDDAPalette": {
       "type": "object",
-      "required": [
-        "id",
-        "type"
-      ],
       "properties": {
         "//": {
           "type": "string"
+        },
+        "abstrct": {
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "computers": {
           "type": "object",
@@ -235,7 +247,14 @@
           }
         },
         "id": {
-          "type": "string"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/CDDAStringArray"
+            },
+            {
+              "type": "null"
+            }
+          ]
         },
         "item": {
           "type": "object",
@@ -273,6 +292,9 @@
           "additionalProperties": {
             "$ref": "#/definitions/CDDAPaletteMonstersValue"
           }
+        },
+        "name": {
+          "$ref": "#/definitions/CDDAName"
         },
         "nested": {
           "type": "object",
@@ -334,9 +356,6 @@
           "additionalProperties": {
             "$ref": "#/definitions/CDDAPaletteTrapsValue"
           }
-        },
-        "type": {
-          "$ref": "#/definitions/palette_Literal"
         },
         "vehicles": {
           "type": "object",
@@ -1491,11 +1510,18 @@
         }
       ]
     },
-    "palette_Literal": {
-      "type": "string",
-      "enum": [
-        "palette"
-      ]
+    "CDDATranslation": {
+      "type": "object",
+      "properties": {
+        "//NOLINT(cata-text-style)": {
+          "default": "",
+          "type": "string"
+        },
+        "str": {
+          "default": "",
+          "type": "string"
+        }
+      }
     }
   }
 }

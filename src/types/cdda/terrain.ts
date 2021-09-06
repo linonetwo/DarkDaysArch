@@ -11,7 +11,6 @@ export type CDDATime = number | string;
 export type CDDAStringArray = string | string[];
 export type CDDAVolume = number | string;
 export type CDDAName = string | CDDATranslation;
-export type Terrain_Literal = "terrain";
 export type ArrayOf_CDDATerrain = CDDATerrain[];
 
 export interface CDDATerrain {
@@ -136,7 +135,6 @@ export interface CDDATerrain {
    * @docs JSON_INFO.md    build-in trap
    */
   trap?: string;
-  type: Terrain_Literal;
   [k: string]: unknown;
 }
 export interface CDDATerrainBash {

@@ -13,9 +13,15 @@ export type CDDAJSONType =
   | "mapgen_Literal"
   | "overmap_special_Literal"
   | "overmap_terrain_Literal"
+  | "overmap_location_Literal"
+  | "overmap_connection_Literal"
   | "palette_Literal"
   | "terrain_Literal"
-  | "trap_Literal";
+  | "trap_Literal"
+  | "EXTERNAL_OPTION_Literal"
+  | "ITEM_BLACKLIST_Literal"
+  | "region_settings_Literal"
+  | "city_building_Literal";
 export type ArrayOf_SelectListItemWithType = SelectListItemWithType[];
 
 /**

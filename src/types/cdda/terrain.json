@@ -204,9 +204,6 @@
     },
     "CDDATerrain": {
       "type": "object",
-      "required": [
-        "type"
-      ],
       "properties": {
         "abstrct": {
           "type": [
@@ -405,9 +402,6 @@
         "trap": {
           "description": "@docs JSON_INFO.md    build-in trap",
           "type": "string"
-        },
-        "type": {
-          "$ref": "#/definitions/terrain_Literal"
         }
       }
     },
@@ -591,12 +585,6 @@
         {
           "type": "string"
         }
-      ]
-    },
-    "terrain_Literal": {
-      "type": "string",
-      "enum": [
-        "terrain"
       ]
     }
   }

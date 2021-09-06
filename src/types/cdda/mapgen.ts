@@ -6,9 +6,11 @@
  */
 
 /**
- * A char in map rows can mean multiple item, like # mean a terrain and a furniture, and some terrain can have id same as a furniture, so we have to keep id's type in a tuple
+ * * A char in map rows can mean multiple item, like # mean a terrain and a furniture, and some terrain can have id same as a furniture, so we have to keep id's type in a tuple
+ *
+ * * (type, id), where type is like "terrain" or "furniture"
  */
-export type ItemIDOrItemList = [MapgenPaletteKeys, string] | [MapgenPaletteKeys, string][];
+export type ItemId = [MapgenPaletteKeys, string];
 export type MapgenPaletteKeys = "terrain" | "furniture" | "items";
 export type CDDAMapgen = CDDAMapgenOM | CDDAMapgenUpdate | CDDAMapgenNested;
 export type CDDAPaletteComputersValue = CDDAPaletteComputersValueComputer | CDDAPaletteComputersValueComputer[];
@@ -312,13 +314,13 @@ export type CDDAPaletteTrapsValueObject = CDDAPaletteTrapsValueTrap | CDDAPalett
 export type CDDAPaletteVehiclesValue = CDDAPaletteVehiclesValueVehicle | CDDAPaletteVehiclesValueVehicle[];
 export type CDDAPaletteVendingsValue = CDDAPaletteVendingsValueVending | CDDAPaletteVendingsValueVending[];
 export type CDDAPaletteZonesValue = CDDAPaletteZonesValueZone | CDDAPaletteZonesValueZone[];
-export type Mapgen_Literal = "mapgen";
+export type CDDAMapgenOMTerrain = string | string[] | string[][];
 
 export interface CDDAMapgenWithCache {
   /**
    * Map 2D array that have place-holder characters replaced with actual item ID, for map view to display And we have multiple mapgen in a file, so this will be a 3D matrix. But each location can have terrain, furniture, item and so on, so each tile will be a list, so this is a 4D tensor
    */
-  parsed_map: ItemIDOrItemList[][][][];
+  parsed_map: ItemId[][][][];
   /**
    * Full mapgen file content, for code editor to display
    */
@@ -328,8 +330,11 @@ export interface CDDAMapgenWithCache {
 export interface CDDAMapgenOM {
   method?: string;
   object?: CDDAMapgenObject | null;
-  om_terrain: string;
-  type: Mapgen_Literal;
+  om_terrain: CDDAMapgenOMTerrain;
+  /**
+   * @docs MAPGEN.md      weight value determines how rare it is default 1000, 0 means disabled
+   */
+  weight?: number;
   [k: string]: unknown;
 }
 export interface CDDAMapgenObject {
@@ -343,7 +348,10 @@ export interface CDDAMapgenObject {
   fields?: {
     [k: string]: CDDAPaletteFieldsValue;
   };
-  fill_ter: string;
+  /**
+   * @docs MAPGEN.md      required when rows is undefined
+   */
+  fill_ter?: string;
   /**
    * @example "furniture": { "c": "f_exercise", "u": [ "f_ergometer", "f_ergometer_mechanical" ]}
    */
@@ -403,7 +411,18 @@ export interface CDDAMapgenObject {
   place_vehicles?: CDDAMapgenPlaceVehicles[];
   place_vendingmachines?: CDDAMapgenPlaceVendings[];
   place_zones?: CDDAMapgenPlaceZones[];
-  rows: string[];
+  /**
+   * @docs MAPGEN.md      not sure how it works
+   */
+  predecessor_mapgen?: string;
+  /**
+   * @docs MAPGEN.md      required when fill_ter is undefined
+   */
+  rotation?: CDDAIntRange;
+  /**
+   * @docs MAPGEN.md      required when fill_ter is undefined
+   */
+  rows?: string[];
   rubble?: {
     [k: string]: CDDAPaletteRubbleValue;
   };
@@ -1189,14 +1208,20 @@ export interface CDDAPaletteZonesValueZone {
 export interface CDDAMapgenUpdate {
   method?: string;
   object?: CDDAMapgenObject | null;
-  type: Mapgen_Literal;
   update_mapgen_id: string;
+  /**
+   * @docs MAPGEN.md      weight value determines how rare it is default 1000, 0 means disabled
+   */
+  weight?: number;
   [k: string]: unknown;
 }
 export interface CDDAMapgenNested {
   method?: string;
   nested_mapgen_id: string;
   object?: CDDAMapgenObject | null;
-  type: Mapgen_Literal;
+  /**
+   * @docs MAPGEN.md      weight value determines how rare it is default 1000, 0 means disabled
+   */
+  weight?: number;
   [k: string]: unknown;
 }

@@ -5,28 +5,12 @@
  * and run json-schema-to-typescript to regenerate this file.
  */
 
-export type CDDAModInfoAuthors =
-  | {
-      Name: string;
-    }
-  | {
-      NameList: string[];
-    };
-export type CDDAModInfoCategory =
-  | "content"
-  | "total_conversion"
-  | "items"
-  | "creatures"
-  | "misc_additions"
-  | "buildings"
-  | "vehicles"
-  | "rebalance"
-  | "magical"
-  | "item_exclude"
-  | "monster_exclude"
-  | "graphical";
+export type CDDAModInfoWithExternalOption = CDDAModInfo | CDDAExternalOption | CDDAItemBlackList;
+export type CDDAModInfoAuthors = string | string[];
 export type MOD_INFO_Literal = "MOD_INFO";
-export type ArrayOf_CDDAModInfo = CDDAModInfo[];
+export type EXTERNAL_OPTION_Literal = "EXTERNAL_OPTION";
+export type ITEM_BLACKLIST_Literal = "ITEM_BLACKLIST";
+export type ArrayOf_CDDAModInfoWithExternalOption = CDDAModInfoWithExternalOption[];
 
 /**
  * @docs https://github.com/CleverRaven/Cataclysm-DDA/blob/master/doc/MODDING.md#modinfojson
@@ -34,7 +18,7 @@ export type ArrayOf_CDDAModInfo = CDDAModInfo[];
 export interface CDDAModInfo {
   "//"?: string;
   authors?: CDDAModInfoAuthors | null;
-  category?: CDDAModInfoCategory | null;
+  category?: string | null;
   dependencies?: string[] | null;
   description: string;
   id: string;
@@ -42,5 +26,19 @@ export interface CDDAModInfo {
   name: string;
   type: MOD_INFO_Literal;
   version?: string | null;
+  [k: string]: unknown;
+}
+export interface CDDAExternalOption {
+  info?: string | null;
+  name: string;
+  stype: string;
+  type: EXTERNAL_OPTION_Literal;
+  value: true;
+  [k: string]: unknown;
+}
+export interface CDDAItemBlackList {
+  items: true[];
+  type: ITEM_BLACKLIST_Literal;
+  whitelist: boolean;
   [k: string]: unknown;
 }

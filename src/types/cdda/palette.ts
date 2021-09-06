@@ -26,6 +26,7 @@ export type CDDAPaletteDistribution = string | [string, number];
 export type CDDAPaletteGaspumpsValue = CDDAPaletteGaspumpsValueGaspump | CDDAPaletteGaspumpsValueGaspump[];
 export type CDDAIntRange = number | number[];
 export type CDDAPaletteGraffitiValue = CDDAPaletteGraffitiValueGraffiti | CDDAPaletteGraffitiValueGraffiti[];
+export type CDDAStringArray = string | string[];
 export type CDDAPaletteItemValue = CDDAPaletteItemValueItem | CDDAPaletteItemValueItem[];
 export type CDDAPaletteItemsValue = CDDAPaletteItemsValueItem | CDDAPaletteItemsValueItem[];
 export type CDDAPaletteLiquidsValue = CDDAPaletteLiquidsValueLiquid | CDDAPaletteLiquidsValueLiquid[];
@@ -36,7 +37,6 @@ export type CDDAPaletteMonsterValueMonster =
 export type CDDAPaletteMonstersValue = CDDAPaletteMonstersValueMonster | CDDAPaletteMonstersValueMonster[];
 export type CDDAPaletteNestedValue = CDDAPaletteNestedValueNested | CDDAPaletteNestedValueNested[];
 export type CDDAPaletteNestedValueNestedChuncks = string | CDDAPaletteDistribution;
-export type CDDAStringArray = string | string[];
 export type CDDAPaletteNpcsValue = CDDAPaletteNpcsValueNpc | CDDAPaletteNpcsValueNpc[];
 export type CDDAPaletteRubbleValue = CDDAPaletteRubbleValueRubble | CDDAPaletteRubbleValueRubble[];
 export type CDDAPaletteSealedValue = CDDAPaletteSealedValueSealed | CDDAPaletteSealedValueSealed[];
@@ -58,11 +58,12 @@ export type CDDAPaletteTrapsValueObject = CDDAPaletteTrapsValueTrap | CDDAPalett
 export type CDDAPaletteVehiclesValue = CDDAPaletteVehiclesValueVehicle | CDDAPaletteVehiclesValueVehicle[];
 export type CDDAPaletteVendingsValue = CDDAPaletteVendingsValueVending | CDDAPaletteVendingsValueVending[];
 export type CDDAPaletteZonesValue = CDDAPaletteZonesValueZone | CDDAPaletteZonesValueZone[];
-export type Palette_Literal = "palette";
+export type CDDAName = string | CDDATranslation;
 export type ArrayOf_CDDAPalette = CDDAPalette[];
 
 export interface CDDAPalette {
   "//"?: string;
+  abstrct?: string | null;
   computers?: {
     [k: string]: CDDAPaletteComputersValue;
   };
@@ -84,7 +85,7 @@ export interface CDDAPalette {
   graffiti?: {
     [k: string]: CDDAPaletteGraffitiValue;
   };
-  id: string;
+  id?: CDDAStringArray | null;
   item?: {
     [k: string]: CDDAPaletteItemValue;
   };
@@ -106,6 +107,7 @@ export interface CDDAPalette {
   monsters?: {
     [k: string]: CDDAPaletteMonstersValue;
   };
+  name?: CDDAName;
   nested?: {
     [k: string]: CDDAPaletteNestedValue;
   };
@@ -139,7 +141,6 @@ export interface CDDAPalette {
   traps?: {
     [k: string]: CDDAPaletteTrapsValue;
   };
-  type: Palette_Literal;
   vehicles?: {
     [k: string]: CDDAPaletteVehiclesValue;
   };
@@ -630,5 +631,10 @@ export interface CDDAPaletteZonesValueZone {
    * @docs MAPGEN.md    Values: `"NPC_RETREAT"`, `"NPC_NO_INVESTIGATE"`, or `"NPC_INVESTIGATE_ONLY"`
    */
   type: string;
+  [k: string]: unknown;
+}
+export interface CDDATranslation {
+  "//NOLINT(cata-text-style)"?: string;
+  str?: string;
   [k: string]: unknown;
 }

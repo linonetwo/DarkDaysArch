@@ -1,11 +1,58 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "Array_of_CDDAModInfo",
+  "title": "Array_of_CDDAModInfoWithExternalOption",
   "type": "array",
   "items": {
-    "$ref": "#/definitions/CDDAModInfo"
+    "$ref": "#/definitions/CDDAModInfoWithExternalOption"
   },
   "definitions": {
+    "CDDAExternalOption": {
+      "type": "object",
+      "required": [
+        "name",
+        "stype",
+        "type",
+        "value"
+      ],
+      "properties": {
+        "info": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "stype": {
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/definitions/EXTERNAL_OPTION_Literal"
+        },
+        "value": true
+      }
+    },
+    "CDDAItemBlackList": {
+      "type": "object",
+      "required": [
+        "items",
+        "type",
+        "whitelist"
+      ],
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": true
+        },
+        "type": {
+          "$ref": "#/definitions/ITEM_BLACKLIST_Literal"
+        },
+        "whitelist": {
+          "type": "boolean"
+        }
+      }
+    },
     "CDDAModInfo": {
       "description": "@docs https://github.com/CleverRaven/Cataclysm-DDA/blob/master/doc/MODDING.md#modinfojson",
       "type": "object",
@@ -30,13 +77,9 @@
           ]
         },
         "category": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/CDDAModInfoCategory"
-            },
-            {
-              "type": "null"
-            }
+          "type": [
+            "string",
+            "null"
           ]
         },
         "dependencies": {
@@ -80,49 +123,39 @@
     "CDDAModInfoAuthors": {
       "anyOf": [
         {
-          "type": "object",
-          "required": [
-            "Name"
-          ],
-          "properties": {
-            "Name": {
-              "type": "string"
-            }
-          },
-          "additionalProperties": false
+          "type": "string"
         },
         {
-          "type": "object",
-          "required": [
-            "NameList"
-          ],
-          "properties": {
-            "NameList": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          "additionalProperties": false
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       ]
     },
-    "CDDAModInfoCategory": {
+    "CDDAModInfoWithExternalOption": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/CDDAModInfo"
+        },
+        {
+          "$ref": "#/definitions/CDDAExternalOption"
+        },
+        {
+          "$ref": "#/definitions/CDDAItemBlackList"
+        }
+      ]
+    },
+    "EXTERNAL_OPTION_Literal": {
       "type": "string",
       "enum": [
-        "content",
-        "total_conversion",
-        "items",
-        "creatures",
-        "misc_additions",
-        "buildings",
-        "vehicles",
-        "rebalance",
-        "magical",
-        "item_exclude",
-        "monster_exclude",
-        "graphical"
+        "EXTERNAL_OPTION"
+      ]
+    },
+    "ITEM_BLACKLIST_Literal": {
+      "type": "string",
+      "enum": [
+        "ITEM_BLACKLIST"
       ]
     },
     "MOD_INFO_Literal": {

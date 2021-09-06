@@ -17,7 +17,7 @@
           "items": {
             "type": "array",
             "items": {
-              "$ref": "#/definitions/ItemIDOrItemList"
+              "$ref": "#/definitions/ItemId"
             }
           }
         }
@@ -97,8 +97,7 @@
     "CDDAMapgenNested": {
       "type": "object",
       "required": [
-        "nested_mapgen_id",
-        "type"
+        "nested_mapgen_id"
       ],
       "properties": {
         "method": {
@@ -118,16 +117,17 @@
             }
           ]
         },
-        "type": {
-          "$ref": "#/definitions/mapgen_Literal"
+        "weight": {
+          "description": "@docs MAPGEN.md      weight value determines how rare it is default 1000, 0 means disabled",
+          "type": "integer",
+          "format": "int64"
         }
       }
     },
     "CDDAMapgenOM": {
       "type": "object",
       "required": [
-        "om_terrain",
-        "type"
+        "om_terrain"
       ],
       "properties": {
         "method": {
@@ -145,19 +145,39 @@
           ]
         },
         "om_terrain": {
-          "type": "string"
+          "$ref": "#/definitions/CDDAMapgenOMTerrain"
         },
-        "type": {
-          "$ref": "#/definitions/mapgen_Literal"
+        "weight": {
+          "description": "@docs MAPGEN.md      weight value determines how rare it is default 1000, 0 means disabled",
+          "type": "integer",
+          "format": "int64"
         }
       }
     },
+    "CDDAMapgenOMTerrain": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
     "CDDAMapgenObject": {
       "type": "object",
-      "required": [
-        "fill_ter",
-        "rows"
-      ],
       "properties": {
         "computers": {
           "type": "object",
@@ -184,6 +204,7 @@
           }
         },
         "fill_ter": {
+          "description": "@docs MAPGEN.md      required when rows is undefined",
           "type": "string"
         },
         "furniture": {
@@ -391,7 +412,20 @@
             "$ref": "#/definitions/CDDAMapgenPlaceZones"
           }
         },
+        "predecessor_mapgen": {
+          "description": "@docs MAPGEN.md      not sure how it works",
+          "type": "string"
+        },
+        "rotation": {
+          "description": "@docs MAPGEN.md      required when fill_ter is undefined",
+          "allOf": [
+            {
+              "$ref": "#/definitions/CDDAIntRange"
+            }
+          ]
+        },
         "rows": {
+          "description": "@docs MAPGEN.md      required when fill_ter is undefined",
           "type": "array",
           "items": {
             "type": "string"
@@ -2067,7 +2101,6 @@
     "CDDAMapgenUpdate": {
       "type": "object",
       "required": [
-        "type",
         "update_mapgen_id"
       ],
       "properties": {
@@ -2085,11 +2118,13 @@
             }
           ]
         },
-        "type": {
-          "$ref": "#/definitions/mapgen_Literal"
-        },
         "update_mapgen_id": {
           "type": "string"
+        },
+        "weight": {
+          "description": "@docs MAPGEN.md      weight value determines how rare it is default 1000, 0 means disabled",
+          "type": "integer",
+          "format": "int64"
         }
       }
     },
@@ -3226,40 +3261,19 @@
         }
       ]
     },
-    "ItemIDOrItemList": {
-      "description": "A char in map rows can mean multiple item, like # mean a terrain and a furniture, and some terrain can have id same as a furniture, so we have to keep id's type in a tuple",
-      "anyOf": [
+    "ItemId": {
+      "description": "* A char in map rows can mean multiple item, like # mean a terrain and a furniture, and some terrain can have id same as a furniture, so we have to keep id's type in a tuple\n\n* (type, id), where type is like \"terrain\" or \"furniture\"",
+      "type": "array",
+      "items": [
         {
-          "description": "(type, id), where type is like \"terrain\" or \"furniture\"",
-          "type": "array",
-          "items": [
-            {
-              "$ref": "#/definitions/MapgenPaletteKeys"
-            },
-            {
-              "type": "string"
-            }
-          ],
-          "maxItems": 2,
-          "minItems": 2
+          "$ref": "#/definitions/MapgenPaletteKeys"
         },
         {
-          "type": "array",
-          "items": {
-            "type": "array",
-            "items": [
-              {
-                "$ref": "#/definitions/MapgenPaletteKeys"
-              },
-              {
-                "type": "string"
-              }
-            ],
-            "maxItems": 2,
-            "minItems": 2
-          }
+          "type": "string"
         }
-      ]
+      ],
+      "maxItems": 2,
+      "minItems": 2
     },
     "MapgenPaletteKeys": {
       "type": "string",
@@ -3267,12 +3281,6 @@
         "terrain",
         "furniture",
         "items"
-      ]
-    },
-    "mapgen_Literal": {
-      "type": "string",
-      "enum": [
-        "mapgen"
       ]
     }
   }
