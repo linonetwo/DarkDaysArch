@@ -2,7 +2,7 @@
 import { createModel } from '@rematch/core';
 import type { RootModel } from './index';
 
-import { CDDAMapgenWithCache, ItemIDOrItemList } from 'src/types/cdda/mapgen';
+import { CDDAMapgenWithCache, ItemId } from 'src/types/cdda/mapgen';
 
 interface IMaps {
   activeOpenedMapIndex?: number;
@@ -23,7 +23,7 @@ export interface IMapTileInfo {
   /**
    * [tileType, tileID] or [tileType, tileID][]
    */
-  tiles: ItemIDOrItemList;
+  tiles: ItemId;
 }
 
 /**

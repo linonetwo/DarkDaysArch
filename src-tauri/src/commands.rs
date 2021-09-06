@@ -82,7 +82,24 @@ pub fn read_mapgen_file(mapgen_file_path: &str) -> Result<mapgen::CDDAMapgenWith
               .iter()
               .map(|palette_id| {
                 // TODO: search in the knowledge graph
-                raw_palette.iter().find(|p| p.id == *palette_id)
+                raw_palette.iter().find(|p| {
+                  if let Some(id_mix) = &p.select_list.id {
+                    match id_mix {
+                      CDDAStringArray::Single(id) => { *id == *palette_id },
+                      CDDAStringArray::Multiple(ids) => {
+                        let mut flag: bool = false;
+                        for id in ids {
+                          if *id == *palette_id {
+                            flag = true;
+                            break;
+                          }
+                        };
+                        flag
+                      }
+                    }
+                  }
+                  else {false}
+                })
               })
               .filter(|p| p.is_some())
               .map(|p| p.unwrap().clone())
@@ -188,7 +205,7 @@ pub fn load_cdda_data_folder<'s>(state: tauri::State<'s, types::state::AppState>
         Ok(json_array) => {
           for json_enum in json_array {
             match json_enum {
-              CDDA_JSON::Furniture(json) => {
+              CDDA_JSON::furniture(json) => {
                 match &json
                   .ter_furn_common
                   .select_list
