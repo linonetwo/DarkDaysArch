@@ -32,6 +32,18 @@ pub struct CDDAPalette {
   pub mapping: BTreeMap<String, CDDAMapgenMapping>,
 }
 
+impl CDDAPalette {
+  pub fn extend(self, other_palette_to_overwrite_self: CDDAPalette) -> CDDAPalette {
+    let mut new_palette = self.clone();
+    // TODO: we just copy ids that used in the mapgen for now, should add whole keys in CDDAMapgenMapping
+    new_palette.mapping_object.terrain.extend(other_palette_to_overwrite_self.mapping_object.terrain.into_iter());
+    new_palette.mapping_object.furniture.extend(other_palette_to_overwrite_self.mapping_object.furniture.into_iter());
+    new_palette.mapping_object.items.extend(other_palette_to_overwrite_self.mapping_object.items.into_iter());
+
+    new_palette
+  }
+}
+
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct CDDAMapgenMapping {
   #[serde(default)]

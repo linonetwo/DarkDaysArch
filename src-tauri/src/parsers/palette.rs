@@ -163,6 +163,14 @@ pub fn mapgen_to_palette(mapgen_object: &mapgen::CDDAMapgenObject) -> palette::C
   }
 }
 
-pub fn merge_palette_for_mapgen<'p>(palettes_to_merge: &'p Vec<palette::CDDAPalette>) -> &palette::CDDAPalette {
-  palettes_to_merge.get(0).unwrap()
+/**
+ * Merge palettes, palette in the right will overwrite the one on the left.
+ */
+pub fn merge_palette_for_mapgen(palettes_to_merge: &mut Vec<palette::CDDAPalette>) -> palette::CDDAPalette {
+  // TODO: we just merge two palettes for now
+  match palettes_to_merge.len() {
+    1 => palettes_to_merge.get(0).unwrap().clone(),
+    2.. => palettes_to_merge.get(0).unwrap().clone().extend(palettes_to_merge.get(1).unwrap().clone()),
+    _ => panic!("No palette to merge in merge_palette_for_mapgen"),
+  }
 }

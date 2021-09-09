@@ -105,11 +105,9 @@ pub fn read_mapgen_file(mapgen_file_path: &str) -> Result<mapgen::CDDAMapgenWith
               .filter(|p| p.is_some())
               .map(|p| p.unwrap().clone())
               .collect();
+            // palette in the right will overwrite the one on the left, so we add mapgen palette to the right most position in this array
             palettes_to_reuse.push(parsers::palette::mapgen_to_palette(om_object));
-            if palettes_to_reuse.len() == 0 {
-              return vec![];
-            }
-            let merged_palette = parsers::palette::merge_palette_for_mapgen(&palettes_to_reuse);
+            let merged_palette = parsers::palette::merge_palette_for_mapgen(&mut palettes_to_reuse);
 
             om_object
               .rows
@@ -119,7 +117,7 @@ pub fn read_mapgen_file(mapgen_file_path: &str) -> Result<mapgen::CDDAMapgenWith
                   .chars()
                   .map(|c| {
                     let char_string = c.to_string();
-                    let mut tile_ids = parsers::palette::lookup_mapgen_char_in_palette(&char_string, merged_palette);
+                    let mut tile_ids = parsers::palette::lookup_mapgen_char_in_palette(&char_string, &merged_palette);
                     if !tile_ids.iter().any(|item| item.0 == mapgen::MapgenPaletteKeys::terrain) {
                       tile_ids.insert(0, mapgen::ItemId(mapgen::MapgenPaletteKeys::terrain, om_object.fill_ter.clone()));
                     }
