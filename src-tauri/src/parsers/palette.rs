@@ -1,6 +1,9 @@
-use data::types::{mapgen, palette};
+use std::collections::BTreeMap;
 
 use crate::utils;
+use data::common::{CDDAName, CDDAStringArray};
+use data::list;
+use data::types::{mapgen, palette};
 
 pub fn lookup_mapgen_char_in_palette(char_string: &String, palette: &palette::CDDAPalette) -> Vec<mapgen::ItemId> {
   let mut items_this_tile: Vec<mapgen::ItemId> = vec![];
@@ -15,10 +18,7 @@ pub fn lookup_mapgen_char_in_palette(char_string: &String, palette: &palette::CD
         items_this_tile.push(mapgen::ItemId(mapgen::MapgenPaletteKeys::terrain, id.clone()));
       }
       palette::CDDAPaletteTerrainValue::Object(terrain_value) => {
-        items_this_tile.push(mapgen::ItemId(
-          mapgen::MapgenPaletteKeys::terrain,
-          terrain_value.terrain.clone(),
-        ));
+        items_this_tile.push(mapgen::ItemId(mapgen::MapgenPaletteKeys::terrain, terrain_value.terrain.clone()));
       }
       // "o": [["t_window_domestic", 10], "t_window_no_curtains", "t_window_open", "t_window_no_curtains_open", ["t_curtains", 5]],
       // possible: [["t_window_domestic", 10], ["t_window_no_curtains", "t_window_open"], "t_window_no_curtains_open", [["t_curtains", 5], ["t_door_o", 5], "t_door_locked_interior"]
@@ -61,10 +61,7 @@ pub fn lookup_mapgen_char_in_palette(char_string: &String, palette: &palette::CD
         items_this_tile.push(mapgen::ItemId(mapgen::MapgenPaletteKeys::furniture, id.clone()));
       }
       palette::CDDAPaletteFurnitureValue::Object(furniture_value) => {
-        items_this_tile.push(mapgen::ItemId(
-          mapgen::MapgenPaletteKeys::furniture,
-          furniture_value.furniture.clone(),
-        ));
+        items_this_tile.push(mapgen::ItemId(mapgen::MapgenPaletteKeys::furniture, furniture_value.furniture.clone()));
       }
       // "o": [["t_window_domestic", 10], "t_window_no_curtains", "t_window_open", "t_window_no_curtains_open", ["t_curtains", 5]],
       // possible: [["t_window_domestic", 10], ["t_window_no_curtains", "t_window_open"], "t_window_no_curtains_open", [["t_curtains", 5], ["t_door_o", 5], "t_door_locked_interior"]
@@ -91,10 +88,7 @@ pub fn lookup_mapgen_char_in_palette(char_string: &String, palette: &palette::CD
             };
           }
           None => {
-            items_this_tile.push(mapgen::ItemId(
-              mapgen::MapgenPaletteKeys::furniture,
-              ref_object.fallback.clone(),
-            ));
+            items_this_tile.push(mapgen::ItemId(mapgen::MapgenPaletteKeys::furniture, ref_object.fallback.clone()));
           }
         };
       }
@@ -115,7 +109,7 @@ pub fn pick_random_list_id_by_distribution(random_list_ids: &Vec<palette::CDDAPa
         random_list_item_picker.add(id, *weight);
       }
     };
-  };
+  }
   // match random_list_ids {
   //   palette::CDDAPaletteDistribution::Id(id) => {
   //     random_list_item_picker.add(id, 1);
@@ -146,6 +140,26 @@ pub fn pick_random_list_id_by_distribution(random_list_ids: &Vec<palette::CDDAPa
   match result {
     Some(id) => Some((*id).clone()),
     None => None,
+  }
+}
+
+/**
+ * Extract palette information from mapgen JSON
+ */
+pub fn mapgen_to_palette(mapgen_object: &mapgen::CDDAMapgenObject) -> palette::CDDAPalette {
+  let mut mapgen_palette = palette::CDDAMapgenMapping::new();
+  // copy mapgen content to palette
+  mapgen_palette.terrain = mapgen_object.mapping_object.terrain.clone();
+  // return a new palette object
+  palette::CDDAPalette {
+    comment: String::from("Generated from mapgen object"),
+    select_list: list::SelectListItem {
+      abstract_id: Some(String::from("mapgen")),
+      id: Some(CDDAStringArray::Single(String::from("mapgen"))),
+      name: CDDAName::Name(String::from("mapgen")),
+    },
+    mapping_object: mapgen_palette,
+    mapping: BTreeMap::new(),
   }
 }
 

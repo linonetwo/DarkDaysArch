@@ -40,6 +40,15 @@ export const maps = createModel<RootModel>()({
       state.activeOpenedMapIndex = activeOpenedMapIndex;
       return state;
     },
+    updateActiveMapAtLocation(state, payload: { characters: string; location: [number, number] }) {
+      if (state.activeOpenedMapIndex === undefined) {
+        return state;
+      }
+      const activeOpenedMap = state.mapsInOpenedFile[state.activeOpenedMapIndex];
+      // get itemID by char
+      const itemID = [];
+      return state;
+    },
   },
   selectors: (slice, createSelector, hasProps) => ({
     /**

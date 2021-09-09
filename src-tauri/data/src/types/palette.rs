@@ -12,7 +12,6 @@ pub type CDDAPaletteArray = Vec<CDDAPalette>;
 pub struct CDDAPalette {
   // #[serde(rename = "type")]
   // pub cdda_json_type: palette_Literal,
-
   #[serde(flatten)]
   pub select_list: list::SelectListItem,
 
@@ -119,6 +118,37 @@ pub struct CDDAMapgenMapping {
   #[serde(default)]
   #[serde(skip_serializing_if = "BTreeMap::is_empty")]
   pub faction_owner_character: BTreeMap<String, CDDAPaletteFactionValue>,
+}
+
+impl CDDAMapgenMapping {
+  pub fn new() -> CDDAMapgenMapping {
+    CDDAMapgenMapping {
+      parameters: BTreeMap::new(),
+      terrain: BTreeMap::new(),
+      furniture: BTreeMap::new(),
+      items: BTreeMap::new(),
+      monsters: BTreeMap::new(),
+      fields: BTreeMap::new(),
+      npcs: BTreeMap::new(),
+      signs: BTreeMap::new(),
+      vendingmachines: BTreeMap::new(),
+      liquids: BTreeMap::new(),
+      vehicles: BTreeMap::new(),
+      item: BTreeMap::new(),
+      monster: BTreeMap::new(),
+      traps: BTreeMap::new(),
+      rubble: BTreeMap::new(),
+      computers: BTreeMap::new(),
+      toilets: BTreeMap::new(),
+      gaspumps: BTreeMap::new(),
+      sealed_item: BTreeMap::new(),
+      graffiti: BTreeMap::new(),
+      zones: BTreeMap::new(),
+      nested: BTreeMap::new(),
+      ter_furn_transforms: BTreeMap::new(),
+      faction_owner_character: BTreeMap::new(),
+    }
+  }
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
@@ -915,21 +945,21 @@ pub struct CDDAPaletteMonstersValueMonster {
 impl CDDAPalette {
   pub fn get_id(&self) -> Option<Vec<String>> {
     let select_list = &self.select_list;
-    let mut result:Vec<String> = Vec::new();
+    let mut result: Vec<String> = Vec::new();
     match &select_list.id {
-      Some(id_mix) => {
-        match id_mix {
-          CDDAStringArray::Single(id) => {
+      Some(id_mix) => match id_mix {
+        CDDAStringArray::Single(id) => {
+          result.push((*id).clone());
+        }
+        CDDAStringArray::Multiple(ids) => {
+          for id in ids {
             result.push((*id).clone());
-          },
-          CDDAStringArray::Multiple(ids) => {
-            for id in ids {
-              result.push((*id).clone());
-            }
           }
         }
       },
-      None => { return None; }
+      None => {
+        return None;
+      }
     };
     Some(result)
   }

@@ -77,7 +77,7 @@ pub fn read_mapgen_file(mapgen_file_path: &str) -> Result<mapgen::CDDAMapgenWith
         let om_object_option = &overmap_terrain_mapgen.common.object;
         match om_object_option {
           Some(om_object) => {
-            let palettes_to_reuse: Vec<palette::CDDAPalette> = om_object
+            let mut palettes_to_reuse: Vec<palette::CDDAPalette> = om_object
               .palettes
               .iter()
               .map(|palette_id| {
@@ -85,7 +85,7 @@ pub fn read_mapgen_file(mapgen_file_path: &str) -> Result<mapgen::CDDAMapgenWith
                 raw_palette.iter().find(|p| {
                   if let Some(id_mix) = &p.select_list.id {
                     match id_mix {
-                      CDDAStringArray::Single(id) => { *id == *palette_id },
+                      CDDAStringArray::Single(id) => *id == *palette_id,
                       CDDAStringArray::Multiple(ids) => {
                         let mut flag: bool = false;
                         for id in ids {
@@ -93,17 +93,19 @@ pub fn read_mapgen_file(mapgen_file_path: &str) -> Result<mapgen::CDDAMapgenWith
                             flag = true;
                             break;
                           }
-                        };
+                        }
                         flag
                       }
                     }
+                  } else {
+                    false
                   }
-                  else {false}
                 })
               })
               .filter(|p| p.is_some())
               .map(|p| p.unwrap().clone())
               .collect();
+            palettes_to_reuse.push(parsers::palette::mapgen_to_palette(om_object));
             if palettes_to_reuse.len() == 0 {
               return vec![];
             }
