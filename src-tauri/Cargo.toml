@@ -27,6 +27,10 @@ typescript-type-def = "0.2.1"
 schemars = "0.8.3"
 data = {path = "./data"}
 
+[dependencies.rusqlite]
+version = "0.25.3"
+features = ["bundled"]
+
 [features]
 default = ["custom-protocol"]
 custom-protocol = ["tauri/custom-protocol"]

@@ -103,7 +103,9 @@ fn main() {
   // // println!("{:?}", raw_region);
   // println!("{}",region_json);
 
-  let mut knowledge: CDDAKnowledgeGraph = CDDAKnowledgeGraph::new();
+  let knowledge: CDDAKnowledgeGraph = CDDAKnowledgeGraph::new();
+
+  knowledge.create_table();
 
   {
     let file_path = "../public/json/test.json";
@@ -117,11 +119,21 @@ fn main() {
 
     // println!("{:?}",raw);
 
-    for item_ter in raw {
-      knowledge.update(item_ter,Path::new("a.txt").to_path_buf());
+    for cluster in raw.get(0).unwrap().create_cluster("a.json".to_string())
+    {
+      knowledge.insert(&cluster);
     }
+
+    knowledge.update("standard_domestic_landscaping_palette".to_string(),"palette".to_string(),"a.json".to_string(), raw.get(1).unwrap());
+
+    // knowledge.delete("standard_domestic_landscaping_palette".to_string(),"palette".to_string(),"a.json".to_string());
   }
 
-  println!("{:?}", knowledge);
+  // knowledge.display();
+
+  for i in &knowledge.search(Some("standard_domestic_landscaping_palette".to_string()),None,None){
+    println!("{:?}", i);
+  }
+  
 
 }

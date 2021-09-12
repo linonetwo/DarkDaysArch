@@ -1,6 +1,8 @@
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 use std::path::PathBuf;
+use rusqlite::{Connection,params,Result};
+use rusqlite::types::{FromSql, FromSqlError, FromSqlResult, ToSql, ToSqlOutput, ValueRef};
 
 pub mod city_building;
 pub mod external_option;
@@ -17,18 +19,30 @@ pub mod terrain;
 pub mod tileset;
 pub mod trap;
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub enum CDDAType {
-  Furniture,
-  Mapgen,
-  OvermapTerrain,
-  OvermapSpecial,
-  OvermapConnection,
-  OvermapLocation,
-  CityBuilding,
-  RegionSettings,
-  Palette,
-  Terrain,
+macro_rules! get_cluster {
+  ($m:expr, $cluster:ident, $p:expr, $($x:path),*) => {
+    let type_field = $m.get_type();
+    match $m {
+      $(
+        $x(item) => {
+          match item.get_id() {
+            Some(ids) => {
+              for id in ids {
+                $cluster.push(CDDADataCluster{
+                  id: id.clone(),
+                  type_field: type_field.clone(),
+                  path: $p.clone(),
+                  data: (*$m).clone(),
+                });
+                };
+              },
+            None => {}
+          }
+        },
+      )*
+      _ => {},
+    };
+  }
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -50,207 +64,160 @@ pub enum CDDA_JSON {
   Unknown,
 }
 
+//serialize to sqlite
+impl ToSql for CDDA_JSON {
+  fn to_sql(&self) -> Result<ToSqlOutput<'_>> {
+    Ok(ToSqlOutput::from(serde_json::to_string(self).unwrap()))
+  }
+}
+
+impl FromSql for CDDA_JSON {
+  fn column_result(value: ValueRef<'_>) -> FromSqlResult<Self> {
+      serde_json::from_str(value.as_str().unwrap())
+      .map_err(|err| FromSqlError::Other(Box::new(err)))
+  }
+}
+
+//deserialize from sqlite
+impl CDDA_JSON {
+  pub fn create_cluster(&self, path: String) -> Vec<CDDADataCluster> {
+    let mut cluster: Vec<CDDADataCluster> = vec![];
+    get_cluster!(
+      self, cluster, path,
+      CDDA_JSON::furniture,
+      CDDA_JSON::overmap_terrain,
+      CDDA_JSON::overmap_special,
+      CDDA_JSON::overmap_connection,
+      CDDA_JSON::overmap_location,
+      CDDA_JSON::city_building,
+      CDDA_JSON::region_settings,
+      CDDA_JSON::palette,
+      CDDA_JSON::terrain
+    );
+    cluster
+  }
+
+  // get the type of CDDA_JSON
+  pub fn get_type(&self) -> String {
+    match self {
+      CDDA_JSON::furniture(_) => {return "furniture".to_string();},
+      CDDA_JSON::mapgen(_) => {return "mapgen".to_string();},
+      CDDA_JSON::overmap_terrain(_) => {return "overmap_terrain".to_string();},
+      CDDA_JSON::overmap_special(_) => {return "overmap_special".to_string();},
+      CDDA_JSON::overmap_location(_) => {return "overmap_location".to_string();},
+      CDDA_JSON::overmap_connection(_) => {return "overmap_connection".to_string();},
+      CDDA_JSON::city_building(_) => {return "city_building".to_string();},
+      CDDA_JSON::region_settings(_) => {return "region_settings".to_string();},
+      CDDA_JSON::palette(_) => {return "palette".to_string();},
+      CDDA_JSON::terrain(_) => {return "terrain".to_string();},
+      CDDA_JSON::Unknown => {return "unknown".to_string();},
+    }
+  }
+}
+
 #[allow(non_camel_case_types)]
 pub type CDDA_JSON_Array = Vec<CDDA_JSON>;
 
-/**
- * Get each type of JSON by id
- */
+//all information needed put in the database
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub struct CDDAKnowledgeGraph {
-  pub furniture: BTreeMap<String, furniture::CDDAFurniture>,
-  pub mapgen: BTreeMap<String, mapgen::CDDAMapgen>,
-  pub overmap_terrain: BTreeMap<String, overmap_terrain::CDDAOvermapTerrain>,
-  pub overmap_special: BTreeMap<String, overmap_special::CDDAOvermapSpecial>,
-  pub overmap_connection: BTreeMap<String, overmap_connection::CDDAOvermapConnection>,
-  pub overmap_location: BTreeMap<String, overmap_location::CDDAOvermapLocation>,
-  pub city_building: BTreeMap<String, city_building::CDDACityBuilding>,
-  pub region_settings: BTreeMap<String, region_settings::CDDARegionSettings>,
-  pub palette: BTreeMap<String, palette::CDDAPalette>,
-  pub terrain: BTreeMap<String, terrain::CDDATerrain>,
-  pub file_content: BTreeMap<String,Vec<(String,CDDAType)>>,
-  // pub tileset: BTreeMap<String, tileset::CDDATileSetConfig>,
+pub struct CDDADataCluster {
+  pub id: String,
+  pub type_field: String,
+  pub path: String,
+  pub data: CDDA_JSON,
 }
 
-macro_rules! match_insert_index {
-  ($m:expr, $l:ident, $($x:path, $y:expr, $z:path),*) => {
-    match $m {
-      $(
-        $x(item) => {
-          match item.get_id() {
-            Some(ids) => {
-              for id in ids {
-                $y.insert(id.clone(),(*item).clone());
-                $l.push((id.clone(),$z));
-              }
-            },
-            None => {}
-          }
-        },
-      )*
-      _ => {},
-    }
-  };
+#[derive(Debug)]
+pub struct CDDAKnowledgeGraph {
+  pub database: Connection,
 }
 
 impl CDDAKnowledgeGraph {
   pub fn new() -> CDDAKnowledgeGraph {
-    CDDAKnowledgeGraph {
-      furniture: Default::default(),
-      mapgen: Default::default(),
-      overmap_terrain: Default::default(),
-      overmap_special: Default::default(),
-      overmap_connection: Default::default(),
-      overmap_location: Default::default(),
-      city_building: Default::default(),
-      region_settings: Default::default(),
-      palette: Default::default(),
-      terrain: Default::default(),
-      file_content: Default::default(),
-      // tileset: Default::default(),
+    CDDAKnowledgeGraph{
+      database: Connection::open_in_memory().unwrap()
     }
   }
 
-  // remind to release memory for original CDDA_JSON object
-  pub fn update(&mut self, update_data: CDDA_JSON, file_path: PathBuf) {
-    let file = file_path.display().to_string();
-  // get the mutable inner list for a file_path, if create one if not found
-    let id_clutter_list: &mut Vec<(String,CDDAType)>;
-    match self.file_content.get_mut(&file) {
-      Some(id_list) => {
-        id_clutter_list = id_list;
-      },
-      None => {
-        self.file_content.insert(file.clone(), Vec::new());
-        id_clutter_list = self.file_content.get_mut(&file).unwrap();
+  // create the table before first insert
+  pub fn create_table(&self) {
+    let sql: &str = "CREATE TABLE IF NOT EXISTS 'jsonTable'(
+      'Id'     TEXT NOT NULL,
+      'Type'   TEXT NOT NULL,
+      'Path'   TEXT NOT NULL,
+      'Data'   TEXT NOT NULL,
+      PRIMARY KEY ('Id','Type','Path')
+    )";
+
+    self.database.execute(sql, params![]).unwrap();
+  }
+
+  // insert a row
+  pub fn insert(&self, data: &CDDADataCluster) {
+    let sql: &str = "INSERT INTO 'jsonTable'('Id','Type','Path','Data') VALUES (?1,?2,?3,?4)";
+
+    self.database.execute(sql, params![data.id,data.type_field,data.path,data.data]).unwrap();
+  }
+
+  //delete a row
+  pub fn delete(&self, id:String, type_field:String, path:String) {
+    let sql: &str = "DELETE FROM 'jsonTable' WHERE Id = ?1 AND Type = ?2 AND Path = ?3";
+
+    self.database.execute(sql, params![id,type_field,path]).unwrap();
+  }
+
+  //update the data of a row except id type and path
+  pub fn update(&self, id:String, type_field:String, path:String, data: &CDDA_JSON) {
+    let sql: &str = "UPDATE 'jsonTable' SET Data = ?1 WHERE Id = ?2 AND Type = ?3 AND Path = ?4";
+
+    self.database.execute(sql, params![data,id,type_field,path]).unwrap();
+  }
+
+  //search rows in table, only for id type path, all optional
+  pub fn search(&self, id:Option<String>, type_field:Option<String>, path:Option<String>) -> Vec<CDDADataCluster> {
+    let mut data_cluster_list: Vec<CDDADataCluster> = Vec::new();
+
+    let sql: &str = &format!("SELECT * FROM 'jsonTable' WHERE Id LIKE '%{}%' AND Type LIKE '%{}%' AND Path LIKE '%{}%'",
+    id.unwrap_or_default(),
+    type_field.unwrap_or_default(),
+    path.unwrap_or_default())[..];
+
+    let mut stmt = self.database.prepare(sql).unwrap();
+
+    let iterator = stmt.query_map(
+      [],
+      |row| {
+        Ok(CDDADataCluster{
+          id: row.get(0).unwrap(),
+          type_field: row.get(1).unwrap(),
+          path: row.get(2).unwrap(),
+          data: row.get(3).unwrap()
+        })
       }
+    ).unwrap();
+
+    for item in iterator {
+      data_cluster_list.push(item.unwrap());
     }
-    // create or change index
-    match_insert_index![
-      &update_data, id_clutter_list,
-      CDDA_JSON::furniture, self.furniture, CDDAType::Furniture,
-      CDDA_JSON::mapgen, self.mapgen, CDDAType::Mapgen,
-      CDDA_JSON::overmap_terrain, self.overmap_terrain, CDDAType::OvermapTerrain,
-      CDDA_JSON::overmap_special, self.overmap_special, CDDAType::OvermapSpecial,
-      CDDA_JSON::overmap_connection, self.overmap_connection, CDDAType::OvermapConnection,
-      CDDA_JSON::overmap_location, self.overmap_location, CDDAType::OvermapLocation,
-      CDDA_JSON::city_building, self.city_building, CDDAType::CityBuilding,
-      CDDA_JSON::region_settings, self.region_settings, CDDAType::RegionSettings,
-      CDDA_JSON::palette, self.palette, CDDAType::Palette,
-      CDDA_JSON::terrain, self.terrain, CDDAType::Terrain
-    ]
-    // match &update_data {
-    //   CDDA_JSON::palette(palette_item) => {
-    //     match palette_item.get_id() {
-    //       Some(ids) => {
-    //         for id in ids {
-    //           self.palette.insert(id.clone(),(*palette_item).clone());
-    //           id_clutter_list.push((id.clone(),CDDAType::Palette));
-    //         }
-    //       },
-    //       None => {}
-    //     }
-    //   },
-    //   CDDA_JSON::mapgen(mapgen_item) => {
-    //     match mapgen_item.get_id() {
-    //       Some(ids) => {
-    //         for id in ids {
-    //           self.mapgen.insert(id.clone(),(*mapgen_item).clone());
-    //           id_clutter_list.push((id.clone(),CDDAType::Mapgen));
-    //         }
-    //       },
-    //       None => {}
-    //     }
-    //   },
-    //   CDDA_JSON::furniture(furniture_item) => {
-    //     match furniture_item.get_id() {
-    //       Some(ids) => {
-    //         for id in ids {
-    //           self.furniture.insert(id.clone(),(*furniture_item).clone());
-    //           id_clutter_list.push((id.clone(),CDDAType::Furniture));
-    //         }
-    //       },
-    //       None => {}
-    //     }
-    //   },
-    //   CDDA_JSON::terrain(terrain_item) => {
-    //     match terrain_item.get_id() {
-    //       Some(ids) => {
-    //         for id in ids {
-    //           self.terrain.insert(id.clone(),(*terrain_item).clone());
-    //           id_clutter_list.push((id.clone(),CDDAType::Terrain));
-    //         }
-    //       },
-    //       None => {}
-    //     }
-    //   },
-    //   CDDA_JSON::overmap_terrain(omt_item) => {
-    //     match omt_item.get_id() {
-    //       Some(ids) => {
-    //         for id in ids {
-    //           self.overmap_terrain.insert(id.clone(),(*omt_item).clone());
-    //           id_clutter_list.push((id.clone(),CDDAType::OvermapTerrain));
-    //         }
-    //       },
-    //       None => {}
-    //     }
-    //   },
-    //   CDDA_JSON::overmap_special(oms_item) => {
-    //     match oms_item.get_id() {
-    //       Some(ids) => {
-    //         for id in ids {
-    //           self.overmap_special.insert(id.clone(),(*oms_item).clone());
-    //           id_clutter_list.push((id.clone(),CDDAType::OvermapSpecial));
-    //         }
-    //       },
-    //       None => {}
-    //     }
-    //   },
-    //   CDDA_JSON::overmap_location(oml_item) => {
-    //     match oml_item.get_id() {
-    //       Some(ids) => {
-    //         for id in ids {
-    //           self.overmap_location.insert(id.clone(),(*oml_item).clone());
-    //           id_clutter_list.push((id.clone(),CDDAType::OvermapLocation));
-    //         }
-    //       },
-    //       None => {}
-    //     }
-    //   },
-    //   CDDA_JSON::overmap_connection(omc_item) => {
-    //     match omc_item.get_id() {
-    //       Some(ids) => {
-    //         for id in ids {
-    //           self.overmap_connection.insert(id.clone(),(*omc_item).clone());
-    //           id_clutter_list.push((id.clone(),CDDAType::OvermapConnection));
-    //         }
-    //       },
-    //       None => {}
-    //     }
-    //   },
-    //   CDDA_JSON::city_building(city_item) => {
-    //     match city_item.get_id() {
-    //       Some(ids) => {
-    //         for id in ids {
-    //           self.city_building.insert(id.clone(),(*city_item).clone());
-    //           id_clutter_list.push((id.clone(),CDDAType::CityBuilding));
-    //         }
-    //       },
-    //       None => {}
-    //     }
-    //   },
-    //   CDDA_JSON::region_settings(region_item) => {
-    //     match region_item.get_id() {
-    //       Some(ids) => {
-    //         for id in ids {
-    //           self.region_settings.insert(id.clone(),(*region_item).clone());
-    //           id_clutter_list.push((id.clone(),CDDAType::RegionSettings));
-    //         }
-    //       },
-    //       None => {}
-    //     }
-    //   },
-    //   _ => {},
-    // };
+
+    data_cluster_list
+  }
+
+  // display the content of the table
+  pub fn display(&self) {
+    let sql: &str = "SELECT * FROM 'jsonTable'";
+    let mut stmt = self.database.prepare(sql).unwrap();
+    let iter = stmt.query_map(params![],|row| {
+      Ok(CDDADataCluster{
+        id: row.get(0).unwrap(),
+        type_field: row.get(1).unwrap(),
+        path: row.get(2).unwrap(),
+        data: row.get(3).unwrap(),
+      })
+    }).unwrap();
+
+    for i in iter {
+      println!("{:?}",i.unwrap());
+    }
   }
 }
