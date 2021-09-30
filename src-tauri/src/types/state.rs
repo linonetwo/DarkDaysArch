@@ -1,8 +1,7 @@
 use std::{sync::Mutex};
-use serde::{Deserialize, Serialize};
 use data::types::CDDAKnowledgeGraph;
 
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug)]
 pub struct AppStateRaw {
   pub knowledge_graph: CDDAKnowledgeGraph,
 }
