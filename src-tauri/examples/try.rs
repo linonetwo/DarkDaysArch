@@ -105,8 +105,6 @@ fn main() {
 
   let knowledge: CDDAKnowledgeGraph = CDDAKnowledgeGraph::new();
 
-  knowledge.create_table();
-
   {
     let file_path = "../public/json/test.json";
     let mut raw_file = File::open(file_path).unwrap();

@@ -134,9 +134,11 @@ pub struct CDDAKnowledgeGraph {
 
 impl CDDAKnowledgeGraph {
   pub fn new() -> CDDAKnowledgeGraph {
-    CDDAKnowledgeGraph{
-      database: Connection::open_in_memory().unwrap()
-    }
+    let new_instance = CDDAKnowledgeGraph {
+      database: Connection::open_in_memory().unwrap(),
+    };
+    new_instance.create_table();
+    new_instance
   }
 
   // create the table before first insert
