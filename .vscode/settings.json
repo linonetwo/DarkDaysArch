@@ -3,12 +3,13 @@
     "public/locales"
   ],
   "cSpell.words": [
+    "CDDA",
     "CDDAJSON",
-    "Mapgen",
-    "PIXI",
     "craco",
     "jsonschema",
     "languagedetector",
+    "Mapgen",
+    "PIXI",
     "tileset",
     "typesync"
   ],
