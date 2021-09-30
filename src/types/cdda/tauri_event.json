@@ -1,0 +1,55 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "EventRootObject",
+  "description": "Type root for json schema export, in this way we can export all types together",
+  "anyOf": [
+    {
+      "$ref": "#/definitions/ModLoadingEventPayload"
+    }
+  ],
+  "definitions": {
+    "ModLoadingEventFileItem": {
+      "type": "object",
+      "required": [
+        "file_count",
+        "mod_name",
+        "progress"
+      ],
+      "properties": {
+        "file_count": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "mod_name": {
+          "type": "string"
+        },
+        "progress": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "ModLoadingEventPayload": {
+      "description": "game://mod-loading",
+      "type": "object",
+      "required": [
+        "fileList"
+      ],
+      "properties": {
+        "fileList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ModLoadingEventFileItem"
+          }
+        },
+        "game://mod-loading": {
+          "description": "This is the type of this event, won't have actuarial data, just sync this string between rs and ts",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    }
+  }
+}

@@ -2,11 +2,12 @@
 import { createModel } from '@rematch/core';
 import { Loader, LoaderResource } from 'pixi.js';
 import { invoke } from '@tauri-apps/api';
+import { listen } from '@tauri-apps/api/event';
 
 import type { RootModel } from './index';
 import { CDDATileSetConfigWithCache } from 'src/types/cdda/tileset';
 import { CDDAMapgenWithCache } from 'src/types/cdda/mapgen';
-import { ArrayOf_CDDATerrain } from 'src/types/cdda/terrain';
+import { ModLoadingEventPayload } from 'src/types/cdda/tauri_event';
 
 export const TILE_SET_CONFIG_FILE_NAME = 'tile_config.json';
 
@@ -36,6 +37,15 @@ interface IMapsState {
   activeOpenedFilePath?: string;
   /** 打开的几个工作区，可以查看里面的文件内容 */
   fileTrees: IFileTree[];
+  /** 文件加载进度信息 */
+  loadingProgress: {
+    /** 所有本次要加载的文件列表 */
+    fileList: ModLoadingEventPayload['fileList'];
+    /** 已加载完几个 */
+    loadedCount: number;
+    loading: boolean;
+  };
+  /** 当前在编辑器（内存）里打开的文件 */
   openedFiles: IOpenedFile[];
 }
 
@@ -43,7 +53,7 @@ interface IMapsState {
  * 管理当前打开的地图文件、Mod资源等
  */
 export const files = createModel<RootModel>()({
-  state: { activeOpenedFilePath: undefined, fileTrees: [], openedFiles: [] } as IMapsState,
+  state: { activeOpenedFilePath: undefined, fileTrees: [], loadingProgress: { loading: false, fileList: [], loadedCount: 0 }, openedFiles: [] } as IMapsState,
   reducers: {
     selectFile(state, selectedFilePath?: string) {
       state.activeOpenedFilePath = selectedFilePath;
@@ -77,6 +87,10 @@ export const files = createModel<RootModel>()({
     },
     removeOpenedFiles(state, openedFileIndex: number) {
       state.openedFiles.splice(openedFileIndex, 1);
+      return state;
+    },
+    updateLoadingProgress(state, newProgress: IMapsState['loadingProgress']) {
+      state.loadingProgress = newProgress;
       return state;
     },
   },
@@ -118,6 +132,19 @@ export const files = createModel<RootModel>()({
       } catch (error) {
         console.error(error);
       }
+    },
+    async listenModLoadingProgress() {
+      const unlisten = await listen<ModLoadingEventPayload>('game://mod-loading', (event) => {
+        const { payload } = event;
+        const { fileList } = payload;
+        const total = fileList.reduce((previousCount, file) => previousCount + file.file_count, 0);
+        const loadedCount = fileList.reduce((previousCount, file) => previousCount + file.progress, 0);
+        dispatch.files.updateLoadingProgress({
+          loading: true,
+          fileList,
+          loadedCount,
+        });
+      });
     },
     async loadTextures(tilesetPathName: string) {
       // prevent Unhandled Rejection (TypeError): window.rpc is undefined when open in browser

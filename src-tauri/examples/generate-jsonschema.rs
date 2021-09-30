@@ -5,6 +5,8 @@ use std::{
   path::{Path, PathBuf},
 };
 
+use data::events::EventRootObject;
+
 use data::list::SelectList;
 /**
  * convert serde to jsonschema: https://imfeld.dev/writing/generating_typescript_types_from_rust
@@ -24,6 +26,7 @@ where
 
 fn main() {
   let project_root = &get_project_root().unwrap();
+  generate::<EventRootObject>(Path::join(project_root, "../src/types/cdda/tauri_event.json"));
   generate::<SelectList>(Path::join(project_root, "../src/types/cdda/selectList.json"));
   generate::<tileset::CDDATileSetConfigWithCache>(Path::join(project_root, "../src/types/cdda/tileset.json"));
   generate::<mapgen::CDDAMapgenWithCache>(Path::join(project_root, "../src/types/cdda/mapgen.json"));
