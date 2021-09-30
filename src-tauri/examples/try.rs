@@ -1,8 +1,7 @@
+use data::common::*;
 #[allow(unused_imports)]
-
 use data::list;
 use data::types::*;
-use data::common::*;
 use glob::glob;
 use project_root::get_project_root;
 use schemars::JsonSchema;
@@ -12,7 +11,6 @@ use serde_json;
 use std::fs::create_dir;
 use std::path::Path;
 use std::{collections::BTreeMap, fs::canonicalize, fs::File, io::Read};
-
 
 fn main() {
   // let map_file_path = "../public/json/magic_academy.json";
@@ -117,21 +115,23 @@ fn main() {
 
     // println!("{:?}",raw);
 
-    for cluster in raw.get(0).unwrap().create_cluster("a.json".to_string())
-    {
+    for cluster in raw.get(0).unwrap().create_cluster("a.json".to_string()) {
       knowledge.insert(&cluster);
     }
 
-    knowledge.update("standard_domestic_landscaping_palette".to_string(),"palette".to_string(),"a.json".to_string(), raw.get(1).unwrap());
+    knowledge.update(
+      "standard_domestic_landscaping_palette".to_string(),
+      "palette".to_string(),
+      "a.json".to_string(),
+      raw.get(1).unwrap(),
+    );
 
     // knowledge.delete("standard_domestic_landscaping_palette".to_string(),"palette".to_string(),"a.json".to_string());
   }
 
   // knowledge.display();
 
-  for i in &knowledge.search(Some("standard_domestic_landscaping_palette".to_string()),None,None){
+  for i in &knowledge.search(Some("standard_domestic_landscaping_palette".to_string()), None, None) {
     println!("{:?}", i);
   }
-  
-
 }

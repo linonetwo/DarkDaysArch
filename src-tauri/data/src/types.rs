@@ -1,8 +1,8 @@
+use rusqlite::types::{FromSql, FromSqlError, FromSqlResult, ToSql, ToSqlOutput, ValueRef};
+use rusqlite::{params, Connection, Result};
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 use std::path::PathBuf;
-use rusqlite::{Connection,params,Result};
-use rusqlite::types::{FromSql, FromSqlError, FromSqlResult, ToSql, ToSqlOutput, ValueRef};
 
 pub mod city_building;
 pub mod external_option;
@@ -73,8 +73,7 @@ impl ToSql for CDDA_JSON {
 
 impl FromSql for CDDA_JSON {
   fn column_result(value: ValueRef<'_>) -> FromSqlResult<Self> {
-      serde_json::from_str(value.as_str().unwrap())
-      .map_err(|err| FromSqlError::Other(Box::new(err)))
+    serde_json::from_str(value.as_str().unwrap()).map_err(|err| FromSqlError::Other(Box::new(err)))
   }
 }
 
@@ -83,7 +82,9 @@ impl CDDA_JSON {
   pub fn create_cluster(&self, path: String) -> Vec<CDDADataCluster> {
     let mut cluster: Vec<CDDADataCluster> = vec![];
     get_cluster!(
-      self, cluster, path,
+      self,
+      cluster,
+      path,
       CDDA_JSON::furniture,
       CDDA_JSON::overmap_terrain,
       CDDA_JSON::overmap_special,
@@ -100,17 +101,39 @@ impl CDDA_JSON {
   // get the type of CDDA_JSON
   pub fn get_type(&self) -> String {
     match self {
-      CDDA_JSON::furniture(_) => {return "furniture".to_string();},
-      CDDA_JSON::mapgen(_) => {return "mapgen".to_string();},
-      CDDA_JSON::overmap_terrain(_) => {return "overmap_terrain".to_string();},
-      CDDA_JSON::overmap_special(_) => {return "overmap_special".to_string();},
-      CDDA_JSON::overmap_location(_) => {return "overmap_location".to_string();},
-      CDDA_JSON::overmap_connection(_) => {return "overmap_connection".to_string();},
-      CDDA_JSON::city_building(_) => {return "city_building".to_string();},
-      CDDA_JSON::region_settings(_) => {return "region_settings".to_string();},
-      CDDA_JSON::palette(_) => {return "palette".to_string();},
-      CDDA_JSON::terrain(_) => {return "terrain".to_string();},
-      CDDA_JSON::Unknown => {return "unknown".to_string();},
+      CDDA_JSON::furniture(_) => {
+        return "furniture".to_string();
+      }
+      CDDA_JSON::mapgen(_) => {
+        return "mapgen".to_string();
+      }
+      CDDA_JSON::overmap_terrain(_) => {
+        return "overmap_terrain".to_string();
+      }
+      CDDA_JSON::overmap_special(_) => {
+        return "overmap_special".to_string();
+      }
+      CDDA_JSON::overmap_location(_) => {
+        return "overmap_location".to_string();
+      }
+      CDDA_JSON::overmap_connection(_) => {
+        return "overmap_connection".to_string();
+      }
+      CDDA_JSON::city_building(_) => {
+        return "city_building".to_string();
+      }
+      CDDA_JSON::region_settings(_) => {
+        return "region_settings".to_string();
+      }
+      CDDA_JSON::palette(_) => {
+        return "palette".to_string();
+      }
+      CDDA_JSON::terrain(_) => {
+        return "terrain".to_string();
+      }
+      CDDA_JSON::Unknown => {
+        return "unknown".to_string();
+      }
     }
   }
 }
@@ -158,45 +181,46 @@ impl CDDAKnowledgeGraph {
   pub fn insert(&self, data: &CDDADataCluster) {
     let sql: &str = "INSERT INTO 'jsonTable'('Id','Type','Path','Data') VALUES (?1,?2,?3,?4)";
 
-    self.database.execute(sql, params![data.id,data.type_field,data.path,data.data]).unwrap();
+    self.database.execute(sql, params![data.id, data.type_field, data.path, data.data]).unwrap();
   }
 
   //delete a row
-  pub fn delete(&self, id:String, type_field:String, path:String) {
+  pub fn delete(&self, id: String, type_field: String, path: String) {
     let sql: &str = "DELETE FROM 'jsonTable' WHERE Id = ?1 AND Type = ?2 AND Path = ?3";
 
-    self.database.execute(sql, params![id,type_field,path]).unwrap();
+    self.database.execute(sql, params![id, type_field, path]).unwrap();
   }
 
   //update the data of a row except id type and path
-  pub fn update(&self, id:String, type_field:String, path:String, data: &CDDA_JSON) {
+  pub fn update(&self, id: String, type_field: String, path: String, data: &CDDA_JSON) {
     let sql: &str = "UPDATE 'jsonTable' SET Data = ?1 WHERE Id = ?2 AND Type = ?3 AND Path = ?4";
 
-    self.database.execute(sql, params![data,id,type_field,path]).unwrap();
+    self.database.execute(sql, params![data, id, type_field, path]).unwrap();
   }
 
   //search rows in table, only for id type path, all optional
-  pub fn search(&self, id:Option<String>, type_field:Option<String>, path:Option<String>) -> Vec<CDDADataCluster> {
+  pub fn search(&self, id: Option<String>, type_field: Option<String>, path: Option<String>) -> Vec<CDDADataCluster> {
     let mut data_cluster_list: Vec<CDDADataCluster> = Vec::new();
 
-    let sql: &str = &format!("SELECT * FROM 'jsonTable' WHERE Id LIKE '%{}%' AND Type LIKE '%{}%' AND Path LIKE '%{}%'",
-    id.unwrap_or_default(),
-    type_field.unwrap_or_default(),
-    path.unwrap_or_default())[..];
+    let sql: &str = &format!(
+      "SELECT * FROM 'jsonTable' WHERE Id LIKE '%{}%' AND Type LIKE '%{}%' AND Path LIKE '%{}%'",
+      id.unwrap_or_default(),
+      type_field.unwrap_or_default(),
+      path.unwrap_or_default()
+    )[..];
 
     let mut stmt = self.database.prepare(sql).unwrap();
 
-    let iterator = stmt.query_map(
-      [],
-      |row| {
-        Ok(CDDADataCluster{
+    let iterator = stmt
+      .query_map([], |row| {
+        Ok(CDDADataCluster {
           id: row.get(0).unwrap(),
           type_field: row.get(1).unwrap(),
           path: row.get(2).unwrap(),
-          data: row.get(3).unwrap()
+          data: row.get(3).unwrap(),
         })
-      }
-    ).unwrap();
+      })
+      .unwrap();
 
     for item in iterator {
       data_cluster_list.push(item.unwrap());
@@ -209,17 +233,19 @@ impl CDDAKnowledgeGraph {
   pub fn display(&self) {
     let sql: &str = "SELECT * FROM 'jsonTable'";
     let mut stmt = self.database.prepare(sql).unwrap();
-    let iter = stmt.query_map(params![],|row| {
-      Ok(CDDADataCluster{
-        id: row.get(0).unwrap(),
-        type_field: row.get(1).unwrap(),
-        path: row.get(2).unwrap(),
-        data: row.get(3).unwrap(),
+    let iter = stmt
+      .query_map(params![], |row| {
+        Ok(CDDADataCluster {
+          id: row.get(0).unwrap(),
+          type_field: row.get(1).unwrap(),
+          path: row.get(2).unwrap(),
+          data: row.get(3).unwrap(),
+        })
       })
-    }).unwrap();
+      .unwrap();
 
     for i in iter {
-      println!("{:?}",i.unwrap());
+      println!("{:?}", i.unwrap());
     }
   }
 }
