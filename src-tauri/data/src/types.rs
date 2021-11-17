@@ -166,15 +166,54 @@ impl CDDAKnowledgeGraph {
 
   // create the table before first insert
   pub fn create_table(&self) {
-    let sql: &str = "CREATE TABLE IF NOT EXISTS 'jsonTable'(
+    self
+      .database
+      .execute(
+        "CREATE TABLE IF NOT EXISTS 'jsonTable'(
       'Id'     TEXT NOT NULL,
       'Type'   TEXT NOT NULL,
       'Path'   TEXT NOT NULL,
       'Data'   TEXT NOT NULL,
       PRIMARY KEY ('Id','Type','Path')
-    )";
+    )",
+        params![],
+      )
+      .unwrap();
+    self
+      .database
+      .execute(
+        "CREATE TABLE IF NOT EXISTS 'modFolder' (
+      'Path'   TEXT NOT NULL,
+      PRIMARY KEY ('Path')
+    )",
+        params![],
+      )
+      .unwrap();
+  }
 
-    self.database.execute(sql, params![]).unwrap();
+  pub fn set_mod_folder_loaded(&self, path: String) {
+    self
+      .database
+      .execute(
+        "INSERT OR REPLACE INTO 'modFolder' (
+          'Path'
+        ) VALUES (
+          ?1
+        )",
+        params![path],
+      )
+      .unwrap();
+  }
+
+  pub fn check_mod_folder_loaded(&self, path: &String) -> bool {
+    match self.database.execute("SELECT * FROM 'modFolder' WHERE 'Path' = ?1", params![path]) {
+      Ok(_) => {
+        true
+      }
+      Err(_) => {
+        false
+      }
+    }
   }
 
   // insert a row

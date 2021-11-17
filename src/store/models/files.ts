@@ -123,11 +123,9 @@ export const files = createModel<RootModel>()({
     async loadMods(dataFolderPath: string) {
       try {
         // eslint-disable-next-line @typescript-eslint/await-thenable
-        const result = await invoke<string>('load_cdda_data_folder', {
+        await invoke<string>('load_cdda_data_folder', {
           dataFolderPath,
         });
-        // DEBUG: console
-        console.log(`result`, result);
         // dispatch.knowledgeGraph.update({ terrain });
       } catch (error) {
         console.error(error);

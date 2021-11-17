@@ -11,6 +11,9 @@ use crate::types;
 
 #[tauri::command]
 pub fn load_cdda_data_folder<'s>(state: tauri::State<'s, types::state::AppState>, data_folder_path: String) -> Result<String, String> {
+  if state.0.lock().unwrap().knowledge_graph.check_mod_folder_loaded(&data_folder_path) {
+    return Err(format!("{} already loaded", &data_folder_path));
+  }
   let data_folder_absolute_file_path: String = canonicalize(Path::join(
     &Path::join(&get_project_root().map_err(|e| e.to_string())?, "../public"),
     &data_folder_path,
@@ -104,6 +107,7 @@ pub fn load_cdda_data_folder<'s>(state: tauri::State<'s, types::state::AppState>
       }
     }
   }
+  state.0.lock().unwrap().knowledge_graph.set_mod_folder_loaded(data_folder_path);
   Ok("Done".into())
   // state.knowledge_graph
 }
