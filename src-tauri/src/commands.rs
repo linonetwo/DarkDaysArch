@@ -145,8 +145,10 @@ pub fn read_mapgen_file(mapgen_file_path: &str) -> Result<mapgen::CDDAMapgenWith
   Ok(mapgen_with_cache)
 }
 
-// TODO: prepare a State that contains all JSON first
-// #[tauri::command]
-// pub fn get_json_by_id(id: String) -> Result<CDDA_JSON, String> {
-
-// }
+#[tauri::command]
+pub fn query_database<'s>(state: tauri::State<'s, types::state::AppState>, sql: String) -> Result<Vec<CDDA_JSON>, String> {
+  let database = &state.0.lock().unwrap().knowledge_graph.database;
+  let mut stmt = database.prepare(&sql).map_err(|e| e.to_string())?;
+  let results = stmt.query_map::<Vec<CDDA_JSON>, _, _>([], |r| r.get(0)).map_err(|e| e.to_string())?;
+  Ok(results.collect::<Vec<CDDA_JSON>>())
+}
