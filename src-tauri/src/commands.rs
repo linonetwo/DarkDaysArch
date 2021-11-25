@@ -12,7 +12,7 @@ use crate::parsers;
 use crate::types;
 
 pub fn invoke_handler() -> impl Fn(tauri::Invoke) + Send + Sync + 'static {
-  tauri::generate_handler![read_tileset_folder, read_mapgen_file, load_cdda_data_folder::load_cdda_data_folder]
+  tauri::generate_handler![read_tileset_folder, read_mapgen_file, load_cdda_data_folder::load_cdda_data_folder, query_database]
 }
 
 #[tauri::command]
@@ -146,9 +146,9 @@ pub fn read_mapgen_file(mapgen_file_path: &str) -> Result<mapgen::CDDAMapgenWith
 }
 
 #[tauri::command]
-pub fn query_database<'s>(state: tauri::State<'s, types::state::AppState>, sql: String) -> Result<Vec<CDDA_JSON>, String> {
+pub fn query_database<'s>(state: tauri::State<'s, types::state::AppState>, sql: String) -> Result<Box<dyn std::any::Any>, String> {
   let database = &state.0.lock().unwrap().knowledge_graph.database;
   let mut stmt = database.prepare(&sql).map_err(|e| e.to_string())?;
-  let results = stmt.query_map::<Vec<CDDA_JSON>, _, _>([], |r| r.get(0)).map_err(|e| e.to_string())?;
-  Ok(results.collect::<Vec<CDDA_JSON>>())
+  let results = stmt.query_map::<Vec<_>, _, _>([], |r| r.get(0)).map_err(|e| e.to_string())?;
+  Ok(std::boxed::Box::new(results.collect::<Vec<_>>()))
 }
